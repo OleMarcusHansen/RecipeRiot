@@ -52,7 +52,7 @@ fun MainApp(modifier: Modifier = Modifier) {
             composable(route = "main") { HomeScreen() }
             composable(route = "ingredients") { IngredientsScreen() }
             composable(route = "shoppinglist") { ShoppingListScreen() }
-            composable(route = "settings") { SettingsScreen() }
+            composable(route = "settings") { SettingsScreen(logout = {navController.navigate("login")}) }
         }
         BottomAppBar {
             Button(onClick = { navController.navigate("main") }) {
