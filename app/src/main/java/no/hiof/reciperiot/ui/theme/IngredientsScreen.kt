@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -24,7 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun IngredientRow(name: String, checkedState: MutableState<Boolean>) {
+fun IngredientRow(name: String, checkedState: MutableState<Boolean>,
+                  onCheckedChange: (Boolean) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -40,8 +40,8 @@ fun IngredientRow(name: String, checkedState: MutableState<Boolean>) {
 
         Checkbox(
             checked = checkedState.value,
-            onCheckedChange = { newCheckedState ->
-                checkedState.value = newCheckedState
+            onCheckedChange = { newValue ->
+                onCheckedChange(newValue)
             },
             modifier = Modifier.size(24.dp)
         )
@@ -49,21 +49,33 @@ fun IngredientRow(name: String, checkedState: MutableState<Boolean>) {
 }
 @Composable
 fun IngredientsScreen(modifier: Modifier = Modifier) {
-    val checkedState = remember { mutableStateOf(false) }
     var displayedText by remember { mutableStateOf("") }
+
+    // Create a list of ingredients with their individual states
+    val ingredients = listOf(
+        "Løk" to remember { mutableStateOf(false) },
+        "Poteter" to remember { mutableStateOf(false) },
+        "Mel" to remember { mutableStateOf(false) },
+        "Melk" to remember { mutableStateOf(false) },
+        "Kjøttdeig" to remember { mutableStateOf(false) }
+    )
 
     Column(
         modifier = modifier
-            .fillMaxSize()
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        IngredientRow("Løk", checkedState)
-        IngredientRow("Poteter", checkedState)
-        IngredientRow("Mel", checkedState)
-        IngredientRow("Melk", checkedState)
-        IngredientRow("Kjøttdeig", checkedState)
+
+        ingredients.forEach { (name, checkedState) ->
+            IngredientRow(
+                name = name,
+                checkedState = checkedState,
+                onCheckedChange = { newValue ->
+                    checkedState.value = newValue
+                }
+            )
+        }
 
         Button(onClick = {
             displayedText = "Ingredienser added!"
