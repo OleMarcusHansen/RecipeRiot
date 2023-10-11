@@ -17,12 +17,14 @@ import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -31,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import no.hiof.reciperiot.ui.theme.HomeScreen
 import no.hiof.reciperiot.ui.theme.IngredientsScreen
@@ -139,17 +142,20 @@ fun MainApp(modifier: Modifier = Modifier) {
 @Composable
 fun BottomNavBar(navController: NavController, bottomNavigationScreens: List<Screen>)
 {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination?.route
+
     BottomAppBar {
         bottomNavigationScreens.forEach { screen ->
-            NavigationBarItem(selected =
-                navController.currentDestination?.route == screen.route
+            NavigationBarItem(selected = currentDestination == screen.route
                 , onClick = {
                     navController.navigate(screen.route)
                 }, icon = {
-                (screen.icon)
-            }, label = {
-                Text(stringResource(id = screen.title))
-            })
+                    Icon(imageVector = screen.icon, contentDescription = "Icon")
+                }, label = {
+                    Text(stringResource(id = screen.title))
+                }
+            )
         }
     }
 }
