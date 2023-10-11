@@ -10,10 +10,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import no.hiof.reciperiot.R
 
 @Composable
@@ -26,15 +28,17 @@ fun FavouriteMeals() {
             contentAlignment = Alignment.Center
         ) {
             Image(
-                // painterResource(successInfo.successInfoImageId)
                 painterResource(R.drawable.food),
                 contentDescription = "",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
 
-            // will display in the middle of the image
-            Text("Some Text In the middle")
+            Text(text = "dette er min rett",
+                color = Color.Black,
+                fontSize = 20.sp
+
+            )
         }
     }
 }
