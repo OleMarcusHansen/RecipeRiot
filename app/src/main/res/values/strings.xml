@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">RecipeRiot</string>
+    <string name="home">Home</string>
+    <string name="ingridients">Ingridients</string>
+    <string name="shopping">Shopping</string>
+    <string name="settings">Settings</string>
+    <string name="login">Login</string>
 </resources>
