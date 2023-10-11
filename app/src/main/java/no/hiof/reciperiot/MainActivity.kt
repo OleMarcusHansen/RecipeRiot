@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
@@ -38,6 +39,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import no.hiof.reciperiot.ui.theme.FavouriteMeals
 import no.hiof.reciperiot.ui.theme.HomeScreen
 import no.hiof.reciperiot.ui.theme.IngredientsScreen
 import no.hiof.reciperiot.ui.theme.LoginScreen
@@ -67,6 +69,8 @@ sealed class Screen(val route: String, val title: Int, val icon: ImageVector){
     object Ingridients : Screen("ingridients", R.string.ingridients, Icons.Default.Add)
     object Shopping : Screen("shopping", R.string.shopping, Icons.Default.ShoppingCart)
     object Settings : Screen("settings", R.string.settings, Icons.Default.Settings)
+    object Favourites : Screen("favourites", R.string.favourites, Icons.Default.Favorite)
+
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -80,7 +84,9 @@ fun MainApp(modifier: Modifier = Modifier) {
         Screen.Home,
         Screen.Ingridients,
         Screen.Shopping,
-        Screen.Settings
+        Screen.Settings,
+        Screen.Favourites
+
     )
 
     Scaffold( topBar = { AppTopBar() }
@@ -104,6 +110,9 @@ fun MainApp(modifier: Modifier = Modifier) {
             }
             composable(Screen.Settings.route) {
                 SettingsScreen(logout = {navController.navigate("login")})
+            }
+            composable(Screen.Favourites.route) {
+                FavouriteMeals()
             }
         }
     }
