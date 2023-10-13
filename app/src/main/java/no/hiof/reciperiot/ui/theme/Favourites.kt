@@ -17,9 +17,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.hiof.reciperiot.R
+import no.hiof.reciperiot.ui.theme.data.RecipeSource
 
 @Composable
 fun FavouriteMeals() {
+    val recipes = RecipeSource().loadRecipes()
     Card {
         Box(
             modifier = Modifier
