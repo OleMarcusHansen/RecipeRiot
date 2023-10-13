@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -34,6 +35,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -67,9 +69,9 @@ sealed class Screen(val route: String, val title: Int, val icon: ImageVector){
     object Login : Screen("login", R.string.login, Icons.Default.Home)
     object Home : Screen("home", R.string.home, Icons.Default.Home)
     object Ingridients : Screen("ingridients", R.string.ingridients, Icons.Default.Add)
+    object Favourites : Screen("favourites", R.string.favourites, Icons.Default.Favorite)
     object Shopping : Screen("shopping", R.string.shopping, Icons.Default.ShoppingCart)
     object Settings : Screen("settings", R.string.settings, Icons.Default.Settings)
-    object Favourites : Screen("favourites", R.string.favourites, Icons.Default.Favorite)
 
 }
 @OptIn(ExperimentalMaterial3Api::class)
@@ -77,27 +79,27 @@ sealed class Screen(val route: String, val title: Int, val icon: ImageVector){
 @Composable
 fun MainApp(modifier: Modifier = Modifier) {
 
-
     val navController = rememberNavController()
 
     val bottomNavigationScreens = listOf(
         Screen.Home,
         Screen.Ingridients,
+        Screen.Favourites,
         Screen.Shopping,
-        Screen.Settings,
-        Screen.Favourites
+        Screen.Settings
 
     )
 
-    Scaffold( topBar = { AppTopBar() }
-        , bottomBar = {
-        BottomNavBar(
-            navController = navController,
-            bottomNavigationScreens = bottomNavigationScreens
-        )
-    }
+    Scaffold(
+        topBar = { AppTopBar() },
+        bottomBar = {
+            BottomNavBar(
+                navController = navController,
+                bottomNavigationScreens = bottomNavigationScreens
+            )
+        }
     ) { innerPadding ->
-        NavHost(navController = navController, startDestination = "login") {
+        NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(top = 100.dp)) {
             composable(Screen.Login.route) { LoginScreen(login = {navController.navigate("home")}) }
             composable(Screen.Home.route) {
                 HomeScreen()
@@ -105,52 +107,17 @@ fun MainApp(modifier: Modifier = Modifier) {
             composable(Screen.Ingridients.route) {
                 IngredientsScreen()
             }
+            composable(Screen.Favourites.route) {
+                FavouriteMeals()
+            }
             composable(Screen.Shopping.route) {
                 ShoppingListScreen()
             }
             composable(Screen.Settings.route) {
                 SettingsScreen(logout = {navController.navigate("login")})
             }
-            composable(Screen.Favourites.route) {
-                FavouriteMeals()
-            }
         }
     }
-    /*Scaffold() {innerPadding ->
-        NavHost(NavController = navController, startDestination = Screen.Home.route) {
-            composable(route = Screen.Home.route) {
-                Text(text = "HomeScreen()" ) }
-            composable(route = Screen.Ingridients.route) { IngredientsScreen() }
-            composable(route = Screen.Shopping.route) { ShoppingListScreen() }
-            composable(route = Screen.Settings.route) { SettingsScreen(logout = {navController.navigate("login")}) }
-        }
-    }*/
-/*
-    val navController = rememberNavController()
-
-    Column(verticalArrangement = Arrangement.SpaceBetween) {
-        NavHost(navController = navController, startDestination = "login") {
-            composable(route = "login") { LoginScreen() }
-            composable(route = "main") { HomeScreen() }
-            composable(route = "ingredients") { IngredientsScreen() }
-            composable(route = "shoppinglist") { ShoppingListScreen() }
-            composable(route = "settings") { SettingsScreen(logout = {navController.navigate("login")}) }
-        }
-        BottomAppBar {
-            Button(onClick = { navController.navigate("main") }) {
-                Text("Home")
-            }
-            Button(onClick = { navController.navigate("ingredients") }) {
-                Text("Ingredients")
-            }
-            Button(onClick = { navController.navigate("shoppinglist") }) {
-                Text("Shopping")
-            }
-            Button(onClick = { navController.navigate("settings") }) {
-                Text("Settings")
-            }
-        }*/
-    //}
 }
 @Composable
 fun BottomNavBar(navController: NavController, bottomNavigationScreens: List<Screen>)
@@ -175,14 +142,15 @@ fun BottomNavBar(navController: NavController, bottomNavigationScreens: List<Scr
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTopBar() {
+fun AppTopBar(modifier: Modifier = Modifier) {
     TopAppBar(
-        title = { Text(text = "My App") },
+        title = { Text(text = "") },
         navigationIcon = {
+            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally){
             Image(
                 painter = painterResource(id = R.drawable.reciperiot),
                 contentDescription = null
-            )
+            )}
         }
     )
 }
