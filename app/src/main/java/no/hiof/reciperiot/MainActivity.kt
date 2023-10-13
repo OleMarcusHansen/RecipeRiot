@@ -98,7 +98,7 @@ fun MainApp(modifier: Modifier = Modifier) {
     }
     ) { innerPadding ->
         NavHost(navController = navController, startDestination = "login") {
-            composable(Screen.Login.route) { LoginScreen() }
+            composable(Screen.Login.route) { LoginScreen(login = {navController.navigate("home")}) }
             composable(Screen.Home.route) {
                 HomeScreen()
             }
