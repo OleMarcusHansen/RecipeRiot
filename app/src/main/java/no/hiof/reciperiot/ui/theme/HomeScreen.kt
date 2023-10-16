@@ -25,10 +25,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import no.hiof.reciperiot.R
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
@@ -38,9 +40,9 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     Column(modifier = modifier
         .padding(horizontal = 50.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Text("Valg", fontSize = 20.sp)
-        TimeInput(text = "Time in minutes ", state = time)
-        Text("Dine ingredienser", fontSize = 20.sp)
+        Text(stringResource(R.string.home_options), fontSize = 20.sp)
+        TimeInput(text = stringResource(R.string.home_options_time), state = time)
+        Text(stringResource(R.string.home_ingredients), fontSize = 20.sp)
         Ingredient(text = "Paprika", state = paprika)
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = { /*ChatGPT*/ }) {

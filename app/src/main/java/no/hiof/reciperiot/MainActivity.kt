@@ -5,8 +5,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +16,6 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -66,12 +63,12 @@ class MainActivity : ComponentActivity() {
     }
 }
 sealed class Screen(val route: String, val title: Int, val icon: ImageVector){
-    object Login : Screen("login", R.string.login, Icons.Default.Home)
-    object Home : Screen("home", R.string.home, Icons.Default.Home)
-    object Ingridients : Screen("ingridients", R.string.ingridients, Icons.Default.Add)
-    object Favourites : Screen("favourites", R.string.favourites, Icons.Default.Favorite)
-    object Shopping : Screen("shopping", R.string.shopping, Icons.Default.ShoppingCart)
-    object Settings : Screen("settings", R.string.settings, Icons.Default.Settings)
+    object Login : Screen("login", R.string.nav_login, Icons.Default.Home)
+    object Home : Screen("home", R.string.nav_home, Icons.Default.Home)
+    object Ingredients : Screen("ingredients", R.string.nav_ingredients, Icons.Default.Add)
+    object Favourites : Screen("favourites", R.string.nav_favourites, Icons.Default.Favorite)
+    object Shopping : Screen("shopping", R.string.nav_shopping, Icons.Default.ShoppingCart)
+    object Settings : Screen("settings", R.string.nav_settings, Icons.Default.Settings)
 
 }
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,7 +80,7 @@ fun MainApp(modifier: Modifier = Modifier) {
 
     val bottomNavigationScreens = listOf(
         Screen.Home,
-        Screen.Ingridients,
+        Screen.Ingredients,
         Screen.Favourites,
         Screen.Shopping,
         Screen.Settings
@@ -104,7 +101,7 @@ fun MainApp(modifier: Modifier = Modifier) {
             composable(Screen.Home.route) {
                 HomeScreen()
             }
-            composable(Screen.Ingridients.route) {
+            composable(Screen.Ingredients.route) {
                 IngredientsScreen()
             }
             composable(Screen.Favourites.route) {
