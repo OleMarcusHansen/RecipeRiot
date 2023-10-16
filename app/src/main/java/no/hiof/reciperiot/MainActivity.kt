@@ -105,7 +105,7 @@ fun MainApp(modifier: Modifier = Modifier) {
                 IngredientsScreen()
             }
             composable(Screen.Favourites.route) {
-                FavouriteMeals()
+                FavouriteMeals(navController)
             }
             composable(Screen.Shopping.route) {
                 ShoppingListScreen()
