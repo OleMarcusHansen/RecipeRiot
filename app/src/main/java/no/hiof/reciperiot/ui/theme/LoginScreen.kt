@@ -17,9 +17,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import no.hiof.reciperiot.R
 
 @Composable
 fun LoginScreen(login: () -> Unit, modifier : Modifier = Modifier) {
@@ -29,13 +31,12 @@ fun LoginScreen(login: () -> Unit, modifier : Modifier = Modifier) {
     Column(modifier = modifier
         .padding(horizontal = 50.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        TextInput(text = "Username: ", state = username)
-        TextInput(text = "Password: ", state = password)
+        TextInput(text = stringResource(R.string.username), state = username)
+        TextInput(text = stringResource(R.string.password), state = password)
         Button(onClick = { login() }) {
-            Text("Log in")
+            Text(stringResource(R.string.login))
         }
     }
-
 }
 
 @Composable
