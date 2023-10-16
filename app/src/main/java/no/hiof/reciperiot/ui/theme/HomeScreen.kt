@@ -87,16 +87,7 @@ fun Ingredient(text : String, state : MutableState<Boolean>){
     }
 }
 
-/*@Composable
-fun RecipeList(recipes : MutableState<List<Recipe>>){
-    if (recipes.value.isNotEmpty()){
-        Column {
-            recipes.value.forEach {recipe ->
-                RecipeCard(recipe = recipe)
-            }
-        }
-    }
-}*/
+
 
 fun generateGPT() : List<Recipe>{
     val response = """{
