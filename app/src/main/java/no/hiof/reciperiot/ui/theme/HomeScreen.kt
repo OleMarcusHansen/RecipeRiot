@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.ui.theme.model.Recipe
+import org.json.JSONObject
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
@@ -45,7 +46,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = {
                 /*ChatGPT*/
-                val newRecipes = listOf(Recipe(2, "gpt-generert mat", R.drawable.food, "12min", false))
+                val newRecipes = generateGPT()
                 recipes.value = newRecipes
             }) {
                 Text("Generer oppskrift")
@@ -93,4 +94,34 @@ fun RecipeList(recipes : MutableState<List<Recipe>>){
             }
         }
     }
+}
+
+fun generateGPT() : List<Recipe>{
+    val response = """{
+          "recipe_name": "Turkey Ham and Cheese Panini",
+          "recipe_time": "20 minutes",
+          "recipe_instructions": [
+            "1. Preheat a panini press or a stovetop grill pan over medium-high heat.",
+            "2. Take 2 slices of bread and lay them out on a clean surface.",
+            "3. Place a slice of turkey ham on each of the bread slices.",
+            "4. Add a few slices of cheese on top of the turkey ham.",
+            "5. Thinly slice some onions and place them on the cheese.",
+            "6. Add a few pickles for some extra flavor.",
+            "7. Top each sandwich with another slice of bread to form a sandwich.",
+            "8. If you have a panini press, place the sandwiches inside and cook for about 4-5 minutes until the bread is toasted and the cheese is melted. If you're using a stovetop grill pan, place the sandwiches on the hot pan and press them down with a heavy object (like a cast-iron skillet) to get that signature panini press effect. Cook for 2-3 minutes on each side until the bread is toasted and the cheese is melted.",
+            "9. Carefully remove the panini from the press or grill pan and let them cool slightly before cutting in half.",
+            "10. Serve with a side of Doritos or enjoy your Turkey Ham and Cheese Panini by itself!"
+          ],
+          "recipe_nutrition": {
+            "calories": "Approximately 400-500 calories per serving",
+            "carbohydrates": "Approximately 35-45g per serving",
+            "protein": "Approximately 15-20g per serving",
+            "fat": "Approximately 20-25g per serving",
+            "fiber": "Approximately 2-4g per serving"
+          }
+    }"""
+    val generatedjson = JSONObject(response)
+
+    val recipes = listOf(Recipe(2, generatedjson.getString("recipe_name"), R.drawable.food, generatedjson.getString("recipe_time"), false))
+    return recipes
 }
