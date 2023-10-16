@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -47,18 +49,21 @@ fun IngredientRow(name: String, checkedState: MutableState<Boolean>,
         )
     }
 }
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IngredientsScreen(modifier: Modifier = Modifier) {
-    var displayedText by remember { mutableStateOf("") }
-
-    // Create a list of ingredients with their individual states
-    val ingredients = listOf(
-        "Løk" to remember { mutableStateOf(false) },
-        "Poteter" to remember { mutableStateOf(false) },
-        "Mel" to remember { mutableStateOf(false) },
-        "Melk" to remember { mutableStateOf(false) },
-        "Kjøttdeig" to remember { mutableStateOf(false) }
-    )
+    var newIngredient by remember { mutableStateOf("") }
+    var ingredientsList by remember {
+        mutableStateOf(
+            listOf(
+                "Løk" to mutableStateOf(false),
+                "Poteter" to mutableStateOf(false),
+                "Mel" to mutableStateOf(false),
+                "Melk" to mutableStateOf(false),
+                "Kjøttdeig" to mutableStateOf(false)
+            )
+        )
+    }
 
     Column(
         modifier = modifier
@@ -67,7 +72,27 @@ fun IngredientsScreen(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        ingredients.forEach { (name, checkedState) ->
+        // Input field for adding new ingredients
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            OutlinedTextField(
+                value = newIngredient,
+                onValueChange = { newIngredient = it },
+                label = { Text("Add an ingredient") }
+            )
+            Button(onClick = {
+                if (newIngredient.isNotBlank()) {
+                    ingredientsList = ingredientsList.toMutableList().plus(newIngredient to mutableStateOf(true))
+                    newIngredient = ""
+                }
+            }) {
+                Text(text = "Add")
+            }
+        }
+
+        ingredientsList.forEach { (name, checkedState) ->
             IngredientRow(
                 name = name,
                 checkedState = checkedState,
@@ -75,12 +100,6 @@ fun IngredientsScreen(modifier: Modifier = Modifier) {
                     checkedState.value = newValue
                 }
             )
-        }
-
-        Button(onClick = {
-            displayedText = "Ingredienser added!"
-        }) {
-            Text(text = "Legg til ingredienser")
         }
     }
 }
