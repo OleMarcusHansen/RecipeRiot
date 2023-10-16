@@ -99,7 +99,7 @@ fun MainApp(modifier: Modifier = Modifier) {
         NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(top = 100.dp)) {
             composable(Screen.Login.route) { LoginScreen(login = {navController.navigate("home")}) }
             composable(Screen.Home.route) {
-                HomeScreen()
+                HomeScreen(navController)
             }
             composable(Screen.Ingredients.route) {
                 IngredientsScreen()

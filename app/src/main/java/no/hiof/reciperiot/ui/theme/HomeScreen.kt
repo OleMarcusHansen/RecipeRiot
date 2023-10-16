@@ -25,13 +25,14 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ui.theme.model.Recipe
 import org.json.JSONObject
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
     val time = remember { mutableStateOf("") }
     val paprika = remember { mutableStateOf(false) }
 
@@ -53,7 +54,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 Text("Generer oppskrift")
             }
         }
-        RecipeList(recipes = recipes)
+        RecipeList(recipes = recipes.value, navController)
     }
 }
 
@@ -86,16 +87,16 @@ fun Ingredient(text : String, state : MutableState<Boolean>){
     }
 }
 
-@Composable
+/*@Composable
 fun RecipeList(recipes : MutableState<List<Recipe>>){
     if (recipes.value.isNotEmpty()){
         Column {
             recipes.value.forEach {recipe ->
-                recipeCard(recipe = recipe)
+                RecipeCard(recipe = recipe)
             }
         }
     }
-}
+}*/
 
 fun generateGPT() : List<Recipe>{
     val response = """{
