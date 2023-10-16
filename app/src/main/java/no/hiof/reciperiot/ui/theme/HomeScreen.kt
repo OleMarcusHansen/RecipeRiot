@@ -26,7 +26,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.hiof.reciperiot.R
+import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ui.theme.model.Recipe
+import androidx.navigation.NavController
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
@@ -51,7 +53,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 Text("Generer oppskrift")
             }
         }
-        RecipeList(recipes = recipes)
+        //RecipeList(recipes = recipes)
     }
 }
 
@@ -83,14 +85,16 @@ fun Ingredient(text : String, state : MutableState<Boolean>){
         )
     }
 }
-
+/*
 @Composable
 fun RecipeList(recipes : MutableState<List<Recipe>>){
     if (recipes.value.isNotEmpty()){
         Column {
             recipes.value.forEach {recipe ->
-                recipeCard(recipe = recipe)
+                RecipeCard(recipe = recipe, navController = navController)
+                })
             }
         }
     }
 }
+ */
