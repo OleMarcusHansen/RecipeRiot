@@ -12,16 +12,11 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -31,11 +26,14 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import no.hiof.reciperiot.R
+import no.hiof.reciperiot.ui.theme.model.Recipe
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
     val time = remember { mutableStateOf("") }
     val paprika = remember { mutableStateOf(false) }
+
+    val recipes = remember { mutableStateOf(emptyList<Recipe>()) }
 
     Column(modifier = modifier
         .padding(horizontal = 50.dp),
@@ -45,10 +43,15 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         Text(stringResource(R.string.home_ingredients), fontSize = 20.sp)
         Ingredient(text = "Paprika", state = paprika)
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = { /*ChatGPT*/ }) {
+            Button(onClick = {
+                /*ChatGPT*/
+                val newRecipes = listOf(Recipe(2, "gpt-generert mat", R.drawable.food, "12min", false))
+                recipes.value = newRecipes
+            }) {
                 Text("Generer oppskrift")
             }
         }
+        RecipeList(recipes = recipes)
     }
 }
 
@@ -78,5 +81,16 @@ fun Ingredient(text : String, state : MutableState<Boolean>){
             },
             modifier = Modifier.size(24.dp)
         )
+    }
+}
+
+@Composable
+fun RecipeList(recipes : MutableState<List<Recipe>>){
+    if (recipes.value.isNotEmpty()){
+        Column {
+            recipes.value.forEach {recipe ->
+                recipeCard(recipe = recipe)
+            }
+        }
     }
 }
