@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -34,6 +36,8 @@ import no.hiof.reciperiot.ui.theme.model.Recipe
 @Composable
 fun FavouriteMeals() {
     val recipes = RecipeSource().loadRecipes()
+    recipeList(recipes = recipes)
+
 
     Card {
         Box(
@@ -51,8 +55,21 @@ fun FavouriteMeals() {
 
             Text(text = "dette er min rett",
                 color = Color.Black,
-                fontSize = 20.sp
+                fontSize = 28.sp
 
+            )
+        }
+    }
+}
+
+@Composable
+fun recipeList(recipes: List<Recipe>,
+               modifier: Modifier = Modifier) {
+    LazyColumn(userScrollEnabled = true,
+        modifier = modifier) {
+        items(recipes) { recipe ->
+            recipeCard(
+                recipe,
             )
         }
     }
