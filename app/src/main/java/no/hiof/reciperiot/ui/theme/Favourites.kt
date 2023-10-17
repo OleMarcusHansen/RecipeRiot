@@ -52,7 +52,7 @@ fun RecipeList(recipes: List<Recipe>,
             RecipeCard(
                 recipe,
                 onRecipeClick = { selectedRecipe ->
-                    navController.navigate(Screen.Shopping.route)
+                    navController.navigate(Screen.RecipePage.route)
                 }
 
             )

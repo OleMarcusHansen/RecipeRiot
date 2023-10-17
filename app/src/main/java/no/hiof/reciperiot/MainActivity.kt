@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
@@ -42,6 +43,7 @@ import no.hiof.reciperiot.ui.theme.FavouriteMeals
 import no.hiof.reciperiot.ui.theme.HomeScreen
 import no.hiof.reciperiot.ui.theme.IngredientsScreen
 import no.hiof.reciperiot.ui.theme.LoginScreen
+import no.hiof.reciperiot.ui.theme.RecipePage
 import no.hiof.reciperiot.ui.theme.RecipeRiotTheme
 import no.hiof.reciperiot.ui.theme.SettingsScreen
 import no.hiof.reciperiot.ui.theme.ShoppingListScreen
@@ -69,6 +71,7 @@ sealed class Screen(val route: String, val title: Int, val icon: ImageVector){
     object Favourites : Screen("favourites", R.string.nav_favourites, Icons.Default.Favorite)
     object Shopping : Screen("shopping", R.string.nav_shopping, Icons.Default.ShoppingCart)
     object Settings : Screen("settings", R.string.nav_settings, Icons.Default.Settings)
+    object RecipePage : Screen("recipepage", R.string.nav_recipepage, Icons.Default.ArrowForward)
 
 }
 @OptIn(ExperimentalMaterial3Api::class)
@@ -112,6 +115,9 @@ fun MainApp(modifier: Modifier = Modifier) {
             }
             composable(Screen.Settings.route) {
                 SettingsScreen(logout = {navController.navigate("login")})
+            }
+            composable(Screen.RecipePage.route) {
+                RecipePage()
             }
         }
     }
