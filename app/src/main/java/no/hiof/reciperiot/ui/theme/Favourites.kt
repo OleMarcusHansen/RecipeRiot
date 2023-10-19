@@ -1,8 +1,11 @@
 package no.hiof.reciperiot.ui.theme
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,48 +30,32 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.compose.AppTheme
 import no.hiof.reciperiot.R
+import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ui.theme.data.RecipeSource
 import no.hiof.reciperiot.ui.theme.model.Recipe
 
 @Composable
-fun FavouriteMeals() {
+fun FavouriteMeals(navController: NavController) {
     val recipes = RecipeSource().loadRecipes()
-    RecipeList(recipes = recipes)
-
-
-    Card {
-        Box(
-            modifier = Modifier
-                .height(100.dp)
-                .fillMaxWidth(),
-            contentAlignment = Alignment.Center
-        ) {
-            Image(
-                painter = painterResource(R.drawable.food),
-                contentDescription = "",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier.fillMaxSize()
-            )
-
-            Text(text = "dette er min rett",
-                color = Color.Black,
-                fontSize = 28.sp
-
-            )
-        }
-    }
+    RecipeList(recipes = recipes, navController = navController)
 }
 
 @Composable
 fun RecipeList(recipes: List<Recipe>,
+               navController: NavController,
                modifier: Modifier = Modifier) {
     LazyColumn(userScrollEnabled = true,
         modifier = modifier) {
         items(recipes) { recipe ->
             RecipeCard(
                 recipe,
+                onRecipeClick = { selectedRecipe ->
+                    navController.navigate(Screen.RecipePage.route)
+                }
+
             )
         }
     }
@@ -76,11 +63,13 @@ fun RecipeList(recipes: List<Recipe>,
 @Composable
 fun RecipeCard(
     recipe: Recipe,
+    onRecipeClick: (Recipe) -> Unit,
     modifier: Modifier = Modifier) {
     Card(modifier = modifier
         .padding(8.dp)
         .fillMaxWidth()
-        .wrapContentHeight(),
+        .wrapContentHeight()
+        .clickable { onRecipeClick(recipe) },
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(8.dp)){
 
@@ -103,16 +92,9 @@ fun RecipeCard(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
+
         }
 
 
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun Favouritepreview() {
-    AppTheme {
-        FavouriteMeals()
     }
 }
