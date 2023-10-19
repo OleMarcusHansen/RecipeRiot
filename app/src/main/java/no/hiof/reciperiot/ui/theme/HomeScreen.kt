@@ -34,6 +34,8 @@ import org.json.JSONObject
 @Composable
 fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
     val time = remember { mutableStateOf("") }
+
+    //Last inn ingredienser fra databasen, gjør som i ingredientsscreen
     val paprika = remember { mutableStateOf(false) }
 
     val recipes = remember { mutableStateOf(emptyList<Recipe>()) }
@@ -44,6 +46,7 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
         Text(stringResource(R.string.home_options), fontSize = 20.sp)
         TimeInput(text = stringResource(R.string.home_options_time), state = time)
         Text(stringResource(R.string.home_ingredients), fontSize = 20.sp)
+        //bruk mutablestate til ingredienser til å lage liste av ingredienser
         Ingredient(text = "Paprika", state = paprika)
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = {
@@ -88,8 +91,16 @@ fun Ingredient(text : String, state : MutableState<Boolean>){
 }
 
 
-
+//bør ta options og ingredienser som parametere
 fun generateGPT() : List<Recipe>{
+    //prompt til chatGPT
+    //bør bli justert og testet for å få best mulig resultat
+    val prompt = """I have the ingredients: {ingredienser}. 
+        I have {time} minutes to make food. Generate a recipe for me. 
+        The output should be in JSON format with the keys recipe_name, 
+        recipe_time, recipe_instructions and recipe_nutrition"""
+
+    //kalle chatCompletion api
     val response = """{
           "recipe_name": "Turkey Ham and Cheese Panini",
           "recipe_time": "20 minutes",
