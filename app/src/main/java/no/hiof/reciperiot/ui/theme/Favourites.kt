@@ -53,7 +53,7 @@ fun RecipeList(recipes: List<Recipe>,
             RecipeCard(
                 recipe,
                 onRecipeClick = { selectedRecipe ->
-                    navController.navigate(Screen.RecipePage.route)
+                    navController.navigate("${Screen.RecipePage.route}/${selectedRecipe}")
                 }
 
             )
@@ -63,13 +63,13 @@ fun RecipeList(recipes: List<Recipe>,
 @Composable
 fun RecipeCard(
     recipe: Recipe,
-    onRecipeClick: (Recipe) -> Unit,
+    onRecipeClick: (Int) -> Unit,
     modifier: Modifier = Modifier) {
     Card(modifier = modifier
         .padding(8.dp)
         .fillMaxWidth()
         .wrapContentHeight()
-        .clickable { onRecipeClick(recipe) },
+        .clickable { onRecipeClick(recipe.id) },
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(8.dp)){
 
