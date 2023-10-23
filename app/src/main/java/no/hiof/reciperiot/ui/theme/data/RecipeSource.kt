@@ -7,7 +7,7 @@ class RecipeSource() {
     fun loadRecipes(): List<Recipe> {
         return listOf<Recipe>(
             Recipe(1,"mat", R.drawable.food, "45min", true, "dsf"),
-            Recipe(2, "pizza", R.drawable.food, "30min", true,
+            Recipe(2, "pizza", R.drawable.food, "30min", false,
                     "1. Preheat a panini press or a stovetop grill pan over medium-high heat.\n\n" +
                     "2. Take 2 slices of bread and lay them out on a clean surface.\n\n" +
                     "3. Place a slice of turkey ham on each of the bread slices.\n\n" +
