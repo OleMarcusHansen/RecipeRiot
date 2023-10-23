@@ -1,5 +1,6 @@
 package no.hiof.reciperiot.ui.theme
 
+import android.webkit.WebSettings.TextSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -44,7 +45,6 @@ fun RecipePage1(navController: NavController, recipeId: Int) {
 
     //Hent resten av variablene fra RecipeSource basert på recipeId
     val recipe = RecipeSource().loadRecipes().firstOrNull { it.id == recipeId }
-    //val recipe = Recipe(recipeId)
     if (recipe != null) {
     Column(
         modifier = Modifier
@@ -66,20 +66,23 @@ fun RecipePage1(navController: NavController, recipeId: Int) {
             text = recipe.title,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp)
+                .padding(top = 8.dp),
+            fontSize = 20.sp
         )
 
         Text(
             text = recipe.cookingTime,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp)
+                .padding(top = 8.dp),
+            fontSize = 20.sp
         )
         Text(
             text = "recipeid: $recipeId",
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp)
+                .padding(top = 8.dp),
+            fontSize = 20.sp
         )
 
     }} else {
