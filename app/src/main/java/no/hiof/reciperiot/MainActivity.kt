@@ -103,7 +103,7 @@ fun MainApp(modifier: Modifier = Modifier) {
             )
         }
     ) { innerPadding ->
-        NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(top = 100.dp)) {
+        NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(top = 100.dp).padding(bottom = 80.dp)) {
             composable(Screen.Login.route) { LoginScreen(login = {navController.navigate("home")}) }
             composable(Screen.Home.route) {
                 HomeScreen(navController)

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -42,55 +43,72 @@ fun RecipeDetails(recipe: Recipe) {
 
 @Composable
 fun RecipePage1(navController: NavController, recipeId: Int) {
-
-    //Hent resten av variablene fra RecipeSource basert på recipeId
+    // Hent resten av variablene fra RecipeSource basert på recipeId
     val recipe = RecipeSource().loadRecipes().firstOrNull { it.id == recipeId }
-    if (recipe != null) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Image(
-            painter = painterResource(id = recipe.imageResourceId),
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(200.dp)
-                .clip(RoundedCornerShape(8.dp))
-        )
 
-        Text(
-            text = recipe.title,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            fontSize = 20.sp
-        )
+    LazyColumn {
+        if (recipe != null) {
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = recipe.imageResourceId),
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                    )
 
-        Text(
-            text = recipe.cookingTime,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            fontSize = 20.sp
-        )
-        Text(
-            text = "recipeid: $recipeId",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            fontSize = 20.sp
-        )
+                    Text(
+                        text = recipe.title,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 30.sp
+                    )
 
-    }} else {
-    Text(text = "du har kommet til feil side",
-        color = Color.Black,
-        fontSize = 28.sp
-    )
-    // Handle tilfellet der oppskriften ikke ble funnet
-}}
+                    Text(
+                        text = recipe.cookingTime,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 20.sp
+                    )
+                    Text(
+                        text = "recipeid: $recipeId",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 20.sp
+                    )
+                    Text(
+                        text = recipe.recipe_instructions,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 20.sp
+                    )
+                }
+            }
+        } else {
+            item {
+                Text(
+                    text = "du har kommet til feil side as",
+                    color = Color.Black,
+                    fontSize = 28.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+            }
+        }
+    }
+}
 
 
