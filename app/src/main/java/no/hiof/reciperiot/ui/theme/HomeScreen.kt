@@ -12,11 +12,13 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -26,19 +28,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import kotlinx.coroutines.launch
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ui.theme.model.Recipe
 import org.json.JSONObject
 
 @Composable
-fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
+fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, modifier: Modifier = Modifier) {
     val time = remember { mutableStateOf("") }
 
     //Last inn ingredienser fra databasen, gjør som i ingredientsscreen
     val paprika = remember { mutableStateOf(false) }
 
     val recipes = remember { mutableStateOf(emptyList<Recipe>()) }
+
+    //Til snackbar
+    val scope = rememberCoroutineScope()
 
     Column(modifier = modifier
         .padding(horizontal = 50.dp),
@@ -53,6 +59,10 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
                 /*ChatGPT*/
                 val newRecipes = generateGPT()
                 recipes.value = newRecipes
+
+                scope.launch {
+                    snackbarHost.showSnackbar("Oppskrift generert")
+                }
             }) {
                 Text("Generer oppskrift")
             }
