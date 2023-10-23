@@ -88,6 +88,13 @@ fun RecipePage1(navController: NavController, recipeId: Int) {
                         fontSize = 20.sp
                     )
                     Text(
+                        text = "Instruksjoner:",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 26.sp
+                    )
+                    Text(
                         text = recipe.recipe_instructions,
                         modifier = Modifier
                             .fillMaxWidth()
