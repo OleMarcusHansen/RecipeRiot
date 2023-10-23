@@ -35,18 +35,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.compose.AppTheme
 import no.hiof.reciperiot.ui.theme.FavouriteMeals
 import no.hiof.reciperiot.ui.theme.HomeScreen
 import no.hiof.reciperiot.ui.theme.IngredientsScreen
 import no.hiof.reciperiot.ui.theme.LoginScreen
 import no.hiof.reciperiot.ui.theme.RecipePage
+import no.hiof.reciperiot.ui.theme.RecipePage1
 import no.hiof.reciperiot.ui.theme.SettingsScreen
 import no.hiof.reciperiot.ui.theme.ShoppingListScreen
+import no.hiof.reciperiot.ui.theme.model.Recipe
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -92,6 +96,7 @@ fun MainApp(notificationService: NotificationService, modifier: Modifier = Modif
         Screen.Favourites,
         Screen.Shopping,
         Screen.Settings
+
     )
 
     Scaffold(
@@ -103,7 +108,7 @@ fun MainApp(notificationService: NotificationService, modifier: Modifier = Modif
             )
         }
     ) { innerPadding ->
-        NavHost(navController = navController, startDestination = Screen.Login.route, modifier = Modifier.padding(top = 100.dp)) {
+        NavHost(navController = navController, startDestination = Screen.Login.route, modifier = Modifier.padding(top = 100.dp).padding(bottom = 80.dp)) {
             composable(Screen.Login.route) {
                 LoginScreen(
                     login = { navController.navigate(Screen.Home.route) },
@@ -125,10 +130,12 @@ fun MainApp(notificationService: NotificationService, modifier: Modifier = Modif
                 ShoppingListScreen()
             }
             composable(Screen.Settings.route) {
-                SettingsScreen(logout = { navController.navigate(Screen.Login.route) })
+                SettingsScreen(logout = {navController.navigate("login")})
             }
-            composable(Screen.RecipePage.route) {
-                RecipePage()
+            composable("${Screen.RecipePage.route}/{recipeid}",
+                arguments = listOf(navArgument("recipeid"){ type = NavType.IntType})
+            ) { backStackEntry ->
+                RecipePage1(navController, backStackEntry.arguments!!.getInt("recipeid", 1))
             }
         }
     }
