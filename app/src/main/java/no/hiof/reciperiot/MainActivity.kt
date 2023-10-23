@@ -51,6 +51,7 @@ import no.hiof.reciperiot.ui.theme.ShoppingListScreen
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val service = NotificationService(applicationContext)
         setContent {
             AppTheme {
                 // A surface container using the 'background' color from the theme
@@ -58,7 +59,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainApp()
+                    // Call LoginScreen with the showNotification function
+                    LoginScreen(login = { /* Handle successful login */ }, showNotification = { user ->
+                        service.showNotification(user)
+                    })
+
+                    MainApp(service)
                 }
             }
         }
@@ -77,8 +83,7 @@ sealed class Screen(val route: String, val title: Int, val icon: ImageVector){
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainApp(modifier: Modifier = Modifier) {
-
+fun MainApp(notificationService: NotificationService, modifier: Modifier = Modifier) {
     val navController = rememberNavController()
 
     val bottomNavigationScreens = listOf(
@@ -87,7 +92,6 @@ fun MainApp(modifier: Modifier = Modifier) {
         Screen.Favourites,
         Screen.Shopping,
         Screen.Settings
-
     )
 
     Scaffold(
@@ -99,8 +103,15 @@ fun MainApp(modifier: Modifier = Modifier) {
             )
         }
     ) { innerPadding ->
-        NavHost(navController = navController, startDestination = "login", modifier = Modifier.padding(top = 100.dp)) {
-            composable(Screen.Login.route) { LoginScreen(login = {navController.navigate("home")}) }
+        NavHost(navController = navController, startDestination = Screen.Login.route, modifier = Modifier.padding(top = 100.dp)) {
+            composable(Screen.Login.route) {
+                LoginScreen(
+                    login = { navController.navigate(Screen.Home.route) },
+                    showNotification = { user ->
+                        notificationService.showNotification(user)
+                    }
+                )
+            }
             composable(Screen.Home.route) {
                 HomeScreen(navController)
             }
@@ -114,7 +125,7 @@ fun MainApp(modifier: Modifier = Modifier) {
                 ShoppingListScreen()
             }
             composable(Screen.Settings.route) {
-                SettingsScreen(logout = {navController.navigate("login")})
+                SettingsScreen(logout = { navController.navigate(Screen.Login.route) })
             }
             composable(Screen.RecipePage.route) {
                 RecipePage()
@@ -122,6 +133,8 @@ fun MainApp(modifier: Modifier = Modifier) {
         }
     }
 }
+
+
 @Composable
 fun BottomNavBar(navController: NavController, bottomNavigationScreens: List<Screen>)
 {
@@ -165,7 +178,7 @@ fun AppTopBar(modifier: Modifier = Modifier) {
 
 
 
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
@@ -173,3 +186,4 @@ fun GreetingPreview() {
         MainApp()
     }
 }
+ */
