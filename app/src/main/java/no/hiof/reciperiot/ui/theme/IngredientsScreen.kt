@@ -12,18 +12,21 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.compose.AppTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun IngredientRow(name: String, checkedState: MutableState<Boolean>,
@@ -52,7 +55,7 @@ fun IngredientRow(name: String, checkedState: MutableState<Boolean>,
 }
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IngredientsScreen(modifier: Modifier = Modifier) {
+fun IngredientsScreen(snackbarHost : SnackbarHostState, modifier: Modifier = Modifier) {
     var newIngredient by remember { mutableStateOf("") }
     var ingredientsList by remember {
         mutableStateOf(
@@ -65,6 +68,9 @@ fun IngredientsScreen(modifier: Modifier = Modifier) {
             )
         )
     }
+
+    //Til snackbar
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = modifier
@@ -87,6 +93,10 @@ fun IngredientsScreen(modifier: Modifier = Modifier) {
                 if (newIngredient.isNotBlank()) {
                     ingredientsList = ingredientsList.toMutableList().plus(newIngredient to mutableStateOf(true))
                     newIngredient = ""
+
+                    scope.launch{
+                        snackbarHost.showSnackbar("Ingredient added")
+                    }
                 }
             }) {
                 Text(text = "Add")
@@ -104,11 +114,11 @@ fun IngredientsScreen(modifier: Modifier = Modifier) {
         }
     }
 }
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     AppTheme {
         IngredientsScreen()
     }
-}
+}*/

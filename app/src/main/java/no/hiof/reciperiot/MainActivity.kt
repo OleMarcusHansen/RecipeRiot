@@ -113,7 +113,7 @@ fun MainApp(modifier: Modifier = Modifier) {
                 HomeScreen(navController, snackBarHostState)
             }
             composable(Screen.Ingredients.route) {
-                IngredientsScreen()
+                IngredientsScreen(snackBarHostState)
             }
             composable(Screen.Favourites.route) {
                 FavouriteMeals(navController)
