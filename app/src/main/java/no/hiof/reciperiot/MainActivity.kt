@@ -48,7 +48,6 @@ import no.hiof.reciperiot.ui.theme.IngredientsScreen
 import no.hiof.reciperiot.ui.theme.LoginScreen
 import no.hiof.reciperiot.ui.theme.RecipePage
 import no.hiof.reciperiot.ui.theme.RecipePage1
-import no.hiof.reciperiot.ui.theme.RecipeRiotTheme
 import no.hiof.reciperiot.ui.theme.SettingsScreen
 import no.hiof.reciperiot.ui.theme.ShoppingListScreen
 import no.hiof.reciperiot.ui.theme.model.Recipe
