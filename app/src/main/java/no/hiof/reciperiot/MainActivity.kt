@@ -41,6 +41,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.compose.AppTheme
 import no.hiof.reciperiot.ui.theme.FavouriteMeals
 import no.hiof.reciperiot.ui.theme.HomeScreen
 import no.hiof.reciperiot.ui.theme.IngredientsScreen
@@ -56,7 +57,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            RecipeRiotTheme {
+            AppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -153,9 +154,14 @@ fun BottomNavBar(navController: NavController, bottomNavigationScreens: List<Scr
 @Composable
 fun AppTopBar(modifier: Modifier = Modifier) {
     TopAppBar(
+        modifier = modifier.padding(16.dp),
         title = { Text(text = "") },
         navigationIcon = {
-            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally){
+            Column(modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
             Image(
                 painter = painterResource(id = R.drawable.reciperiot),
                 contentDescription = null
@@ -170,7 +176,7 @@ fun AppTopBar(modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    RecipeRiotTheme {
+    AppTheme {
         MainApp()
     }
 }
