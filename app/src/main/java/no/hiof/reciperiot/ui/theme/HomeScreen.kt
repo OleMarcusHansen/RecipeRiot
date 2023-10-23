@@ -57,7 +57,7 @@ fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
                 Text("Generer oppskrift")
             }
         }
-        RecipeList(recipes = recipes.value, navController)
+        RecipeList(recipes = recipes.value, navController, onFavouriteToggle = {})
     }
 }
 

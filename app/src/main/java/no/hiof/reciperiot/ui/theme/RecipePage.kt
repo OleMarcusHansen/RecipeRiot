@@ -81,6 +81,13 @@ fun RecipePage1(navController: NavController, recipeId: Int) {
                         fontSize = 20.sp
                     )
                     Text(
+                        text = "${recipe.isFavourite}",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 20.sp
+                    )
+                    Text(
                         text = "recipeid: $recipeId",
                         modifier = Modifier
                             .fillMaxWidth()
