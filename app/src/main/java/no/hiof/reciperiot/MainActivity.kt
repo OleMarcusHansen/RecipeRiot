@@ -59,6 +59,7 @@ import no.hiof.reciperiot.ui.theme.SettingsScreen
 import no.hiof.reciperiot.ui.theme.ShoppingListScreen
 
 
+@Suppress("DEPRECATION")
 class MainActivity : ComponentActivity() {
 
     private lateinit var auth: FirebaseAuth
@@ -87,7 +88,7 @@ class MainActivity : ComponentActivity() {
                 .setSupported(true)
                 .build())
             .setGoogleIdTokenRequestOptions(
-                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                GoogleIdTokenRequestOptions.builder()
                     .setSupported(true)
                     // Your server's client ID, not your Android client ID.
                     .setServerClientId(getString(R.string.your_web_client_id))
@@ -103,10 +104,11 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth?.getCurrentUser()
-        updateUI(currentUser);
+        //val currentUser = this.auth.currentUser
+        //updateUI(currentUser)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
