@@ -67,7 +67,7 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, m
                 Text("Generer oppskrift")
             }
         }
-        RecipeList(recipes = recipes.value, navController)
+        RecipeList(recipes = recipes.value, navController, onFavouriteToggle = {})
     }
 }
 
@@ -136,6 +136,6 @@ fun generateGPT() : List<Recipe>{
     }"""
     val generatedjson = JSONObject(response)
 
-    val recipes = listOf(Recipe(2, generatedjson.getString("recipe_name"), R.drawable.food, generatedjson.getString("recipe_time"), false))
+    val recipes = listOf(Recipe(2, generatedjson.getString("recipe_name"), R.drawable.food, generatedjson.getString("recipe_time"),false, "ddddd"))
     return recipes
 }

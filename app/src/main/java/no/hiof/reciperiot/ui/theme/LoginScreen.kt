@@ -21,19 +21,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import no.hiof.reciperiot.MainActivity
 import no.hiof.reciperiot.R
 
 @Composable
-fun LoginScreen(login: () -> Unit, modifier : Modifier = Modifier) {
+fun LoginScreen(login: () -> Unit, modifier : Modifier = Modifier, showNotification: (String) -> Unit) {
     val username = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
-
     Column(modifier = modifier
         .padding(horizontal = 50.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)) {
         TextInput(text = stringResource(R.string.username), state = username)
         TextInput(text = stringResource(R.string.password), state = password)
-        Button(onClick = { login() }) {
+
+        Button(onClick = {
+            login()
+            showNotification(username.value) // Pass a sample user string for now
+        }) {
             Text(stringResource(R.string.login))
         }
     }
