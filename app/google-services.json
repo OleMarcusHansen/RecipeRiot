@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "484983151124",
-    "project_id": "reciperiot-76883",
-    "storage_bucket": "reciperiot-76883.appspot.com"
+    "project_number": "103596280704",
+    "project_id": "reciperiot2",
+    "storage_bucket": "reciperiot2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:484983151124:android:b680f5e4e3be720c0ba501",
+        "mobilesdk_app_id": "1:103596280704:android:5f265314f04fe402044f65",
         "android_client_info": {
           "package_name": "no.hiof.reciperiot"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD6DybBrO9mLV4tpc5vSWSSgqW33-n6xyI"
+          "current_key": "AIzaSyBuZtxhysP4EJNNdNfNMEnDFXtH-fgwP4c"
         }
       ],
       "services": {
