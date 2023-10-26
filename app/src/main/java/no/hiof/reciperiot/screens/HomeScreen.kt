@@ -31,8 +31,18 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.model.Recipe
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.FormBody
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.Response
 import org.json.JSONObject
+import java.io.IOException
 
 @Composable
 fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, client: OkHttpClient, modifier: Modifier = Modifier) {
@@ -103,6 +113,9 @@ fun Ingredient(text : String, state : MutableState<Boolean>){
 
 //bør ta options og ingredienser som parametere
 fun generateGPT(client: OkHttpClient) : List<Recipe>{
+
+    println("test")
+
     //prompt til chatGPT
     //bør bli justert og testet for å få best mulig resultat
     val prompt = """I have the ingredients: {ingredienser}. 
@@ -112,10 +125,14 @@ fun generateGPT(client: OkHttpClient) : List<Recipe>{
 
     //kalle chatCompletion api
 
-    val postBody: RequestBody = FormBody.Builder()
-        .add("model", "gpt-3.5-turbo")
-        .add("messages", """[{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "hello"}]""")
-        .build()
+    val mediaType: MediaType = "application/json; charset=utf-8".toMediaType()
+    val body = """
+        {
+            "model": "gpt-3.5-turbo",
+            "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "hello"}]
+        }
+    """
+    val postBody: RequestBody = body.toRequestBody(mediaType)
 
     val url = "https://api.openai.com/v1/chat/completions"
 
@@ -125,10 +142,18 @@ fun generateGPT(client: OkHttpClient) : List<Recipe>{
         .addHeader("Authorization", "Bearer testtestAPInokkel")
         .build()
 
-    val call : Call = client.newCall(request)
-    val resp : Response = call.execute()
+    //val call : Call = client.newCall(request)
+    //val resp : Response = call.execute()
 
-    println(resp.body?.string())
+    client.newCall(request).enqueue(object : Callback {
+        override fun onResponse(call: Call, response: Response) {
+            println(response.toString())
+        }
+
+        override fun onFailure(call: Call, e: IOException) {
+            println("failed")
+        }
+    })
 
     val response = """{
           "recipe_name": "Turkey Ham and Cheese Panini",
