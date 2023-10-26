@@ -1,6 +1,5 @@
-package no.hiof.reciperiot.ui.theme
+package no.hiof.reciperiot.screens
 
-import android.webkit.WebSettings.TextSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,9 +19,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import no.hiof.reciperiot.R
-import no.hiof.reciperiot.ui.theme.data.RecipeSource
-import no.hiof.reciperiot.ui.theme.model.Recipe
+import no.hiof.reciperiot.data.RecipeSource
+import no.hiof.reciperiot.model.Recipe
 
 @Composable
 fun RecipePage() {

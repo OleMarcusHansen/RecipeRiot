@@ -1,4 +1,4 @@
-package no.hiof.reciperiot.ui.theme
+package no.hiof.reciperiot.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -30,16 +30,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 import no.hiof.reciperiot.R
-import no.hiof.reciperiot.Screen
-import no.hiof.reciperiot.ui.theme.model.Recipe
-import okhttp3.Call
-import okhttp3.FormBody
+import no.hiof.reciperiot.model.Recipe
 import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.Response
 import org.json.JSONObject
-import java.io.IOException
 
 @Composable
 fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, client: OkHttpClient, modifier: Modifier = Modifier) {

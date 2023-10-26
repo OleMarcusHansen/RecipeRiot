@@ -1,4 +1,4 @@
-package no.hiof.reciperiot.ui.theme.model
+package no.hiof.reciperiot.model
 
 import androidx.annotation.DrawableRes
 

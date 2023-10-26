@@ -1,4 +1,4 @@
-package no.hiof.reciperiot.ui.theme
+package no.hiof.reciperiot.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
