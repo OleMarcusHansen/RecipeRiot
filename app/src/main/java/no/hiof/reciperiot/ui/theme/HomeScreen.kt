@@ -119,16 +119,9 @@ fun generateGPT(client: OkHttpClient) : List<Recipe>{
 
     //kalle chatCompletion api
 
-    /*val messages = listOf(
-        mapOf("role" to "system", "content" to "You are a helpful assistant."),
-        mapOf("role" to "user", "content" to "Hello!")
-    )
-
-    val messagesJson = Gson().toJson(messages)
-
     val postBody: RequestBody = FormBody.Builder()
         .add("model", "gpt-3.5-turbo")
-        .add("messages", messagesJson)
+        .add("messages", """[{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "hello"}]""")
         .build()
 
     val url = "https://api.openai.com/v1/chat/completions"
@@ -142,7 +135,7 @@ fun generateGPT(client: OkHttpClient) : List<Recipe>{
     val call : Call = client.newCall(request)
     val resp : Response = call.execute()
 
-    println(resp.body?.string())*/
+    println(resp.body?.string())
 
     val response = """{
           "recipe_name": "Turkey Ham and Cheese Panini",
