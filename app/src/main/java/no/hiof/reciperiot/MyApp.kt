@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import com.google.firebase.FirebaseApp
+import no.hiof.reciperiot.impl.NotificationService
 
 class MyApp: Application() {
 

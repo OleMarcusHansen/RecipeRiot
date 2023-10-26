@@ -1,13 +1,13 @@
-package no.hiof.reciperiot
+package no.hiof.reciperiot.impl
 
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import androidx.compose.ui.res.stringResource
 import androidx.core.app.NotificationCompat
-import androidx.core.content.getSystemService
+import no.hiof.reciperiot.MainActivity
+import no.hiof.reciperiot.R
 
 class NotificationService(
     private val context: Context

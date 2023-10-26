@@ -1,7 +1,7 @@
-package no.hiof.reciperiot.ui.theme.data
+package no.hiof.reciperiot.data
 
 import no.hiof.reciperiot.R
-import no.hiof.reciperiot.ui.theme.model.Recipe
+import no.hiof.reciperiot.model.Recipe
 
 class RecipeSource() {
     fun loadRecipes(): List<Recipe> {

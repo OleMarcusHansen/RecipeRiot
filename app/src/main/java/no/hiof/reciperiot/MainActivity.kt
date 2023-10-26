@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -45,13 +44,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.compose.AppTheme
-import no.hiof.reciperiot.ui.theme.FavouriteMeals
-import no.hiof.reciperiot.ui.theme.HomeScreen
-import no.hiof.reciperiot.ui.theme.IngredientsScreen
-import no.hiof.reciperiot.ui.theme.LoginScreen
-import no.hiof.reciperiot.ui.theme.RecipePage1
-import no.hiof.reciperiot.ui.theme.SettingsScreen
-import no.hiof.reciperiot.ui.theme.ShoppingListScreen
+import no.hiof.reciperiot.impl.NotificationService
+import no.hiof.reciperiot.screens.FavouriteMeals
+import no.hiof.reciperiot.screens.HomeScreen
+import no.hiof.reciperiot.screens.IngredientsScreen
+import no.hiof.reciperiot.screens.LoginScreen
+import no.hiof.reciperiot.screens.RecipePage1
+import no.hiof.reciperiot.screens.SettingsScreen
+import no.hiof.reciperiot.screens.ShoppingListScreen
 import okhttp3.OkHttpClient
 
 
