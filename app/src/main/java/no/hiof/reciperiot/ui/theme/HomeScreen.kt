@@ -32,10 +32,17 @@ import kotlinx.coroutines.launch
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ui.theme.model.Recipe
+import okhttp3.Call
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.Response
 import org.json.JSONObject
+import java.io.IOException
 
 @Composable
-fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, modifier: Modifier = Modifier) {
+fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, client: OkHttpClient, modifier: Modifier = Modifier) {
     val time = remember { mutableStateOf("") }
 
     //Last inn ingredienser fra databasen, gjør som i ingredientsscreen
@@ -57,7 +64,7 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, m
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = {
                 /*ChatGPT*/
-                val newRecipes = generateGPT()
+                val newRecipes = generateGPT(client)
                 recipes.value = newRecipes
 
                 scope.launch {
@@ -102,7 +109,7 @@ fun Ingredient(text : String, state : MutableState<Boolean>){
 
 
 //bør ta options og ingredienser som parametere
-fun generateGPT() : List<Recipe>{
+fun generateGPT(client: OkHttpClient) : List<Recipe>{
     //prompt til chatGPT
     //bør bli justert og testet for å få best mulig resultat
     val prompt = """I have the ingredients: {ingredienser}. 
@@ -111,6 +118,32 @@ fun generateGPT() : List<Recipe>{
         recipe_time, recipe_instructions and recipe_nutrition"""
 
     //kalle chatCompletion api
+
+    /*val messages = listOf(
+        mapOf("role" to "system", "content" to "You are a helpful assistant."),
+        mapOf("role" to "user", "content" to "Hello!")
+    )
+
+    val messagesJson = Gson().toJson(messages)
+
+    val postBody: RequestBody = FormBody.Builder()
+        .add("model", "gpt-3.5-turbo")
+        .add("messages", messagesJson)
+        .build()
+
+    val url = "https://api.openai.com/v1/chat/completions"
+
+    val request : Request = Request.Builder()
+        .url(url)
+        .post(postBody)
+        .addHeader("Authorization", "Bearer testtestAPInokkel")
+        .build()
+
+    val call : Call = client.newCall(request)
+    val resp : Response = call.execute()
+
+    println(resp.body?.string())*/
+
     val response = """{
           "recipe_name": "Turkey Ham and Cheese Panini",
           "recipe_time": "20 minutes",

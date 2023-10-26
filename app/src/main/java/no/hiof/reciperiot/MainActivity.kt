@@ -30,7 +30,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -50,13 +49,16 @@ import no.hiof.reciperiot.ui.theme.FavouriteMeals
 import no.hiof.reciperiot.ui.theme.HomeScreen
 import no.hiof.reciperiot.ui.theme.IngredientsScreen
 import no.hiof.reciperiot.ui.theme.LoginScreen
-import no.hiof.reciperiot.ui.theme.RecipePage
 import no.hiof.reciperiot.ui.theme.RecipePage1
 import no.hiof.reciperiot.ui.theme.SettingsScreen
 import no.hiof.reciperiot.ui.theme.ShoppingListScreen
-import no.hiof.reciperiot.ui.theme.model.Recipe
+import okhttp3.OkHttpClient
+
 
 class MainActivity : ComponentActivity() {
+
+    val client = OkHttpClient()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val service = NotificationService(applicationContext)
@@ -72,7 +74,7 @@ class MainActivity : ComponentActivity() {
                         service.showNotification(user)
                     })
 
-                    MainApp(service)
+                    MainApp(service, client)
                 }
             }
         }
@@ -91,7 +93,7 @@ sealed class Screen(val route: String, val title: Int, val icon: ImageVector){
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainApp(notificationService: NotificationService, modifier: Modifier = Modifier) {
+fun MainApp(notificationService: NotificationService, client: OkHttpClient, modifier: Modifier = Modifier) {
     val navController = rememberNavController()
 
     val bottomNavigationScreens = listOf(
@@ -126,7 +128,7 @@ fun MainApp(notificationService: NotificationService, modifier: Modifier = Modif
                 )
             }
             composable(Screen.Home.route) {
-                HomeScreen(navController, snackBarHostState)
+                HomeScreen(navController, snackBarHostState, client)
             }
             composable(Screen.Ingredients.route) {
                 IngredientsScreen(snackBarHostState)
@@ -200,5 +202,4 @@ fun GreetingPreview() {
     AppTheme {
         MainApp()
     }
-}
- */
+}*/
