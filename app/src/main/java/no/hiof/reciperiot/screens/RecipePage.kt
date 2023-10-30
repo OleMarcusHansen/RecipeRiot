@@ -31,12 +31,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.firestore.FirebaseFirestore
 import no.hiof.reciperiot.data.RecipeSource
 import no.hiof.reciperiot.model.Recipe
 
 
 @Composable
-fun RecipePage1(navController: NavController, recipeId: Int) {
+fun RecipePage1(navController: NavController, recipeId: Int, db: FirebaseFirestore) {
     val recipeSource = remember { RecipeSource() }
     // Hent resten av variablene fra RecipeSource basert på recipeId
     val recipe = RecipeSource().loadRecipes().firstOrNull { it.id == recipeId }

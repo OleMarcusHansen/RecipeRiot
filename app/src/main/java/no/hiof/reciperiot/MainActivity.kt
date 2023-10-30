@@ -32,6 +32,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -45,6 +46,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.compose.AppTheme
 import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import no.hiof.reciperiot.impl.NotificationService
 import no.hiof.reciperiot.screens.AuthenticationScreen
@@ -80,7 +82,7 @@ class MainActivity : ComponentActivity() {
                         service.showNotification(user)
                     })
 
-                    MainApp(service, client)
+                    MainApp(service, client, db)
                 }
             }
         }
@@ -99,7 +101,7 @@ sealed class Screen(val route: String, val title: Int, val icon: ImageVector){
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainApp(notificationService: NotificationService, client: OkHttpClient, modifier: Modifier = Modifier) {
+fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: FirebaseFirestore , modifier: Modifier = Modifier) {
     val navController = rememberNavController()
 
     val bottomNavigationScreens = listOf(
@@ -149,7 +151,7 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient, modi
                 IngredientsScreen(snackBarHostState)
             }
             composable(Screen.Favourites.route) {
-                FavouriteMeals(navController)
+                FavouriteMeals(navController, db)
             }
             composable(Screen.Shopping.route) {
                 ShoppingListScreen()
@@ -160,7 +162,7 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient, modi
             composable("${Screen.RecipePage.route}/{recipeid}",
                 arguments = listOf(navArgument("recipeid"){ type = NavType.IntType})
             ) { backStackEntry ->
-                RecipePage1(navController, backStackEntry.arguments!!.getInt("recipeid", 1))
+                RecipePage1(navController, backStackEntry.arguments!!.getInt("recipeid", 1), db)
             }
         }
     }

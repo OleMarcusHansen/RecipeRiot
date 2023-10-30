@@ -1,5 +1,6 @@
 package no.hiof.reciperiot.screens
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -38,15 +39,34 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.data.RecipeSource
 import no.hiof.reciperiot.model.Recipe
 
+
+
 @Composable
-fun FavouriteMeals(navController: NavController) {
+fun FavouriteMeals(navController: NavController, db: FirebaseFirestore) {
+    val user = hashMapOf(
+        "first" to "Ada",
+        "last" to "Lovelace",
+        "born" to 1815
+    )
     val recipes by remember { mutableStateOf(RecipeSource().loadRecipes()) }
     val favoriteRecipes = recipes.filter { it.isFavourite }
-    RecipeList(recipes = favoriteRecipes, navController = navController, onFavouriteToggle = {})
+    RecipeList(recipes = favoriteRecipes, navController = navController, onFavouriteToggle = {
+        db.collection("FavouriteMeals")
+            .add(user)
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
+    })
 }
 
 @Composable
