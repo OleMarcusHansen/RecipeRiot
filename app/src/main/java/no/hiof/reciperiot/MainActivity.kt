@@ -44,6 +44,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.compose.AppTheme
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.firestore
 import no.hiof.reciperiot.impl.NotificationService
 import no.hiof.reciperiot.screens.FavouriteMeals
 import no.hiof.reciperiot.screens.HomeScreen
@@ -58,6 +60,9 @@ import okhttp3.OkHttpClient
 class MainActivity : ComponentActivity() {
 
     val client = OkHttpClient()
+
+    // Firestore connection, maybe change this
+    val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
