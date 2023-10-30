@@ -118,10 +118,11 @@ fun generateGPT(client: OkHttpClient) : List<Recipe>{
 
     //prompt til chatGPT
     //bør bli justert og testet for å få best mulig resultat
-    val prompt = """I have the ingredients: {ingredienser}. 
-        I have {time} minutes to make food. Generate a recipe for me. 
+    val prompt = """I have the ingredients: cheese, bacon, eggs, onions. 
+        I have 20 minutes to make food. Generate a recipe for me. 
         The output should be in JSON format with the keys recipe_name, 
-        recipe_time, recipe_instructions and recipe_nutrition"""
+        recipe_time, recipe_instructions and recipe_nutrition.
+        Answer with only the JSON string."""
 
     //kalle chatCompletion api
 
@@ -129,7 +130,7 @@ fun generateGPT(client: OkHttpClient) : List<Recipe>{
     val body = """
         {
             "model": "gpt-3.5-turbo",
-            "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "hello"}]
+            "messages": [{"role": "system", "content": "You are a recipe generator"}, {"role": "user", "content": "Create a recipe in JSON format with the keys recipe_name, recipe_time, recipe_instructions and recipe_nutrition."}]
         }
     """
     val postBody: RequestBody = body.toRequestBody(mediaType)
@@ -139,46 +140,60 @@ fun generateGPT(client: OkHttpClient) : List<Recipe>{
     val request : Request = Request.Builder()
         .url(url)
         .post(postBody)
-        .addHeader("Authorization", "Bearer testtestAPInokkel")
+        .addHeader("Authorization", "Bearer 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")
         .build()
 
     //val call : Call = client.newCall(request)
     //val resp : Response = call.execute()
 
+    var responseString = """{
+            "recipe_name": "Early response baguettes",
+            "recipe_time": "1",
+            "recipe_instructions": [
+                "1. Preheat a panini press or a stovetop grill pan over medium-high heat.",
+                "2. Take 2 slices of bread and lay them out on a clean surface."
+            ],
+            "recipe_nutrition": {
+                "calories": "Approximately 400-500 calories per serving",
+                "carbohydrates": "Approximately 35-45g per serving"
+             }
+        }
+    """
+
     client.newCall(request).enqueue(object : Callback {
         override fun onResponse(call: Call, response: Response) {
             println(response.toString())
+            //println(response.body?.string())
+            //val responseJSON = JSONObject(response.body?.string())
+            val responseBody = response.body?.string()
+            print(responseBody)
+            if (responseBody != null) {
+                val responseJSON = JSONObject(responseBody)
+                responseString = responseJSON.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content")
+                // Now you can work with responseJSON
+            } else {
+                // Handle the case where the response body is null
+            }
         }
 
         override fun onFailure(call: Call, e: IOException) {
-            println("failed")
+            println("failed. message: " + e.message)
+            responseString = """{
+                    "recipe_name": "Failed tomato soup",
+                    "recipe_time": "60",
+                    "recipe_instructions": [
+                        "1. Preheat a panini press or a stovetop grill pan over medium-high heat.",
+                        "2. Take 2 slices of bread and lay them out on a clean surface."
+                    ],
+                    "recipe_nutrition": {
+                        "calories": "Approximately 400-500 calories per serving",
+                        "carbohydrates": "Approximately 35-45g per serving"
+                     }
+                }
+            """
         }
     })
-
-    val response = """{
-          "recipe_name": "Turkey Ham and Cheese Panini",
-          "recipe_time": "20 minutes",
-          "recipe_instructions": [
-            "1. Preheat a panini press or a stovetop grill pan over medium-high heat.",
-            "2. Take 2 slices of bread and lay them out on a clean surface.",
-            "3. Place a slice of turkey ham on each of the bread slices.",
-            "4. Add a few slices of cheese on top of the turkey ham.",
-            "5. Thinly slice some onions and place them on the cheese.",
-            "6. Add a few pickles for some extra flavor.",
-            "7. Top each sandwich with another slice of bread to form a sandwich.",
-            "8. If you have a panini press, place the sandwiches inside and cook for about 4-5 minutes until the bread is toasted and the cheese is melted. If you're using a stovetop grill pan, place the sandwiches on the hot pan and press them down with a heavy object (like a cast-iron skillet) to get that signature panini press effect. Cook for 2-3 minutes on each side until the bread is toasted and the cheese is melted.",
-            "9. Carefully remove the panini from the press or grill pan and let them cool slightly before cutting in half.",
-            "10. Serve with a side of Doritos or enjoy your Turkey Ham and Cheese Panini by itself!"
-          ],
-          "recipe_nutrition": {
-            "calories": "Approximately 400-500 calories per serving",
-            "carbohydrates": "Approximately 35-45g per serving",
-            "protein": "Approximately 15-20g per serving",
-            "fat": "Approximately 20-25g per serving",
-            "fiber": "Approximately 2-4g per serving"
-          }
-    }"""
-    val generatedjson = JSONObject(response)
+    val generatedjson = JSONObject(responseString)
 
     val recipes = listOf(Recipe(2, generatedjson.getString("recipe_name"), R.drawable.food, generatedjson.getString("recipe_time"),false, "ddddd"))
     return recipes

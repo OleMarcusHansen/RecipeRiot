@@ -53,11 +53,16 @@ import no.hiof.reciperiot.screens.RecipePage1
 import no.hiof.reciperiot.screens.SettingsScreen
 import no.hiof.reciperiot.screens.ShoppingListScreen
 import okhttp3.OkHttpClient
+import java.util.concurrent.TimeUnit
 
 
 class MainActivity : ComponentActivity() {
 
-    val client = OkHttpClient()
+    val client = OkHttpClient.Builder()
+        .connectTimeout(60, TimeUnit.SECONDS)
+        .readTimeout(60, TimeUnit.SECONDS)
+        .writeTimeout(60, TimeUnit.SECONDS)
+        .build()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
