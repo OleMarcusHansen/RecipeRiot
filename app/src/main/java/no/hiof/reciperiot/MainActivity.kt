@@ -47,6 +47,7 @@ import com.example.compose.AppTheme
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import no.hiof.reciperiot.impl.NotificationService
+import no.hiof.reciperiot.screens.AuthenticationScreen
 import no.hiof.reciperiot.screens.FavouriteMeals
 import no.hiof.reciperiot.screens.HomeScreen
 import no.hiof.reciperiot.screens.IngredientsScreen
@@ -125,12 +126,21 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient, modi
     ) { innerPadding ->
         NavHost(navController = navController, startDestination = Screen.Login.route, modifier = Modifier.padding(top = 100.dp).padding(bottom = 80.dp)) {
             composable(Screen.Login.route) {
+                AuthenticationScreen(
+                    onSignInClick = { email, password ->
+                        navController.navigate(Screen.Home.route)
+
+                    }
+                )
+                /*
                 LoginScreen(
                     login = { navController.navigate(Screen.Home.route) },
                     showNotification = { user ->
                         notificationService.showNotification(user)
                     }
                 )
+
+                 */
             }
             composable(Screen.Home.route) {
                 HomeScreen(navController, snackBarHostState, client)
