@@ -22,21 +22,6 @@ import androidx.navigation.NavController
 import no.hiof.reciperiot.data.RecipeSource
 import no.hiof.reciperiot.model.Recipe
 
-@Composable
-fun RecipePage() {
-    Text(text = "dette er min rett",
-        color = Color.Black,
-        fontSize = 28.sp
-    )
-
-}
-
-@Composable
-fun RecipeDetails(recipe: Recipe) {
-    Text(text = recipe.title)
-
-
-}
 
 @Composable
 fun RecipePage1(navController: NavController, recipeId: Int) {

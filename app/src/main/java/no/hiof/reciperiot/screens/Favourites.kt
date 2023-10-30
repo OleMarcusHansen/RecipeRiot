@@ -45,7 +45,8 @@ import no.hiof.reciperiot.model.Recipe
 @Composable
 fun FavouriteMeals(navController: NavController) {
     val recipes by remember { mutableStateOf(RecipeSource().loadRecipes()) }
-    RecipeList(recipes = recipes, navController = navController, onFavouriteToggle = {})
+    val favoriteRecipes = recipes.filter { it.isFavourite }
+    RecipeList(recipes = favoriteRecipes, navController = navController, onFavouriteToggle = {})
 }
 
 @Composable
@@ -113,7 +114,6 @@ fun RecipeCard(
                 IconToggleButton(
                     checked = isFavourite,
                     onCheckedChange = {
-                        // Oppdaterer tilstanden og kaller tilbakemeldingsfunksjonen
                         isFavourite = !isFavourite
                         onFavouriteToggle(recipe.copy(isFavourite = isFavourite))
                         Log.d("RecipeCard", "Favourite toggled for recipe: ${recipe.title}, isFavourite: $isFavourite")
