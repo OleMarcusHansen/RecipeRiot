@@ -9,11 +9,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -25,8 +37,10 @@ import no.hiof.reciperiot.model.Recipe
 
 @Composable
 fun RecipePage1(navController: NavController, recipeId: Int) {
+    val recipeSource = remember { RecipeSource() }
     // Hent resten av variablene fra RecipeSource basert på recipeId
     val recipe = RecipeSource().loadRecipes().firstOrNull { it.id == recipeId }
+    var isFavourite by rememberSaveable { mutableStateOf(recipe?.isFavourite ?: false) }
 
     LazyColumn {
         if (recipe != null) {
@@ -46,6 +60,26 @@ fun RecipePage1(navController: NavController, recipeId: Int) {
                             .height(200.dp)
                             .clip(RoundedCornerShape(8.dp))
                     )
+                    IconToggleButton(
+                        checked = isFavourite,
+                        onCheckedChange = {
+                            isFavourite = !isFavourite
+                            recipeSource.updateRecipe(recipeId, isFavourite)
+                        },
+                        modifier = Modifier
+                            .padding(16.dp)
+                    ) {
+                        Icon(
+                            imageVector = if (isFavourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            contentDescription = null,
+                            tint = Color.Black,
+                            modifier = Modifier
+                                .graphicsLayer {
+                                    scaleX = 1.3f
+                                    scaleY = 1.3f
+                                },
+                        )
+                    }
 
                     Text(
                         text = recipe.title,
@@ -90,6 +124,7 @@ fun RecipePage1(navController: NavController, recipeId: Int) {
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
+
                 }
             }
         } else {

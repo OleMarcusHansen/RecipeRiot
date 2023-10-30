@@ -76,7 +76,6 @@ fun RecipeCard(
     onFavouriteToggle: (Recipe) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Bruk rememberSaveable for å lagre tilstanden selv når komposisjonen blir re-creert
     var isFavourite by rememberSaveable { mutableStateOf(recipe.isFavourite) }
 
     Card(
