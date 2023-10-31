@@ -28,7 +28,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.model.Recipe
 import okhttp3.Call
@@ -67,10 +71,10 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = {
                 /*ChatGPT*/
-                val newRecipes = generateGPT(client)
-                recipes.value = newRecipes
 
                 scope.launch {
+                    val newRecipes = generateGPT(client)
+                    recipes.value = newRecipes
                     snackbarHost.showSnackbar("Oppskrift generert")
                 }
             }) {
@@ -112,7 +116,7 @@ fun Ingredient(text : String, state : MutableState<Boolean>){
 
 
 //bør ta options og ingredienser som parametere
-fun generateGPT(client: OkHttpClient) : List<Recipe>{
+/*fun generateGPT(client: OkHttpClient) : List<Recipe>{
 
     println("test")
 
@@ -197,4 +201,98 @@ fun generateGPT(client: OkHttpClient) : List<Recipe>{
 
     val recipes = listOf(Recipe(2, generatedjson.getString("recipe_name"), R.drawable.food, generatedjson.getString("recipe_time"),false, "ddddd"))
     return recipes
+}*/
+
+suspend fun generateGPT(client: OkHttpClient): List<Recipe> = withContext(Dispatchers.IO) {
+    // ... (Your existing code)
+    println("test")
+
+    //prompt til chatGPT
+    //bør bli justert og testet for å få best mulig resultat
+    val prompt = """I have the ingredients: cheese, bacon, eggs, onions. 
+        I have 20 minutes to make food. Generate a recipe for me. 
+        The output should be in JSON format with the keys recipe_name, 
+        recipe_time, recipe_instructions and recipe_nutrition.
+        Answer with only the JSON string."""
+
+    //kalle chatCompletion api
+
+    val mediaType: MediaType = "application/json; charset=utf-8".toMediaType()
+    val body = """
+        {
+            "model": "gpt-3.5-turbo",
+            "messages": [{"role": "system", "content": "You are a recipe generator"}, {"role": "user", "content": "Create a recipe in JSON format with the keys recipe_name, recipe_time, recipe_instructions and recipe_nutrition."}]
+        }
+    """
+    val postBody: RequestBody = body.toRequestBody(mediaType)
+
+    val url = "https://api.openai.com/v1/chat/completions"
+
+    val request : Request = Request.Builder()
+        .url(url)
+        .post(postBody)
+        .addHeader("Authorization", "Bearer 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")
+        .build()
+
+    //val call : Call = client.newCall(request)
+    //val resp : Response = call.execute()
+
+    // Make the API call
+    val response: Response = try {
+        client.newCall(request).await()
+    } catch (e: IOException) {
+        // Handle the exception here
+        val defaultRecipe = Recipe(
+            2,
+            "Failed tomato soup",
+            R.drawable.food,
+            "60",
+            false,
+            "ddddd"
+        )
+        return@withContext listOf(defaultRecipe)
+    }
+
+    // Handle the response and return the list of recipes
+    if (response.isSuccessful) {
+        val responseString = response.body?.string()
+        println(responseString)
+        if (responseString != null) {
+            val responseJSON = JSONObject(responseString)
+            val messageJSON = JSONObject(responseJSON.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content"))
+            println(messageJSON)
+            val recipes = listOf(
+                Recipe(
+                    2,
+                    messageJSON.getString("recipe_name"),
+                    R.drawable.food,
+                    messageJSON.getString("recipe_time"),
+                    false,
+                    "ddddd"
+                )
+            )
+            return@withContext recipes
+        }
+    }
+
+    // Handle errors or return a default value in case of failure
+    val defaultRecipe = Recipe(
+        2,
+        "Failed tomato soup",
+        R.drawable.food,
+        "60",
+        false,
+        "ddddd"
+    )
+    return@withContext listOf(defaultRecipe)
+}
+
+// Extension function to make Call awaitable with a coroutine
+suspend fun Call.await(): Response = withContext(Dispatchers.IO) {
+    val deferred = async { execute() }
+    try {
+        deferred.await()
+    } catch (e: CancellationException) {
+        throw e
+    }
 }
