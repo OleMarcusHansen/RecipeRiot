@@ -242,6 +242,7 @@ suspend fun generateGPT(client: OkHttpClient): List<Recipe> = withContext(Dispat
         client.newCall(request).await()
     } catch (e: IOException) {
         // Handle the exception here
+        println(e)
         val defaultRecipe = Recipe(
             2,
             "Failed tomato soup",
@@ -275,6 +276,7 @@ suspend fun generateGPT(client: OkHttpClient): List<Recipe> = withContext(Dispat
         }
     }
 
+    println("Something failed")
     // Handle errors or return a default value in case of failure
     val defaultRecipe = Recipe(
         2,
