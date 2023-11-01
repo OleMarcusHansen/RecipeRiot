@@ -145,7 +145,7 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
                  */
             }
             composable(Screen.Home.route) {
-                HomeScreen(navController, snackBarHostState, client)
+                HomeScreen(navController, snackBarHostState, client, modifier,db)
             }
             composable(Screen.Ingredients.route) {
                 IngredientsScreen(snackBarHostState)

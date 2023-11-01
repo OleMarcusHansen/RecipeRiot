@@ -1,5 +1,7 @@
 package no.hiof.reciperiot.screens
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,7 +37,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import no.hiof.reciperiot.data.RecipeSource
 import no.hiof.reciperiot.model.Recipe
 
-
 @Composable
 fun RecipePage1(navController: NavController, recipeId: Int, db: FirebaseFirestore) {
     val recipeSource = remember { RecipeSource() }
@@ -65,7 +66,11 @@ fun RecipePage1(navController: NavController, recipeId: Int, db: FirebaseFiresto
                         checked = isFavourite,
                         onCheckedChange = {
                             isFavourite = !isFavourite
-                            recipeSource.updateRecipe(recipeId, isFavourite)
+                            if (isFavourite) {
+                                handleFirestoreAdd(recipe, db)
+                            } else {
+                                handleFirestoreRemove(recipe, db)
+                            }
                         },
                         modifier = Modifier
                             .padding(16.dp)

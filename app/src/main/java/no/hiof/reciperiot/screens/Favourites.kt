@@ -53,59 +53,80 @@ fun FavouriteMeals(navController: NavController, db: FirebaseFirestore) {
 
     val recipes by remember { mutableStateOf(RecipeSource().loadRecipes()) }
     val favoriteRecipes = recipes.filter { it.isFavourite }
-    RecipeList(recipes = favoriteRecipes, navController = navController, onFavouriteToggle = {recipe ->
-        val isFavourite = recipe.isFavourite
-        //onFavouriteToggle(recipe.copy(isFavourite = isFavourite))
-        if (isFavourite) {
-        val user = mapOf(
-            "id" to recipe.id,
-            "title" to recipe.title,
-            "imageResourceId" to recipe.imageResourceId, // You might want to store the image URL instead of the resource ID
-            "cookingTime" to recipe.cookingTime,
-            "isFavourite" to recipe.isFavourite,
-            "recipe_instructions" to recipe.recipe_instructions
-        )
-
-        db.collection("FavouriteMeals")
-            .add(user)
-            .addOnSuccessListener { documentReference ->
-                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error adding document", e)
-            }
-        } else {
-            // If it's not a favorite anymore, remove it from the database
-            db.collection("FavouriteMeals")
-                .document(recipe.id.toString()) // Use recipe ID as the document ID
-                .delete()
-                .addOnSuccessListener {
-                    Log.d(TAG, "DocumentSnapshot removed with ID: ${recipe.id}")
-                }
-                .addOnFailureListener { e ->
-                    Log.w(TAG, "Error removing document", e)
-                }
+    RecipeList(
+        recipes = favoriteRecipes,
+        navController = navController,
+        onFavouriteToggle = {
+        },
+        onAddToFavorites = { recipe ->
+            handleFirestoreAdd(recipe, db)
+        },
+        onRemoveFromFavorites = { recipe ->
+            handleFirestoreRemove(recipe, db)
         }
+    )
+}
+fun handleFirestoreAdd(recipe: Recipe, db: FirebaseFirestore) {
+    val user = mapOf(
+        "id" to recipe.id,
+        "title" to recipe.title,
+        "imageResourceId" to recipe.imageResourceId,
+        "cookingTime" to recipe.cookingTime,
+        "isFavourite" to recipe.isFavourite,
+        "recipe_instructions" to recipe.recipe_instructions
+    )
 
-    })
+    db.collection("FavouriteMeals")
+        .add(user)
+        .addOnSuccessListener { documentReference ->
+            Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+        }
+        .addOnFailureListener { e ->
+            Log.w(TAG, "Error adding document", e)
+        }
+}
+
+fun handleFirestoreRemove(recipe: Recipe, db: FirebaseFirestore) {
+    Log.d(TAG, "Before get()")
+    db.collection("FavouriteMeals")
+        .whereEqualTo("id", recipe.id)
+        .get()
+        .addOnSuccessListener { documents ->
+            for (document in documents) {
+
+                document.reference.delete()
+                    .addOnSuccessListener {
+                        Log.d(TAG, "DocumentSnapshot successfully deleted with ID: ${document.id}")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error deleting document with ID: ${document.id}", e)
+                    }
+            }
+        }
+        .addOnFailureListener { e ->
+            Log.w(TAG, "Error getting documents", e)
+        }
+    Log.d(TAG, "After get()")
 }
 
 @Composable
-fun RecipeList(recipes: List<Recipe>,
-               navController: NavController,
-               onFavouriteToggle: (Recipe) -> Unit,
-               modifier: Modifier = Modifier) {
-    LazyColumn(userScrollEnabled = true,
-        modifier = modifier) {
+fun RecipeList(
+    recipes: List<Recipe>,
+    navController: NavController,
+    onFavouriteToggle: (Recipe) -> Unit,
+    onAddToFavorites: (Recipe) -> Unit,
+    onRemoveFromFavorites: (Recipe) -> Unit,
+    modifier: Modifier = Modifier) {
+    LazyColumn(userScrollEnabled = true, modifier = modifier) {
         items(recipes) { recipe ->
             RecipeCard(
                 recipe,
                 onRecipeClick = { selectedRecipe ->
                     navController.navigate("${Screen.RecipePage.route}/${selectedRecipe}")
                 },
-                onFavouriteToggle = onFavouriteToggle
-
-
+                onFavouriteToggle = onFavouriteToggle,
+                onAddToFavorites = onAddToFavorites,
+                onRemoveFromFavorites = onRemoveFromFavorites
             )
         }
     }
@@ -115,6 +136,8 @@ fun RecipeCard(
     recipe: Recipe,
     onRecipeClick: (Int) -> Unit,
     onFavouriteToggle: (Recipe) -> Unit,
+    onAddToFavorites: (Recipe) -> Unit,
+    onRemoveFromFavorites: (Recipe) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isFavourite by rememberSaveable { mutableStateOf(recipe.isFavourite) }
@@ -156,6 +179,11 @@ fun RecipeCard(
                     onCheckedChange = {
                         isFavourite = !isFavourite
                         onFavouriteToggle(recipe.copy(isFavourite = isFavourite))
+                        if (isFavourite) {
+                            onAddToFavorites(recipe)
+                        } else {
+                            onRemoveFromFavorites(recipe)
+                        }
                         Log.d("RecipeCard", "Favourite toggled for recipe: ${recipe.title}, isFavourite: $isFavourite")
                     }) {
                     Icon(

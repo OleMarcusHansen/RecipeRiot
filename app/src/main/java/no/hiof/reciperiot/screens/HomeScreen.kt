@@ -28,6 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.model.Recipe
@@ -35,7 +36,7 @@ import okhttp3.OkHttpClient
 import org.json.JSONObject
 
 @Composable
-fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, client: OkHttpClient, modifier: Modifier = Modifier) {
+fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, client: OkHttpClient, modifier: Modifier = Modifier, db: FirebaseFirestore) {
     val time = remember { mutableStateOf("") }
 
     //Last inn ingredienser fra databasen, gjør som i ingredientsscreen
@@ -67,7 +68,13 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                 Text("Generer oppskrift")
             }
         }
-        RecipeList(recipes = recipes.value, navController, onFavouriteToggle = {})
+        RecipeList(recipes = recipes.value, navController, onFavouriteToggle = {},
+            onAddToFavorites = { recipe ->
+                handleFirestoreAdd(recipe, db)
+            },
+            onRemoveFromFavorites = { recipe ->
+                handleFirestoreRemove(recipe, db)
+            })
     }
 }
 
