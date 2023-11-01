@@ -1,5 +1,12 @@
 package no.hiof.reciperiot.data
 
+import android.content.ContentValues
+import android.util.Log
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.model.Recipe
 
@@ -22,5 +29,33 @@ class RecipeSource() {
 
     fun updateRecipe(recipeId: Int, isFavourite: Boolean) {
         recipes.find { it.id == recipeId }?.isFavourite = isFavourite
+    }
+}
+class RecipeSource1() {
+    private val database: FirebaseDatabase = FirebaseDatabase.getInstance()
+    private val recipesReference: DatabaseReference = database.getReference("recipes")
+
+    fun loadRecipes(callback: (List<Recipe>) -> Unit) {
+        recipesReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val recipesFromFirebase: MutableList<Recipe> = mutableListOf()
+
+                for (recipeSnapshot in snapshot.children) {
+                    val recipe = recipeSnapshot.getValue(Recipe::class.java)
+                    recipe?.let { recipesFromFirebase.add(it) }
+                }
+
+                callback.invoke(recipesFromFirebase)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle errors appropriately
+            }
+        })
+    }
+
+    fun updateRecipe(recipeId: Int, isFavourite: Boolean) {
+        val recipeRef = recipesReference.child(recipeId.toString())
+        recipeRef.child("isFavourite").setValue(isFavourite)
     }
 }

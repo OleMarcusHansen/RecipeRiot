@@ -53,6 +53,9 @@ fun FavouriteMeals(navController: NavController, db: FirebaseFirestore) {
 
     val recipes by remember { mutableStateOf(RecipeSource().loadRecipes()) }
     val favoriteRecipes = recipes.filter { it.isFavourite }
+    //val favoriteRecipes = db.collection("FavouriteMeals")
+    //    .whereEqualTo("isFavourite", true)
+    //    .get()
     RecipeList(
         recipes = favoriteRecipes,
         navController = navController,
