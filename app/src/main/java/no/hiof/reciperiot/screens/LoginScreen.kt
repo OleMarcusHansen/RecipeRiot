@@ -1,5 +1,7 @@
 package no.hiof.reciperiot.screens
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +34,8 @@ import no.hiof.reciperiot.R
 @Composable
 fun AuthenticationScreen(
     onSignInClick: (String, String) -> Unit,
+    //TODO: Fix notification
+    //showNotification: (String) -> Unit,
     //TODO: Implement sign up
     //onSignUpClick: () -> Unit
 ) {
@@ -57,22 +61,29 @@ fun AuthenticationScreen(
             visualTransformation = PasswordVisualTransformation()
         )
         Button(onClick = { onSignInClick(email, password) }) {
-            Text("Sign In")
+            Text("Test Sign In")
         }
         val auth = FirebaseAuth.getInstance()
 
         Button(onClick = {
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        onSignInClick(email, password)
-                        //stringResource(R.string.username)
-                        // Sign in successful, navigate to the main app screen.
-                    } else {
-                        onSignInClick(email, password)
-                        // Sign in failed, display an error message.
+            Log.d(TAG,"$email  $password")
+            if (email == "" || password == "") {
+                //Email or password empty
+                Log.e(TAG, "Email or password empty")
+            }
+            else {
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            onSignInClick(email, password)
+                            // Sign in successful, navigate to the main app screen.
+                        } else {
+                            //onSignInClick(email, password)
+                            // Sign in failed, display an error message.
+                            Log.e(TAG, "Error Login failed")
+                        }
                     }
-                }
+            }
         }) {
             Text("Sign In")
         }

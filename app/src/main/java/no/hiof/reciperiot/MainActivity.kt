@@ -45,6 +45,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.compose.AppTheme
 import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import no.hiof.reciperiot.impl.NotificationService
@@ -161,7 +162,9 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
                 ShoppingListScreen()
             }
             composable(Screen.Settings.route) {
-                SettingsScreen(logout = {navController.navigate("login")})
+                SettingsScreen(logout = {navController.navigate("login")
+                    Firebase.auth.signOut()
+                })
             }
             composable("${Screen.RecipePage.route}/{recipeid}",
                 arguments = listOf(navArgument("recipeid"){ type = NavType.IntType})
