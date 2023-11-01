@@ -246,11 +246,11 @@ suspend fun generateGPT(client: OkHttpClient): List<Recipe> = withContext(Dispat
         println(e)
         val defaultRecipe = Recipe(
             2,
-            "Failed tomato soup",
+            "Burned toast",
             R.drawable.food,
             "60",
             false,
-            "ddddd"
+            "Timed out"
         )
         return@withContext listOf(defaultRecipe)
     }
@@ -270,8 +270,7 @@ suspend fun generateGPT(client: OkHttpClient): List<Recipe> = withContext(Dispat
                     R.drawable.food,
                     messageJSON.getString("recipe_time"),
                     false,
-                    "dddd"
-                    //messageJSON.getString("recipe_instructions")
+                    messageJSON.getString("recipe_instructions")
                 )
             )
             return@withContext recipes
@@ -291,7 +290,7 @@ suspend fun generateGPT(client: OkHttpClient): List<Recipe> = withContext(Dispat
         R.drawable.food,
         "60",
         false,
-        "ddddd"
+        "Something failed"
     )
     return@withContext listOf(defaultRecipe)
 }
