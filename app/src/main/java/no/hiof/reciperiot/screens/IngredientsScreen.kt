@@ -1,5 +1,6 @@
 package no.hiof.reciperiot.screens
-
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
 @Composable
@@ -51,9 +53,26 @@ fun IngredientRow(name: String, checkedState: MutableState<Boolean>,
         )
     }
 }
+
+// Saves names and checked states to fireStore
+fun saveIngredientstoDb(db: FirebaseFirestore, ingredientList: List<Pair<String, Boolean>>) {
+    val docRef = db.collection("ingredients").document("userIngredients")
+    val data = hashMapOf<String, Any>()
+    for ((name, checked) in ingredientList) {
+        data[name] = checked
+    }
+    docRef.set(data)
+        .addOnSuccessListener {docRef ->
+            Log.d(TAG,"DocumentSnapcshot added!")
+        }
+        .addOnFailureListener { e ->
+            Log.w(TAG, "Error adding document", e)
+        }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IngredientsScreen(snackbarHost : SnackbarHostState, modifier: Modifier = Modifier) {
+fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, modifier: Modifier = Modifier) {
     var newIngredient by remember { mutableStateOf("") }
     var ingredientsList by remember {
         mutableStateOf(
@@ -69,6 +88,17 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, modifier: Modifier = Mod
 
     //Til snackbar
     val scope = rememberCoroutineScope()
+
+    val saveIngredients = {
+        val ingredientsToSave = ingredientsList.map { (name, checkedState) ->
+            name to checkedState.value
+        }
+        saveIngredientstoDb(db, ingredientsToSave)
+
+        scope.launch{
+            snackbarHost.showSnackbar("Saved ingredients!")
+        }
+    }
 
     Column(
         modifier = modifier
@@ -110,13 +140,23 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, modifier: Modifier = Mod
                 }
             )
         }
+
+        Button(onClick = { saveIngredients()
+        }) {
+            Text(text = "Save ingredients")
+        }
+
     }
+
 }
+
 /*
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     AppTheme {
-        IngredientsScreen()
+        IngredientsScreen(snackbarHost = SnackbarHostState())
     }
-}*/
+}
+
+*/

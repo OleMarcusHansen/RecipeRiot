@@ -32,7 +32,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,6 +45,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.compose.AppTheme
 import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import no.hiof.reciperiot.impl.NotificationService
@@ -153,7 +153,7 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
                 HomeScreen(navController, snackBarHostState, client, modifier,db)
             }
             composable(Screen.Ingredients.route) {
-                IngredientsScreen(snackBarHostState)
+                IngredientsScreen(snackBarHostState, db)
             }
             composable(Screen.Favourites.route) {
                 FavouriteMeals(navController, db)
@@ -162,7 +162,9 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
                 ShoppingListScreen()
             }
             composable(Screen.Settings.route) {
-                SettingsScreen(logout = {navController.navigate("login")})
+                SettingsScreen(logout = {navController.navigate("login")
+                    Firebase.auth.signOut()
+                })
             }
             composable("${Screen.RecipePage.route}/{recipeid}",
                 arguments = listOf(navArgument("recipeid"){ type = NavType.IntType})
