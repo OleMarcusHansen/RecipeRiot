@@ -34,6 +34,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import no.hiof.reciperiot.R
+import no.hiof.reciperiot.Secrets
 import no.hiof.reciperiot.model.Recipe
 import okhttp3.Call
 import okhttp3.Callback
@@ -231,7 +232,7 @@ suspend fun generateGPT(client: OkHttpClient): List<Recipe> = withContext(Dispat
     val request : Request = Request.Builder()
         .url(url)
         .post(postBody)
-        .addHeader("Authorization", "Bearer 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")
+        .addHeader("Authorization", "Bearer " + Secrets.gpt_key)
         .build()
 
     //val call : Call = client.newCall(request)
