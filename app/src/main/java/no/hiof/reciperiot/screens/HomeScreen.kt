@@ -79,7 +79,7 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                     snackbarHost.showSnackbar("Oppskrift generert")
                 }
             }) {
-                Text("Generer oppskrift")
+                Text(stringResource(R.string.home_generate))
             }
         }
         RecipeList(recipes = recipes.value, navController, onFavouriteToggle = {})
