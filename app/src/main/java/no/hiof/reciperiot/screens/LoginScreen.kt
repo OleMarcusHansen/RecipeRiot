@@ -5,21 +5,85 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
 import no.hiof.reciperiot.R
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AuthenticationScreen(
+    onSignInClick: (String, String) -> Unit,
+    //TODO: Implement sign up
+    //onSignUpClick: () -> Unit
+) {
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        TextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            //text = stringResource(R.string.username),
+            //state = email
+        )
+        TextField(
+            value = password,
+            onValueChange = { password = it },
+            label = { Text("Password") },
+            visualTransformation = PasswordVisualTransformation()
+        )
+        Button(onClick = { onSignInClick(email, password) }) {
+            Text("Sign In")
+        }
+        val auth = FirebaseAuth.getInstance()
+
+        Button(onClick = {
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        onSignInClick(email, password)
+                        //stringResource(R.string.username)
+                        // Sign in successful, navigate to the main app screen.
+                    } else {
+                        onSignInClick(email, password)
+                        // Sign in failed, display an error message.
+                    }
+                }
+        }) {
+            Text("Sign In")
+        }
+        /*
+        TextButton(onClick = onSignUpClick) {
+            Text("Don't have an account? Sign Up")
+        }
+
+         */
+    }
+}
 
 @Composable
 fun LoginScreen(login: () -> Unit, modifier : Modifier = Modifier, showNotification: (String) -> Unit) {

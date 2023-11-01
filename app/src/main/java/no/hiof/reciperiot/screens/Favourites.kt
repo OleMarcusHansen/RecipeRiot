@@ -1,5 +1,6 @@
 package no.hiof.reciperiot.screens
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -38,14 +39,34 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.data.RecipeSource
 import no.hiof.reciperiot.model.Recipe
 
+
+
 @Composable
-fun FavouriteMeals(navController: NavController) {
+fun FavouriteMeals(navController: NavController, db: FirebaseFirestore) {
+    val user = hashMapOf(
+        "first" to "Ada",
+        "last" to "Lovelace",
+        "born" to 1815
+    )
     val recipes by remember { mutableStateOf(RecipeSource().loadRecipes()) }
-    RecipeList(recipes = recipes, navController = navController, onFavouriteToggle = {})
+    val favoriteRecipes = recipes.filter { it.isFavourite }
+    RecipeList(recipes = favoriteRecipes, navController = navController, onFavouriteToggle = {
+        db.collection("FavouriteMeals")
+            .add(user)
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
+    })
 }
 
 @Composable
@@ -75,7 +96,6 @@ fun RecipeCard(
     onFavouriteToggle: (Recipe) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Bruk rememberSaveable for å lagre tilstanden selv når komposisjonen blir re-creert
     var isFavourite by rememberSaveable { mutableStateOf(recipe.isFavourite) }
 
     Card(
@@ -113,7 +133,6 @@ fun RecipeCard(
                 IconToggleButton(
                     checked = isFavourite,
                     onCheckedChange = {
-                        // Oppdaterer tilstanden og kaller tilbakemeldingsfunksjonen
                         isFavourite = !isFavourite
                         onFavouriteToggle(recipe.copy(isFavourite = isFavourite))
                         Log.d("RecipeCard", "Favourite toggled for recipe: ${recipe.title}, isFavourite: $isFavourite")
