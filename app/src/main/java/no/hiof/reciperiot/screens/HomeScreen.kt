@@ -231,7 +231,7 @@ suspend fun generateGPT(client: OkHttpClient): List<Recipe> = withContext(Dispat
     val request : Request = Request.Builder()
         .url(url)
         .post(postBody)
-        .addHeader("Authorization", "Bearer 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")
+        .addHeader("Authorization", "Bearer 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")
         .build()
 
     //val call : Call = client.newCall(request)
@@ -269,11 +269,17 @@ suspend fun generateGPT(client: OkHttpClient): List<Recipe> = withContext(Dispat
                     R.drawable.food,
                     messageJSON.getString("recipe_time"),
                     false,
-                    messageJSON.getString("recipe_instructions")
+                    "dddd"
+                    //messageJSON.getString("recipe_instructions")
                 )
             )
             return@withContext recipes
         }
+    }
+    else{
+        println(response.message)
+        println(response)
+        println(response.body)
     }
 
     println("Something failed")
