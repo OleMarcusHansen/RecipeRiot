@@ -50,14 +50,22 @@ import no.hiof.reciperiot.model.Recipe
 
 @Composable
 fun FavouriteMeals(navController: NavController, db: FirebaseFirestore) {
-    val user = hashMapOf(
-        "first" to "Ada",
-        "last" to "Lovelace",
-        "born" to 1815
-    )
+
     val recipes by remember { mutableStateOf(RecipeSource().loadRecipes()) }
     val favoriteRecipes = recipes.filter { it.isFavourite }
-    RecipeList(recipes = favoriteRecipes, navController = navController, onFavouriteToggle = {
+    RecipeList(recipes = favoriteRecipes, navController = navController, onFavouriteToggle = {recipe ->
+        val isFavourite = recipe.isFavourite
+        //onFavouriteToggle(recipe.copy(isFavourite = isFavourite))
+        if (isFavourite) {
+        val user = mapOf(
+            "id" to recipe.id,
+            "title" to recipe.title,
+            "imageResourceId" to recipe.imageResourceId, // You might want to store the image URL instead of the resource ID
+            "cookingTime" to recipe.cookingTime,
+            "isFavourite" to recipe.isFavourite,
+            "recipe_instructions" to recipe.recipe_instructions
+        )
+
         db.collection("FavouriteMeals")
             .add(user)
             .addOnSuccessListener { documentReference ->
@@ -66,6 +74,19 @@ fun FavouriteMeals(navController: NavController, db: FirebaseFirestore) {
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding document", e)
             }
+        } else {
+            // If it's not a favorite anymore, remove it from the database
+            db.collection("FavouriteMeals")
+                .document(recipe.id.toString()) // Use recipe ID as the document ID
+                .delete()
+                .addOnSuccessListener {
+                    Log.d(TAG, "DocumentSnapshot removed with ID: ${recipe.id}")
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error removing document", e)
+                }
+        }
+
     })
 }
 
