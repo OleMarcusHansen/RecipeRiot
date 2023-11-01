@@ -268,7 +268,7 @@ suspend fun generateGPT(client: OkHttpClient): List<Recipe> = withContext(Dispat
                     R.drawable.food,
                     messageJSON.getString("recipe_time"),
                     false,
-                    "ddddd"
+                    messageJSON.getString("recipe_instructions")
                 )
             )
             return@withContext recipes
