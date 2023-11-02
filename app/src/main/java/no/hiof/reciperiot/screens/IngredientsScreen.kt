@@ -9,10 +9,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -25,15 +29,21 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.compose.AppTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 @Composable
-fun IngredientRow(name: String, checkedState: MutableState<Boolean>,
-                  onCheckedChange: (Boolean) -> Unit) {
+fun IngredientRow(
+    name: String,
+    checkedState: MutableState<Boolean>,
+    onCheckedChange: (Boolean) -> Unit)
+{
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -154,9 +164,12 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
         }
 
 
-        FloatingActionButton(onClick = { saveIngredients()
-        }) {
-            Text(text = "Save ingredients")
+        FloatingActionButton(onClick = {saveIngredients()},
+            modifier = modifier.padding(16.dp),
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+
+        ) {
+            Icon(Icons.Filled.Add, "Floating action button")
         }
 
 
@@ -166,13 +179,15 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
 
 }
 
-/*
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     AppTheme {
-        IngredientsScreen(snackbarHost = SnackbarHostState())
+        val snackbarHostState = remember { SnackbarHostState() }
+        val db = FirebaseFirestore.getInstance()
+        AppTheme {
+            IngredientsScreen(snackbarHost = snackbarHostState, db = db)
+        }
     }
 }
-
-*/
