@@ -32,8 +32,12 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 @Composable
-fun IngredientRow(name: String, checkedState: MutableState<Boolean>,
-                  onCheckedChange: (Boolean) -> Unit) {
+fun IngredientRow(
+    name: String,
+    checkedState: MutableState<Boolean>,
+    onCheckedChange: (Boolean) -> Unit)
+{
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -154,9 +158,12 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
         }
 
 
-        FloatingActionButton(onClick = { saveIngredients()
-        }) {
-            Text(text = "Save ingredients")
+        FloatingActionButton(onClick = {saveIngredients()},
+            modifier = modifier.padding(16.dp),
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
+
+        ) {
+            Icon(Icons.Filled.Add, "Floating action button")
         }
 
 
@@ -166,13 +173,15 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
 
 }
 
-/*
+
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     AppTheme {
-        IngredientsScreen(snackbarHost = SnackbarHostState())
+        val snackbarHostState = remember { SnackbarHostState() }
+        val db = FirebaseFirestore.getInstance()
+        AppTheme {
+            IngredientsScreen(snackbarHost = snackbarHostState, db = db)
+        }
     }
 }
-
-*/
