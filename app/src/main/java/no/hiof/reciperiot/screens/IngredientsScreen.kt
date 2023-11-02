@@ -26,7 +26,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
 @Composable
@@ -57,18 +59,23 @@ fun IngredientRow(name: String, checkedState: MutableState<Boolean>,
 
 // Saves names and checked states to fireStore
 fun saveIngredientstoDb(db: FirebaseFirestore, ingredientList: List<Pair<String, Boolean>>) {
-    val docRef = db.collection("ingredients").document("userIngredients")
+    val user = Firebase.auth.currentUser
+    //TODO: ensure logged in
+    val docRef = user?.let { db.collection("ingredients").document(it.uid) }
     val data = hashMapOf<String, Any>()
     for ((name, checked) in ingredientList) {
         data[name] = checked
     }
-    docRef.set(data)
-        .addOnSuccessListener {docRef ->
-            Log.d(TAG,"DocumentSnapcshot added!")
-        }
-        .addOnFailureListener { e ->
-            Log.w(TAG, "Error adding document", e)
-        }
+    //TODO: ensure logged in
+    if (docRef != null) {
+        docRef.set(data)
+            .addOnSuccessListener {docRef ->
+                Log.d(TAG,"DocumentSnapcshot added!")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+            }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
