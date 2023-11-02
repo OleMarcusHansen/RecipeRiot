@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -55,7 +56,7 @@ import java.io.IOException
 @Composable
 fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, client: OkHttpClient, modifier: Modifier = Modifier, db: FirebaseFirestore) {
     // Options
-    val time = remember { mutableStateOf("") }
+    val time = remember { mutableStateOf("20") }
 
     // Ingredienser fra databasen, som i ingredientsscreen
     val ingredients = listOf("Banana", "Eggs", "Bacon", "Ham", "Turkey")
@@ -77,16 +78,14 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                 items(ingredients.size) {index ->
                     Text(ingredients[index])
                 }
-            })
-        /*ingredients.forEach { ingredient ->
-            Text(ingredient)
-        }*/
+            }
+        )
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = {
                 /*ChatGPT*/
 
                 scope.launch {
-                    val newRecipes = generateGPT(client)
+                    val newRecipes = generateGPT(client, ingredients, time.value)
                     recipes.value = newRecipes
                     snackbarHost.showSnackbar("Oppskrift generert")
                 }
@@ -220,25 +219,22 @@ fun Ingredient(text : String, state : MutableState<Boolean>){
     return recipes
 }*/
 
-suspend fun generateGPT(client: OkHttpClient): List<Recipe> = withContext(Dispatchers.IO) {
+suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: String): List<Recipe> = withContext(Dispatchers.IO) {
     // ... (Your existing code)
     println("test")
 
     //prompt til chatGPT
     //bør bli justert og testet for å få best mulig resultat
-    val prompt = """I have the ingredients: cheese, bacon, eggs, onions. 
-        I have 20 minutes to make food. Generate a recipe for me. 
-        The output should be in JSON format with the keys recipe_name, 
-        recipe_time, recipe_instructions and recipe_nutrition.
-        Answer with only the JSON string."""
+    val prompt = """I have only the ingredients: ${ingredients}. I have ${time} minutes to make food. Generate a recipe for me. Your output should be in JSON format with the keys recipe_name, recipe_time, recipe_instructions and recipe_nutrition"""
+
+    println(prompt)
 
     //kalle chatCompletion api
-
     val mediaType: MediaType = "application/json; charset=utf-8".toMediaType()
     val body = """
         {
             "model": "gpt-3.5-turbo",
-            "messages": [{"role": "system", "content": "You are a recipe generator"}, {"role": "user", "content": "Create a recipe in JSON format with the keys recipe_name, recipe_time, recipe_instructions and recipe_nutrition."}]
+            "messages": [{"role": "system", "content": "You are a recipe generator"}, {"role": "user", "content": "${prompt}"}]
         }
     """
     val postBody: RequestBody = body.toRequestBody(mediaType)
