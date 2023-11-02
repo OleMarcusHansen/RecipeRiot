@@ -4,10 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -52,14 +55,16 @@ import java.io.IOException
 
 @Composable
 fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, client: OkHttpClient, modifier: Modifier = Modifier, db: FirebaseFirestore) {
-    val time = remember { mutableStateOf("") }
+    // Options
+    val time = remember { mutableStateOf("20") }
 
-    //Last inn ingredienser fra databasen, gjør som i ingredientsscreen
-    val paprika = remember { mutableStateOf(false) }
+    // Ingredienser fra databasen, som i ingredientsscreen
+    val ingredients = listOf("Banana", "Eggs", "Bacon", "Ham", "Turkey")
 
+    // Liste med recipes. For å kanskje generere flere samtidig
     val recipes = remember { mutableStateOf(emptyList<Recipe>()) }
 
-    //Til snackbar
+    // Til snackbar
     val scope = rememberCoroutineScope()
 
     Column(modifier = modifier
@@ -68,14 +73,19 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
         Text(stringResource(R.string.home_options), fontSize = 20.sp)
         TimeInput(text = stringResource(R.string.home_options_time), state = time)
         Text(stringResource(R.string.home_ingredients), fontSize = 20.sp)
-        //bruk mutablestate til ingredienser til å lage liste av ingredienser
-        Ingredient(text = "Paprika", state = paprika)
+        LazyVerticalGrid(columns = GridCells.Adaptive(90.dp),
+            content = {
+                items(ingredients.size) {index ->
+                    Text(ingredients[index])
+                }
+            }
+        )
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = {
                 /*ChatGPT*/
 
                 scope.launch {
-                    val newRecipes = generateGPT(client)
+                    val newRecipes = generateGPT(client, ingredients, time.value)
                     recipes.value = newRecipes
                     snackbarHost.showSnackbar("Oppskrift generert")
                 }
@@ -109,18 +119,16 @@ fun TimeInput(text : String, state : MutableState<String>){
 }
 
 @Composable
+fun IngredientList(ingredients : List<String>){
+
+}
+/*
+@Composable
 fun Ingredient(text : String, state : MutableState<Boolean>){
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround){
         Text(text)
-        Checkbox(
-            checked = state.value,
-            onCheckedChange = { newValue ->
-                state.value = newValue
-            },
-            modifier = Modifier.size(24.dp)
-        )
     }
-}
+}*/
 
 
 //bør ta options og ingredienser som parametere
@@ -211,25 +219,22 @@ fun Ingredient(text : String, state : MutableState<Boolean>){
     return recipes
 }*/
 
-suspend fun generateGPT(client: OkHttpClient): List<Recipe> = withContext(Dispatchers.IO) {
+suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: String): List<Recipe> = withContext(Dispatchers.IO) {
     // ... (Your existing code)
     println("test")
 
     //prompt til chatGPT
     //bør bli justert og testet for å få best mulig resultat
-    val prompt = """I have the ingredients: cheese, bacon, eggs, onions. 
-        I have 20 minutes to make food. Generate a recipe for me. 
-        The output should be in JSON format with the keys recipe_name, 
-        recipe_time, recipe_instructions and recipe_nutrition.
-        Answer with only the JSON string."""
+    val prompt = """I have only the ingredients: ${ingredients}. I have ${time} minutes to make food. Generate a recipe for me. Your output should be in JSON format with the keys recipe_name, recipe_time, recipe_instructions and recipe_nutrition"""
+
+    println(prompt)
 
     //kalle chatCompletion api
-
     val mediaType: MediaType = "application/json; charset=utf-8".toMediaType()
     val body = """
         {
             "model": "gpt-3.5-turbo",
-            "messages": [{"role": "system", "content": "You are a recipe generator"}, {"role": "user", "content": "Create a recipe in JSON format with the keys recipe_name, recipe_time, recipe_instructions and recipe_nutrition."}]
+            "messages": [{"role": "system", "content": "You are a recipe generator"}, {"role": "user", "content": "${prompt}"}]
         }
     """
     val postBody: RequestBody = body.toRequestBody(mediaType)
