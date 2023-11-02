@@ -2,16 +2,17 @@ package no.hiof.reciperiot.screens
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -100,12 +101,16 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
         }
     }
 
-    Column(
+    // Counter for å genere rader for lazyColumn
+    val rowCount = 1
+
+    LazyColumn(
         modifier = modifier
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+        horizontalAlignment = Alignment.CenterHorizontally,
+
+    ) {items(count = rowCount) {item ->
 
         // Input field for adding new ingredients
         Row(
@@ -141,10 +146,14 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
             )
         }
 
-        Button(onClick = { saveIngredients()
+
+        FloatingActionButton(onClick = { saveIngredients()
         }) {
             Text(text = "Save ingredients")
         }
+
+
+    }
 
     }
 
