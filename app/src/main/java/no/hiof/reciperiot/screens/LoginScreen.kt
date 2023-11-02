@@ -29,6 +29,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import no.hiof.reciperiot.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,6 +78,11 @@ fun AuthenticationScreen(
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             onSignInClick(email, password)
+                            val user = Firebase.auth.currentUser
+
+                            if (user != null) {
+                                Log.d(TAG, "Testicular torsion \n${user.uid}")
+                            }
                             // Sign in successful, navigate to the main app screen.
                         } else {
                             //onSignInClick(email, password)
