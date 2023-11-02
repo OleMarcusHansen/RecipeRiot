@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -52,14 +54,16 @@ import java.io.IOException
 
 @Composable
 fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, client: OkHttpClient, modifier: Modifier = Modifier, db: FirebaseFirestore) {
+    // Options
     val time = remember { mutableStateOf("") }
 
-    //Last inn ingredienser fra databasen, gjør som i ingredientsscreen
-    val paprika = remember { mutableStateOf(false) }
+    // Ingredienser fra databasen, som i ingredientsscreen
+    val ingredients = listOf("Banana", "Eggs", "Bacon", "Ham", "Turkey")
 
+    // Liste med recipes. For å kanskje generere flere samtidig
     val recipes = remember { mutableStateOf(emptyList<Recipe>()) }
 
-    //Til snackbar
+    // Til snackbar
     val scope = rememberCoroutineScope()
 
     Column(modifier = modifier
@@ -68,8 +72,15 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
         Text(stringResource(R.string.home_options), fontSize = 20.sp)
         TimeInput(text = stringResource(R.string.home_options_time), state = time)
         Text(stringResource(R.string.home_ingredients), fontSize = 20.sp)
-        //bruk mutablestate til ingredienser til å lage liste av ingredienser
-        Ingredient(text = "Paprika", state = paprika)
+        LazyVerticalGrid(columns = GridCells.Adaptive(90.dp),
+            content = {
+                items(ingredients.size) {index ->
+                    Text(ingredients[index])
+                }
+            })
+        /*ingredients.forEach { ingredient ->
+            Text(ingredient)
+        }*/
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = {
                 /*ChatGPT*/
@@ -109,18 +120,16 @@ fun TimeInput(text : String, state : MutableState<String>){
 }
 
 @Composable
+fun IngredientList(ingredients : List<String>){
+
+}
+/*
+@Composable
 fun Ingredient(text : String, state : MutableState<Boolean>){
     Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround){
         Text(text)
-        Checkbox(
-            checked = state.value,
-            onCheckedChange = { newValue ->
-                state.value = newValue
-            },
-            modifier = Modifier.size(24.dp)
-        )
     }
-}
+}*/
 
 
 //bør ta options og ingredienser som parametere
