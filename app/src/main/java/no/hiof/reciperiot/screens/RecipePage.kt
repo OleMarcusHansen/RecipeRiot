@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.firebase.firestore.FirebaseFirestore
+import no.hiof.reciperiot.R
 import no.hiof.reciperiot.data.RecipeSource
 import no.hiof.reciperiot.model.Recipe
 
@@ -54,7 +55,8 @@ fun RecipePage1(navController: NavController, recipeId: Int, db: FirebaseFiresto
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Image(
-                        painter = painterResource(id = recipe.imageResourceId),
+                        //painter = painterResource(id = recipe.imageResourceId),
+                        painter = painterResource(id = R.drawable.food),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
