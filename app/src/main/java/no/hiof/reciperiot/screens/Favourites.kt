@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.data.RecipeSource
 import no.hiof.reciperiot.model.Recipe
@@ -51,13 +52,15 @@ import no.hiof.reciperiot.model.Recipe
 @Composable
 fun FavouriteMeals(navController: NavController, db: FirebaseFirestore) {
 
+
     val recipes by remember { mutableStateOf(RecipeSource().loadRecipes()) }
-    val favoriteRecipes = recipes.filter { it.isFavourite }
+    val favoriteRecipes = recipes//.filter { it.isFavourite }
     //val favoriteRecipes = db.collection("FavouriteMeals")
     //    .whereEqualTo("isFavourite", true)
     //    .get()
+
     RecipeList(
-        recipes = favoriteRecipes,
+        recipes = recipes,
         navController = navController,
         onFavouriteToggle = {
         },
@@ -158,7 +161,8 @@ fun RecipeCard(
             modifier = Modifier.padding(8.dp)
         ) {
             Image(
-                painter = painterResource(id = recipe.imageResourceId),
+                //painter = painterResource(id = recipe.imageResourceId),
+                painter = painterResource(id = R.drawable.food),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
