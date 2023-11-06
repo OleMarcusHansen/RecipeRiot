@@ -55,8 +55,8 @@ fun RecipePage1(navController: NavController, recipeId: Int, db: FirebaseFiresto
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Image(
-                        //painter = painterResource(id = recipe.imageResourceId),
-                        painter = painterResource(id = R.drawable.food),
+                        painter = painterResource(id = recipe.imageResourceId),
+                        //painter = painterResource(id = R.drawable.food),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier

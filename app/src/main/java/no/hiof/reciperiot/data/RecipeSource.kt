@@ -60,8 +60,10 @@ class RecipeSource() {
             }
 
             Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes.size}")
+            Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes}")
         }
     }
+
 
     fun loadRecipes(): List<Recipe> {
         return recipes.toList()
