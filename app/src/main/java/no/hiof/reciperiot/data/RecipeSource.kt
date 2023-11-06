@@ -47,7 +47,9 @@ class RecipeSource() {
     private val recipes: MutableList<Recipe> = mutableListOf()
 
     init {
-        collectionReference.addSnapshotListener { snapshot, exception ->
+        collectionReference
+            .whereEqualTo("userid", user?.uid)
+            .addSnapshotListener { snapshot, exception ->
             if (exception != null) {
                 Log.e("FirestoreError", "Error fetching data: ${exception.message}")
                 return@addSnapshotListener
