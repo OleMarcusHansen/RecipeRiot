@@ -76,7 +76,7 @@ fun handleFirestoreAdd(recipe: Recipe, db: FirebaseFirestore) {
     val user = mapOf(
         "id" to recipe.id,
         "title" to recipe.title,
-        "imageResourceId" to recipe.imageResourceId,
+        //"imageResourceId" to recipe.imageResourceId,
         "cookingTime" to recipe.cookingTime,
         "isFavourite" to recipe.isFavourite,
         "recipe_instructions" to recipe.recipe_instructions
