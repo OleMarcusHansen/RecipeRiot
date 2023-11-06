@@ -111,7 +111,7 @@ fun RecipePage1(navController: NavController, recipeId: Int, db: FirebaseFiresto
                         fontSize = 20.sp
                     )
                     Text(
-                        text = "recipeid: $recipeId",
+                        text = "recipeid: ${recipeId}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),

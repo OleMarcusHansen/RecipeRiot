@@ -31,7 +31,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -222,7 +224,7 @@ fun Ingredient(text : String, state : MutableState<Boolean>){
 suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: String): List<Recipe> = withContext(Dispatchers.IO) {
     // ... (Your existing code)
     println("test")
-
+    val user = Firebase.auth.currentUser
     //prompt til chatGPT
     //bør bli justert og testet for å få best mulig resultat
     val prompt = """I have only the ingredients: ${ingredients}. I have ${time} minutes to make food. Generate a recipe for me. Your output should be in JSON format with the keys recipe_name, recipe_time, recipe_instructions and recipe_nutrition"""
@@ -282,7 +284,8 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
                     R.drawable.food,
                     messageJSON.getString("recipe_time"),
                     false,
-                    messageJSON.getString("recipe_instructions")
+                    messageJSON.getString("recipe_instructions"),
+                    user!!.uid
                 )
             )
             return@withContext recipes

@@ -60,6 +60,8 @@ class RecipeSource() {
                 val recipe = documentSnapshot.toObject(Recipe::class.java)
                 Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes.size}")
                 Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes}")
+                Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${documentSnapshot.reference.id}")
+
 
 
                 recipe?.let { recipes.add(it) }
