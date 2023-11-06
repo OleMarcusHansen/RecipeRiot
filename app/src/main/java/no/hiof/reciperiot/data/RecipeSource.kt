@@ -44,7 +44,6 @@ class RecipeSource() {
     private val recipes: MutableList<Recipe> = mutableListOf()
 
     init {
-        // Attach a listener to fetch recipes from Firestore
         collectionReference.addSnapshotListener { snapshot, exception ->
             if (exception != null) {
                 Log.e("FirestoreError", "Error fetching data: ${exception.message}")
@@ -52,18 +51,12 @@ class RecipeSource() {
             }
 
             recipes.clear()
-            Log.d("FirestoreData", "Data fetched successfully. Num77777ber of recipes: ${recipes.size}")
-
             snapshot?.documents?.forEach { documentSnapshot ->
-                Log.d("FirestoreData", "Data fetched successfully. Num66667ber of recipes: ${recipes.size}")
                 val recipe = documentSnapshot.toObject(Recipe::class.java)
-                Log.d("FirestoreData", "Data fetched successfully. Num55555ber of recipes: ${recipes.size}")
+                Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes.size}")
 
                 recipe?.let { recipes.add(it) }
             }
-
-            Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes.size}")
-            Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes}")
         }
     }
 
@@ -73,7 +66,6 @@ class RecipeSource() {
     }
 
     fun updateRecipe(recipeId: String, isFavourite: Boolean) {
-        // Update the favorite status in Firestore
         val recipeRef = collectionReference.document(recipeId)
         recipeRef.update("isFavourite", isFavourite)
             .addOnSuccessListener {

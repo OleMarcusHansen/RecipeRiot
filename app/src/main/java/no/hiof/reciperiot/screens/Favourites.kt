@@ -54,10 +54,6 @@ fun FavouriteMeals(navController: NavController, db: FirebaseFirestore) {
 
 
     val recipes by remember { mutableStateOf(RecipeSource().loadRecipes()) }
-    //val favoriteRecipes = recipes//.filter { it.isFavourite }
-    //val favoriteRecipes = db.collection("FavouriteMeals")
-    //    .whereEqualTo("isFavourite", true)
-    //    .get()
 
     RecipeList(
         recipes = recipes,
@@ -76,7 +72,7 @@ fun handleFirestoreAdd(recipe: Recipe, db: FirebaseFirestore) {
     val user = mapOf(
         "id" to recipe.id,
         "title" to recipe.title,
-        //"imageResourceId" to recipe.imageResourceId,
+        "imageResourceId" to recipe.imageResourceId,
         "cookingTime" to recipe.cookingTime,
         "isFavourite" to recipe.isFavourite,
         "recipe_instructions" to recipe.recipe_instructions

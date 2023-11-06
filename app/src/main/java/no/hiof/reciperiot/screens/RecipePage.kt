@@ -41,7 +41,6 @@ import no.hiof.reciperiot.model.Recipe
 @Composable
 fun RecipePage1(navController: NavController, recipeId: Int, db: FirebaseFirestore) {
     val recipeSource = remember { RecipeSource() }
-    // Hent resten av variablene fra RecipeSource basert på recipeId
     val recipe = recipeSource.loadRecipes().firstOrNull { it.id == recipeId }
     var isFavourite by rememberSaveable { mutableStateOf(recipe?.isFavourite ?: false) }
 
@@ -55,8 +54,8 @@ fun RecipePage1(navController: NavController, recipeId: Int, db: FirebaseFiresto
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Image(
-                        //painter = painterResource(id = recipe.imageResourceId),
-                        painter = painterResource(id = R.drawable.food),
+                        painter = painterResource(id = recipe.imageResourceId),
+                        //painter = painterResource(id = R.drawable.food),
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
