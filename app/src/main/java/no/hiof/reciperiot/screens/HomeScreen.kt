@@ -86,6 +86,7 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
 
                 scope.launch {
                     val newRecipes = generateGPT(client, ingredients, time.value)
+                    //val imageString = generateImage(client, ingredients)
                     recipes.value = newRecipes
                     snackbarHost.showSnackbar("Oppskrift generert")
                 }
@@ -221,7 +222,7 @@ fun Ingredient(text : String, state : MutableState<Boolean>){
 
 suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: String): List<Recipe> = withContext(Dispatchers.IO) {
     // ... (Your existing code)
-    println("test")
+    println("start gpt generate")
 
     //prompt til chatGPT
     //bør bli justert og testet for å få best mulig resultat
@@ -246,9 +247,6 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
         .post(postBody)
         .addHeader("Authorization", "Bearer " + Secrets.gpt_key)
         .build()
-
-    //val call : Call = client.newCall(request)
-    //val resp : Response = call.execute()
 
     // Make the API call
     val response: Response = try {
@@ -305,6 +303,61 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
         "Something failed"
     )
     return@withContext listOf(defaultRecipe)
+}
+
+suspend fun generateImage(client: OkHttpClient, ingredients: List<String>): String {
+    println("start image generate")
+
+    //prompt
+    //bør bli justert og testet for å få best mulig resultat
+    val prompt = """The ingredients $ingredients"""
+
+    println(prompt)
+
+    //kalle chatCompletion api
+    val mediaType: MediaType = "application/json; charset=utf-8".toMediaType()
+    val body = """
+        {
+            "prompt": "$prompt",
+            "size": "256x256"
+        }
+    """
+    val postBody: RequestBody = body.toRequestBody(mediaType)
+
+    val url = "https://api.openai.com/v1/images/generations"
+
+    val request : Request = Request.Builder()
+        .url(url)
+        .post(postBody)
+        .addHeader("Authorization", "Bearer " + Secrets.gpt_key)
+        .build()
+
+    // Make the API call
+    val response: Response = try {
+        client.newCall(request).await()
+    } catch (e: IOException) {
+        // Handle the exception here
+        println(e)
+        return "failed"
+    }
+
+    // Handle the response and return the list of recipes
+    if (response.isSuccessful) {
+        val responseString = response.body?.string()
+        println(responseString)
+        if (responseString != null) {
+            return responseString
+        }
+    }
+    else{
+        println(response.message)
+        println(response)
+        println(response.body)
+    }
+
+    println("Something failed")
+    // Handle errors or return a default value in case of failure
+    return "failed"
 }
 
 // Extension function to make Call awaitable with a coroutine
