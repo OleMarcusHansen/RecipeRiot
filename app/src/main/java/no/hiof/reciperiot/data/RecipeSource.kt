@@ -18,7 +18,7 @@ import no.hiof.reciperiot.model.Recipe
 class RecipeSource1() {
     private val recipes: MutableList<Recipe> = mutableListOf(
         Recipe(1,"mat", R.drawable.food,
-            "45min", true, "dsf", "Ls53mVW30tXLzCBJRjxXChAhYQm2"),
+            "45min", true, "dsf", "agI84BahTTXBHvltC1dfNndLk0n2"),
         Recipe(2, "pizza", R.drawable.food,
             "30min", false,
             "1. Preheat a panini press or a stovetop grill pan over medium-high heat.\n\n" +
@@ -27,9 +27,9 @@ class RecipeSource1() {
                     "4. Add a few slices of cheese on top of the turkey ham.\n\n" +
                     "5. Thinly slice some onions and place them on the cheese.\n\n" +
                     "6. Add a few pickles for some extra flavor.\n\n" +
-                    "7. Top each sandwich with another slice of bread to form a sandwich.\n\n", "Ls53mVW30tXLzCBJRjxXChAhYQm2"),
+                    "7. Top each sandwich with another slice of bread to form a sandwich.\n\n", "agI84BahTTXBHvltC1dfNndLk0n2"),
         Recipe(3, "hamburger", R.drawable.hamburger,
-            "2000min", true, "bare lag den bror", "Ls53mVW30tXLzCBJRjxXChAhYQm2")
+            "2000min", true, "bare lag den bror", "agI84BahTTXBHvltC1dfNndLk0n2")
     )
     fun loadRecipes(): List<Recipe> {
         return recipes.toList()
