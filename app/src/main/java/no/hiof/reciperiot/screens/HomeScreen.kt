@@ -259,6 +259,7 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
             "Burned toast",
             R.drawable.food,
             "60",
+            "test",
             false,
             "Timed out"
         )
@@ -278,6 +279,7 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
                     2,
                     messageJSON.getString("recipe_name"),
                     R.drawable.food,
+                    "test",
                     messageJSON.getString("recipe_time"),
                     false,
                     messageJSON.getString("recipe_instructions")
@@ -298,6 +300,7 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
         2,
         "Failed tomato soup",
         R.drawable.food,
+        "test",
         "60",
         false,
         "Something failed"

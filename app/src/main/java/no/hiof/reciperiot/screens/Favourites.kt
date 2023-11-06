@@ -4,8 +4,10 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,6 +41,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
@@ -153,10 +156,11 @@ fun RecipeCard(
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(8.dp)
+        Row(
+            modifier = Modifier.padding(8.dp).fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Image(
+            /*Image(
                 //painter = painterResource(id = recipe.imageResourceId),
                 painter = painterResource(id = R.drawable.food),
                 contentDescription = null,
@@ -165,15 +169,40 @@ fun RecipeCard(
                     .fillMaxWidth()
                     .height(180.dp)
                     .clip(RoundedCornerShape(8.dp))
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+            )*/
+            //Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = recipe.title,
                 style = MaterialTheme.typography.headlineMedium,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            Box(
+            Column{
+                AsyncImage(model = recipe.imageURL, contentDescription = "Image of the recipe")
+                IconToggleButton(
+                    checked = isFavourite,
+                    onCheckedChange = {
+                        isFavourite = !isFavourite
+                        onFavouriteToggle(recipe.copy(isFavourite = isFavourite))
+                        if (isFavourite) {
+                            onAddToFavorites(recipe)
+                        } else {
+                            onRemoveFromFavorites(recipe)
+                        }
+                        Log.d("RecipeCard", "Favourite toggled for recipe: ${recipe.title}, isFavourite: $isFavourite")
+                    }) {
+                    Icon(
+                        imageVector = if (isFavourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = null,
+                        tint = Color.Black,
+                        modifier = modifier.graphicsLayer {
+                            scaleX = 1.3f
+                            scaleY = 1.3f
+                        },
+                    )
+                }
+            }
+            /*Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
             ) {
@@ -199,7 +228,7 @@ fun RecipeCard(
                         },
                     )
                 }
-            }
+            }*/
         }
     }
 }

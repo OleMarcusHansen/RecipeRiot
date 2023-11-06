@@ -33,6 +33,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.google.firebase.firestore.FirebaseFirestore
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.data.RecipeSource
@@ -53,7 +54,7 @@ fun RecipePage1(navController: NavController, recipeId: Int, db: FirebaseFiresto
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Image(
+                    /*Image(
                         painter = painterResource(id = recipe.imageResourceId),
                         //painter = painterResource(id = R.drawable.food),
                         contentDescription = null,
@@ -62,7 +63,8 @@ fun RecipePage1(navController: NavController, recipeId: Int, db: FirebaseFiresto
                             .fillMaxWidth()
                             .height(200.dp)
                             .clip(RoundedCornerShape(8.dp))
-                    )
+                    )*/
+                    AsyncImage(model = recipe.imageURL, contentDescription = "Image of the recipe")
                     IconToggleButton(
                         checked = isFavourite,
                         onCheckedChange = {
