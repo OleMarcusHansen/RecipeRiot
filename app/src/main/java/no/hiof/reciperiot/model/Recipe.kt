@@ -8,6 +8,7 @@ data class Recipe(
     @DrawableRes val imageResourceId: Int = 0,
     val cookingTime: String = "",
     var isFavourite: Boolean = true,
-    var recipe_instructions: String = ""
+    var recipe_instructions: String = "",
+    var userid: String = ""
 
 )

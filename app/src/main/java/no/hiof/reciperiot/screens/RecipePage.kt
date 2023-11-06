@@ -131,6 +131,13 @@ fun RecipePage1(navController: NavController, recipeId: Int, db: FirebaseFiresto
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
+                    Text(
+                        text = recipe.userid,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 20.sp
+                    )
 
                 }
             }

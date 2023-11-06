@@ -40,6 +40,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.firebase.Firebase
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import no.hiof.reciperiot.R
@@ -69,17 +70,20 @@ fun FavouriteMeals(navController: NavController, db: FirebaseFirestore) {
     )
 }
 fun handleFirestoreAdd(recipe: Recipe, db: FirebaseFirestore) {
-    val user = mapOf(
+    val user = com.google.firebase.ktx.Firebase.auth.currentUser
+
+    val recipeadd = mapOf(
         "id" to recipe.id,
         "title" to recipe.title,
         "imageResourceId" to recipe.imageResourceId,
         "cookingTime" to recipe.cookingTime,
         "isFavourite" to recipe.isFavourite,
-        "recipe_instructions" to recipe.recipe_instructions
+        "recipe_instructions" to recipe.recipe_instructions,
+        "userid" to recipe.userid
     )
 
     db.collection("FavouriteMeals")
-        .add(user)
+        .add(recipeadd)
         .addOnSuccessListener { documentReference ->
             Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
         }
@@ -89,9 +93,11 @@ fun handleFirestoreAdd(recipe: Recipe, db: FirebaseFirestore) {
 }
 
 fun handleFirestoreRemove(recipe: Recipe, db: FirebaseFirestore) {
+    val user = com.google.firebase.ktx.Firebase.auth.currentUser
     Log.d(TAG, "Before get()")
     db.collection("FavouriteMeals")
         .whereEqualTo("id", recipe.id)
+        .whereEqualTo("userid", user?.uid)
         .get()
         .addOnSuccessListener { documents ->
             for (document in documents) {
