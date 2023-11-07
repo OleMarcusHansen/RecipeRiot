@@ -116,6 +116,7 @@ fun handleFirestoreRemove(recipe: Recipe, db: FirebaseFirestore) {
     Log.d(TAG, "Before get()")
     db.collection("FavouriteMeals")
         .whereEqualTo("userid", user?.uid)
+        .whereEqualTo("id", recipe.id)
         .get()
         .addOnSuccessListener { documents ->
             for (document in documents) {
