@@ -259,7 +259,7 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
         // Handle the exception here
         println(e)
         val defaultRecipe = Recipe(
-            2,
+            "ik",
             "Burned toast",
             R.drawable.food,
             "60",
@@ -279,7 +279,7 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
             println(messageJSON)
             val recipes = listOf(
                 Recipe(
-                    2,
+                    "yh",
                     messageJSON.getString("recipe_name"),
                     R.drawable.food,
                     messageJSON.getString("recipe_time"),
@@ -300,7 +300,7 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
     println("Something failed")
     // Handle errors or return a default value in case of failure
     val defaultRecipe = Recipe(
-        2,
+        "uh",
         "Failed tomato soup",
         R.drawable.food,
         "60",

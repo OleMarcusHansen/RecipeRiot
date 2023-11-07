@@ -3,7 +3,7 @@ package no.hiof.reciperiot.model
 import androidx.annotation.DrawableRes
 
 data class Recipe(
-    val id: Int = 0,
+    val id: String = "",
     val title: String = "",
     @DrawableRes val imageResourceId: Int = 0,
     val cookingTime: String = "",

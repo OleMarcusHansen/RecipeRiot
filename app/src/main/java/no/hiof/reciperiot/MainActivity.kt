@@ -167,9 +167,9 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
                 })
             }
             composable("${Screen.RecipePage.route}/{recipeid}",
-                arguments = listOf(navArgument("recipeid"){ type = NavType.IntType})
+                arguments = listOf(navArgument("recipeid"){ type = NavType.StringType})
             ) { backStackEntry ->
-                RecipePage1(navController, backStackEntry.arguments!!.getInt("recipeid", 1), db)
+                RecipePage1(navController, backStackEntry.arguments!!.getString("recipeid", "heipa"), db)
             }
         }
     }

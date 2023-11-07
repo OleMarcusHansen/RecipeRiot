@@ -42,6 +42,7 @@ import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.firestore.firestore
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
@@ -69,11 +70,27 @@ fun FavouriteMeals(navController: NavController, db: FirebaseFirestore) {
         }
     )
 }
+private fun updateRecipeId(recipe: Recipe, documentId: String, db: FirebaseFirestore) {
+    val updatedRecipe = mapOf("id" to documentId)
+    val user = com.google.firebase.ktx.Firebase.auth.currentUser
+
+    if (user != null) {
+        db.collection("FavouriteMeals")
+            .document(documentId)
+            .set(updatedRecipe, SetOptions.merge())
+            .addOnSuccessListener {
+                Log.d(TAG, "Recipe ID updated successfully")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error updating recipe ID", e)
+            }
+    }
+}
 fun handleFirestoreAdd(recipe: Recipe, db: FirebaseFirestore) {
     val user = com.google.firebase.ktx.Firebase.auth.currentUser
 
     val recipeadd = mapOf(
-        "id" to recipe.id,
+        "id" to "",
         "title" to recipe.title,
         "imageResourceId" to recipe.imageResourceId,
         "cookingTime" to recipe.cookingTime,
@@ -85,6 +102,8 @@ fun handleFirestoreAdd(recipe: Recipe, db: FirebaseFirestore) {
     db.collection("FavouriteMeals")
         .add(recipeadd)
         .addOnSuccessListener { documentReference ->
+            val updatedRecipe = recipe.copy(id = documentReference.id)
+            updateRecipeId(updatedRecipe, documentReference.id, db)
             Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
         }
         .addOnFailureListener { e ->
@@ -96,18 +115,22 @@ fun handleFirestoreRemove(recipe: Recipe, db: FirebaseFirestore) {
     val user = com.google.firebase.ktx.Firebase.auth.currentUser
     Log.d(TAG, "Before get()")
     db.collection("FavouriteMeals")
-        .whereEqualTo("id", recipe.id)
         .whereEqualTo("userid", user?.uid)
         .get()
         .addOnSuccessListener { documents ->
             for (document in documents) {
+                // Get the document ID
+                val documentId = document.id
 
-                document.reference.delete()
+                // Delete the document based on the document ID
+                db.collection("FavouriteMeals")
+                    .document(documentId)
+                    .delete()
                     .addOnSuccessListener {
-                        Log.d(TAG, "DocumentSnapshot successfully deleted with ID: ${document.id}")
+                        Log.d(TAG, "DocumentSnapshot successfully deleted with ID: $documentId")
                     }
                     .addOnFailureListener { e ->
-                        Log.w(TAG, "Error deleting document with ID: ${document.id}", e)
+                        Log.w(TAG, "Error deleting document with ID: $documentId", e)
                     }
             }
         }
@@ -142,7 +165,7 @@ fun RecipeList(
 @Composable
 fun RecipeCard(
     recipe: Recipe,
-    onRecipeClick: (Int) -> Unit,
+    onRecipeClick: (String) -> Unit,
     onFavouriteToggle: (Recipe) -> Unit,
     onAddToFavorites: (Recipe) -> Unit,
     onRemoveFromFavorites: (Recipe) -> Unit,
