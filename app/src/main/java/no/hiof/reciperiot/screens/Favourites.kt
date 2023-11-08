@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -37,6 +39,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -171,13 +174,17 @@ fun RecipeCard(
                     .clip(RoundedCornerShape(8.dp))
             )*/
             //Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = recipe.title,
-                style = MaterialTheme.typography.headlineMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Column{
+            Column(modifier = Modifier.width(200.dp)){
+                Text(
+                    text = recipe.title,
+                    style = MaterialTheme.typography.headlineMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(recipe.cookingTime)
+            }
+            Column(modifier = Modifier.width(with(LocalDensity.current) { 250.toDp() }),
+                horizontalAlignment = Alignment.End){
                 AsyncImage(model = recipe.imageURL, contentDescription = "Image of the recipe")
                 IconToggleButton(
                     checked = isFavourite,

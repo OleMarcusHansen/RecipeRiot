@@ -279,7 +279,7 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
                     2,
                     messageJSON.getString("recipe_name"),
                     R.drawable.food,
-                    "test",
+                    generateImage(client, messageJSON.getString("recipe_name")),
                     messageJSON.getString("recipe_time"),
                     false,
                     messageJSON.getString("recipe_instructions")
@@ -308,12 +308,12 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
     return@withContext listOf(defaultRecipe)
 }
 
-suspend fun generateImage(client: OkHttpClient, ingredients: List<String>): String {
+suspend fun generateImage(client: OkHttpClient, recipe: String): String {
     println("start image generate")
 
     //prompt
     //bør bli justert og testet for å få best mulig resultat
-    val prompt = """The ingredients $ingredients"""
+    val prompt = """$recipe"""
 
     println(prompt)
 
