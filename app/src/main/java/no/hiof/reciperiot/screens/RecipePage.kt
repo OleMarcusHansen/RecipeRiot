@@ -40,7 +40,7 @@ import no.hiof.reciperiot.data.RecipeSource
 import no.hiof.reciperiot.model.Recipe
 
 @Composable
-fun RecipePage1(navController: NavController, recipeId: Int, db: FirebaseFirestore) {
+fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFirestore) {
     val recipeSource = remember { RecipeSource() }
     val recipe = recipeSource.loadRecipes().firstOrNull { it.id == recipeId }
     var isFavourite by rememberSaveable { mutableStateOf(recipe?.isFavourite ?: false) }
@@ -113,7 +113,7 @@ fun RecipePage1(navController: NavController, recipeId: Int, db: FirebaseFiresto
                         fontSize = 20.sp
                     )
                     Text(
-                        text = "recipeid: $recipeId",
+                        text = "recipeid: ${recipe.id}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
@@ -128,6 +128,13 @@ fun RecipePage1(navController: NavController, recipeId: Int, db: FirebaseFiresto
                     )
                     Text(
                         text = recipe.recipe_instructions,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 20.sp
+                    )
+                    Text(
+                        text = recipe.userid,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),

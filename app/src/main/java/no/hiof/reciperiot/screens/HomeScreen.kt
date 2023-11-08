@@ -31,7 +31,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -86,7 +88,6 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
 
                 scope.launch {
                     val newRecipes = generateGPT(client, ingredients, time.value)
-                    //val imageString = generateImage(client, ingredients)
                     recipes.value = newRecipes
                     snackbarHost.showSnackbar("Oppskrift generert")
                 }
@@ -224,6 +225,7 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
     // ... (Your existing code)
     println("start gpt generate")
 
+    val user = Firebase.auth.currentUser
     //prompt til chatGPT
     //bør bli justert og testet for å få best mulig resultat
     val prompt = """I have only the ingredients: ${ingredients}. I have ${time} minutes to make food. Generate a recipe for me. Your output should be in JSON format with the keys recipe_name, recipe_time, recipe_instructions and recipe_nutrition"""
@@ -255,7 +257,7 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
         // Handle the exception here
         println(e)
         val defaultRecipe = Recipe(
-            2,
+            "ik",
             "Burned toast",
             R.drawable.food,
             "60",
@@ -276,13 +278,14 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
             println(messageJSON)
             val recipes = listOf(
                 Recipe(
-                    2,
+                    "yh",
                     messageJSON.getString("recipe_name"),
                     R.drawable.food,
                     generateImage(client, messageJSON.getString("recipe_name")),
                     messageJSON.getString("recipe_time"),
                     false,
-                    messageJSON.getString("recipe_instructions")
+                    messageJSON.getString("recipe_instructions"),
+                    user!!.uid
                 )
             )
             return@withContext recipes
@@ -297,7 +300,7 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
     println("Something failed")
     // Handle errors or return a default value in case of failure
     val defaultRecipe = Recipe(
-        2,
+        "uh",
         "Failed tomato soup",
         R.drawable.food,
         "test",
