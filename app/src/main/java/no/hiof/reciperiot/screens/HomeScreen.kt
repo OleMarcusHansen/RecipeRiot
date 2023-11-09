@@ -20,9 +20,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,7 +64,23 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
     val time = remember { mutableStateOf("20") }
 
     // Ingredienser fra databasen, som i ingredientsscreen
-    val ingredients = listOf("Banana", "Eggs", "Bacon", "Ham", "Turkey")
+    //var ingredients = listOf("Banana", "Eggs", "Bacon", "Ham", "Turkey")
+
+    var ingredients by remember {
+        mutableStateOf(emptyList<String>())
+    }
+
+    //Fetch data from Firestore
+    getIngredients(db) { data ->
+        if (data != null) {
+            val firestoreIngredients = data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
+            ingredients = firestoreIngredients
+                .filter {it.second.value}
+                .map {it.first}
+        } else {
+            println("No data or error")
+        }
+    }
 
     // Liste med recipes. For å kanskje generere flere samtidig
     val recipes = remember { mutableStateOf(emptyList<Recipe>()) }
