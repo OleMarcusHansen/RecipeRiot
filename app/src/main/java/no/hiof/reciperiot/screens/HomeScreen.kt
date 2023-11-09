@@ -228,7 +228,7 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
     val user = Firebase.auth.currentUser
     //prompt til chatGPT
     //bør bli justert og testet for å få best mulig resultat
-    val prompt = """I have only the ingredients: ${ingredients}. I have ${time} minutes to make food. Generate a recipe for me. Your output should be in JSON format with the keys recipe_name, recipe_time, recipe_instructions and recipe_nutrition"""
+    val prompt = """I have only the ingredients: ${ingredients}. I have ${time} minutes to make food. Generate a recipe for me. Your output should be in JSON format with the keys (recipe_name, recipe_time, recipe_instructions): String, recipe_nutrition: object"""
 
     println(prompt)
 
@@ -260,10 +260,11 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
             "ik",
             "Burned toast",
             R.drawable.food,
-            "test",
+            "https://cdn.discordapp.com/attachments/1148561836724207708/1172152256683065384/image.png?ex=655f46db&is=654cd1db&hm=2450543bf60afc32ad2c67d54b00328112ba7cd43656abb0d32b34f60d339d98&",
             "60",
             false,
-            "Timed out"
+            "Timed out",
+            "{\"calories\":0,\"protein\":0,\"carbohydrates\":0,\"fat\":0}"
         )
         return@withContext listOf(defaultRecipe)
     }
@@ -276,16 +277,24 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
             val responseJSON = JSONObject(responseString)
             val messageJSON = JSONObject(responseJSON.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content"))
             println(messageJSON)
+
+            // Image creation
+            //val imageResponse = generateImage(client, messageJSON.getString("recipe_name"))
+            //val imageResponseURL = JSONObject(imageResponse).getJSONArray("data").getJSONObject(0).getString("url")
+
+            // Standard image
+            val imageResponseURL = "https://cdn.discordapp.com/attachments/1148561836724207708/1172157068497666048/image.png?ex=655f4b56&is=654cd656&hm=a296565e26720c460d137ee7941dd195e597378e26b6e77cc7d1320551067ad0&"
+
             val recipes = listOf(
                 Recipe(
                     "yh",
                     messageJSON.getString("recipe_name"),
                     R.drawable.food,
-                    //generateImage(client, messageJSON.getString("recipe_name")),
-                    "https://www.healthylifestylesliving.com/wp-content/uploads/2015/12/placeholder-256x256.gif",
+                    imageResponseURL,
                     messageJSON.getString("recipe_time"),
                     false,
                     messageJSON.getString("recipe_instructions"),
+                    messageJSON.getString("recipe_nutrition"),
                     user!!.uid
                 )
             )
@@ -304,10 +313,11 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
         "uh",
         "Failed tomato soup",
         R.drawable.food,
-        "test",
+        "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&",
         "60",
         false,
-        "Something failed"
+        "Something failed",
+        "{\"calories\":0,\"protein\":0,\"carbohydrates\":0,\"fat\":0}"
     )
     return@withContext listOf(defaultRecipe)
 }

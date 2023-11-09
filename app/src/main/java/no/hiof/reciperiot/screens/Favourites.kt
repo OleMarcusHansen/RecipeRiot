@@ -54,7 +54,7 @@ import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.data.RecipeSource
 import no.hiof.reciperiot.model.Recipe
-
+import org.json.JSONObject
 
 
 @Composable
@@ -99,9 +99,11 @@ fun handleFirestoreAdd(recipe: Recipe, db: FirebaseFirestore) {
         "id" to "",
         "title" to recipe.title,
         "imageResourceId" to recipe.imageResourceId,
+        "imageURL" to recipe.imageURL,
         "cookingTime" to recipe.cookingTime,
         "isFavourite" to recipe.isFavourite,
         "recipe_instructions" to recipe.recipe_instructions,
+        "recipe_nutrition" to recipe.recipe_nutrition,
         "userid" to recipe.userid
     )
 
@@ -212,6 +214,14 @@ fun RecipeCard(
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(recipe.cookingTime)
+                var calories = "N/A"
+                try {
+                    calories = JSONObject(recipe.recipe_nutrition).getString("calories")
+                }
+                catch (e: Exception){
+                    print(e)
+                }
+                Text("Calories: $calories")
             }
             Column(modifier = Modifier.width(with(LocalDensity.current) { 256.toDp() }),
                 horizontalAlignment = Alignment.End){
