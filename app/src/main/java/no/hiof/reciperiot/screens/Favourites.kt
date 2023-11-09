@@ -213,7 +213,7 @@ fun RecipeCard(
                 )
                 Text(recipe.cookingTime)
             }
-            Column(modifier = Modifier.width(with(LocalDensity.current) { 250.toDp() }),
+            Column(modifier = Modifier.width(with(LocalDensity.current) { 256.toDp() }),
                 horizontalAlignment = Alignment.End){
                 AsyncImage(model = recipe.imageURL, contentDescription = "Image of the recipe")
                 IconToggleButton(

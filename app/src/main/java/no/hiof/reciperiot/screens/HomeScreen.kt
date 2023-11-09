@@ -260,8 +260,8 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
             "ik",
             "Burned toast",
             R.drawable.food,
-            "60",
             "test",
+            "60",
             false,
             "Timed out"
         )
@@ -281,7 +281,8 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
                     "yh",
                     messageJSON.getString("recipe_name"),
                     R.drawable.food,
-                    generateImage(client, messageJSON.getString("recipe_name")),
+                    //generateImage(client, messageJSON.getString("recipe_name")),
+                    "https://www.healthylifestylesliving.com/wp-content/uploads/2015/12/placeholder-256x256.gif",
                     messageJSON.getString("recipe_time"),
                     false,
                     messageJSON.getString("recipe_instructions"),
