@@ -361,10 +361,10 @@ suspend fun generateImage(client: OkHttpClient, recipe: String): String {
     // Make the API call
     val response: Response = try {
         client.newCall(request).await()
-    } catch (e: IOException) {
-        // Handle the exception here
-        println(e)
-        return "failed"
+    } catch (exception: IOException) {
+        // Log error and return default failed image
+        Log.e("ImageGenerationError", "Error calling API: $exception")
+        return """"created": 1699533459,"data": [{"url": "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&"}]}"""
     }
 
     // Handle the response and return the list of recipes
@@ -381,9 +381,9 @@ suspend fun generateImage(client: OkHttpClient, recipe: String): String {
         println(response.body)
     }
 
-    println("Something failed")
-    // Handle errors or return a default value in case of failure
-    return "failed"
+    // Log error and return default failed image
+    Log.e("ImageGenerationError", "Error calling API")
+    return """"created": 1699533459,"data": [{"url": "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&"}]}"""
 }
 
 // Extension function to make Call awaitable with a coroutine
