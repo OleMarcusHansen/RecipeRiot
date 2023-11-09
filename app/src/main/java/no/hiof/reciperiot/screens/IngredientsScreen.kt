@@ -119,13 +119,7 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
         }
     }
 
-    FloatingActionButton(onClick = {saveIngredients()},
-        modifier = modifier.padding(16.dp),
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
 
-        ) {
-        Icon(Icons.Filled.Add, "Floating action button")
-    }
 
     // Counter for å genere rader for lazyColumn
     val rowCount = 1
@@ -171,9 +165,14 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
                 }
             )
         }
+        FloatingActionButton(onClick = {saveIngredients()},
+            modifier = modifier.padding(16.dp),
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
 
+            ) {
+            Icon(Icons.Filled.Add, "Floating action button")
+        }
     }
-
     }
 
 }
