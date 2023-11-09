@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.example.compose.AppTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
@@ -118,6 +119,14 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
         }
     }
 
+    FloatingActionButton(onClick = {saveIngredients()},
+        modifier = modifier.padding(16.dp),
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+
+        ) {
+        Icon(Icons.Filled.Add, "Floating action button")
+    }
+
     // Counter for å genere rader for lazyColumn
     val rowCount = 1
 
@@ -163,16 +172,6 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
             )
         }
 
-
-        FloatingActionButton(onClick = {saveIngredients()},
-            modifier = modifier.padding(16.dp),
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-
-        ) {
-            Icon(Icons.Filled.Add, "Floating action button")
-        }
-
-
     }
 
     }
@@ -180,12 +179,13 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
 }
 
 
+// Preview does not work
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     AppTheme {
         val snackbarHostState = remember { SnackbarHostState() }
-        val db = FirebaseFirestore.getInstance()
+        val db = Firebase.firestore
         AppTheme {
             IngredientsScreen(snackbarHost = snackbarHostState, db = db)
         }
