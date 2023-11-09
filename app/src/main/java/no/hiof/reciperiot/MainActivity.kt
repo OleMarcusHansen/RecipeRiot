@@ -82,11 +82,9 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     // Call LoginScreen with the showNotification function
-                    /*
-                    LoginScreen(login = { /* Handle successful login */ }, showNotification = { user ->
+                    /*LoginScreen(login = { /* Handle successful login */ }, showNotification = { user ->
                         service.showNotification(user)
-                    })
-                     */
+                    })*/
 
                     MainApp(service, client, db)
                 }

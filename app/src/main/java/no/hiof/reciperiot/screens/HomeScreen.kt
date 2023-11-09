@@ -1,5 +1,6 @@
 package no.hiof.reciperiot.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -19,9 +20,11 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -61,7 +64,23 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
     val time = remember { mutableStateOf("20") }
 
     // Ingredienser fra databasen, som i ingredientsscreen
-    val ingredients = listOf("Banana", "Eggs", "Bacon", "Ham", "Turkey")
+    //var ingredients = listOf("Banana", "Eggs", "Bacon", "Ham", "Turkey")
+
+    var ingredients by remember {
+        mutableStateOf(emptyList<String>())
+    }
+
+    //Fetch data from Firestore
+    getIngredients(db) { data ->
+        if (data != null) {
+            val firestoreIngredients = data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
+            ingredients = firestoreIngredients
+                .filter {it.second.value}
+                .map {it.first}
+        } else {
+            println("No data or error")
+        }
+    }
 
     // Liste med recipes. For å kanskje generere flere samtidig
     val recipes = remember { mutableStateOf(emptyList<Recipe>()) }
@@ -128,107 +147,6 @@ fun TimeInput(text : String, state : MutableState<String>){
     }
 }
 
-@Composable
-fun IngredientList(ingredients : List<String>){
-
-}
-/*
-@Composable
-fun Ingredient(text : String, state : MutableState<Boolean>){
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround){
-        Text(text)
-    }
-}*/
-
-
-//bør ta options og ingredienser som parametere
-/*fun generateGPT(client: OkHttpClient) : List<Recipe>{
-
-    println("test")
-
-    //prompt til chatGPT
-    //bør bli justert og testet for å få best mulig resultat
-    val prompt = """I have the ingredients: cheese, bacon, eggs, onions.
-        I have 20 minutes to make food. Generate a recipe for me.
-        The output should be in JSON format with the keys recipe_name, 
-        recipe_time, recipe_instructions and recipe_nutrition.
-        Answer with only the JSON string."""
-
-    //kalle chatCompletion api
-
-    val mediaType: MediaType = "application/json; charset=utf-8".toMediaType()
-    val body = """
-        {
-            "model": "gpt-3.5-turbo",
-            "messages": [{"role": "system", "content": "You are a recipe generator"}, {"role": "user", "content": "Create a recipe in JSON format with the keys recipe_name, recipe_time, recipe_instructions and recipe_nutrition."}]
-        }
-    """
-    val postBody: RequestBody = body.toRequestBody(mediaType)
-
-    val url = "https://api.openai.com/v1/chat/completions"
-
-    val request : Request = Request.Builder()
-        .url(url)
-        .post(postBody)
-        .addHeader("Authorization", "Bearer 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")
-        .build()
-
-    //val call : Call = client.newCall(request)
-    //val resp : Response = call.execute()
-
-    var responseString = """{
-            "recipe_name": "Early response baguettes",
-            "recipe_time": "1",
-            "recipe_instructions": [
-                "1. Preheat a panini press or a stovetop grill pan over medium-high heat.",
-                "2. Take 2 slices of bread and lay them out on a clean surface."
-            ],
-            "recipe_nutrition": {
-                "calories": "Approximately 400-500 calories per serving",
-                "carbohydrates": "Approximately 35-45g per serving"
-             }
-        }
-    """
-
-    client.newCall(request).enqueue(object : Callback {
-        override fun onResponse(call: Call, response: Response) {
-            println(response.toString())
-            //println(response.body?.string())
-            //val responseJSON = JSONObject(response.body?.string())
-            val responseBody = response.body?.string()
-            print(responseBody)
-            if (responseBody != null) {
-                val responseJSON = JSONObject(responseBody)
-                responseString = responseJSON.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content")
-                // Now you can work with responseJSON
-            } else {
-                // Handle the case where the response body is null
-            }
-        }
-
-        override fun onFailure(call: Call, e: IOException) {
-            println("failed. message: " + e.message)
-            responseString = """{
-                    "recipe_name": "Failed tomato soup",
-                    "recipe_time": "60",
-                    "recipe_instructions": [
-                        "1. Preheat a panini press or a stovetop grill pan over medium-high heat.",
-                        "2. Take 2 slices of bread and lay them out on a clean surface."
-                    ],
-                    "recipe_nutrition": {
-                        "calories": "Approximately 400-500 calories per serving",
-                        "carbohydrates": "Approximately 35-45g per serving"
-                     }
-                }
-            """
-        }
-    })
-    val generatedjson = JSONObject(responseString)
-
-    val recipes = listOf(Recipe(2, generatedjson.getString("recipe_name"), R.drawable.food, generatedjson.getString("recipe_time"),false, "ddddd"))
-    return recipes
-}*/
-
 suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: String): List<Recipe> = withContext(Dispatchers.IO) {
     // ... (Your existing code)
     println("start gpt generate")
@@ -261,9 +179,9 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
     // Make the API call
     val response: Response = try {
         client.newCall(request).await()
-    } catch (e: IOException) {
-        // Handle the exception here
-        println(e)
+    } catch (exception: IOException) {
+        // Log error and return default timeout recipe
+        Log.e("ChatCompletionError", "Error calling API ${exception.message}")
         val defaultRecipe = Recipe(
             "ik",
             "Burned toast",
@@ -315,8 +233,8 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
         println(response.body)
     }
 
-    println("Something failed")
-    // Handle errors or return a default value in case of failure
+    // Log error and return default failed recipe
+    Log.e("ChatCompletionError", "Error calling API")
     val defaultRecipe = Recipe(
         "uh",
         "Failed tomato soup",
@@ -360,10 +278,10 @@ suspend fun generateImage(client: OkHttpClient, recipe: String): String {
     // Make the API call
     val response: Response = try {
         client.newCall(request).await()
-    } catch (e: IOException) {
-        // Handle the exception here
-        println(e)
-        return "failed"
+    } catch (exception: IOException) {
+        // Log error and return default failed image
+        Log.e("ImageGenerationError", "Error calling API: $exception")
+        return """"created": 1699533459,"data": [{"url": "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&"}]}"""
     }
 
     // Handle the response and return the list of recipes
@@ -380,9 +298,9 @@ suspend fun generateImage(client: OkHttpClient, recipe: String): String {
         println(response.body)
     }
 
-    println("Something failed")
-    // Handle errors or return a default value in case of failure
-    return "failed"
+    // Log error and return default failed image
+    Log.e("ImageGenerationError", "Error calling API")
+    return """"created": 1699533459,"data": [{"url": "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&"}]}"""
 }
 
 // Extension function to make Call awaitable with a coroutine
