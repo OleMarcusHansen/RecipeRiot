@@ -1,5 +1,6 @@
 package no.hiof.reciperiot.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -261,9 +262,9 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
     // Make the API call
     val response: Response = try {
         client.newCall(request).await()
-    } catch (e: IOException) {
-        // Handle the exception here
-        println(e)
+    } catch (exception: IOException) {
+        // Log error and return default timeout recipe
+        Log.e("ChatCompletionError", "Error calling API ${exception.message}")
         val defaultRecipe = Recipe(
             "ik",
             "Burned toast",
@@ -315,8 +316,8 @@ suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: S
         println(response.body)
     }
 
-    println("Something failed")
-    // Handle errors or return a default value in case of failure
+    // Log error and return default failed recipe
+    Log.e("ChatCompletionError", "Error calling API")
     val defaultRecipe = Recipe(
         "uh",
         "Failed tomato soup",
