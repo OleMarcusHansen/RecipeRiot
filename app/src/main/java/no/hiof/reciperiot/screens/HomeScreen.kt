@@ -69,19 +69,22 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
     // Til snackbar
     val scope = rememberCoroutineScope()
 
-    Column(modifier = modifier
-        .padding(horizontal = 50.dp),
+    Column(
         verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Text(stringResource(R.string.home_options), fontSize = 20.sp)
-        TimeInput(text = stringResource(R.string.home_options_time), state = time)
-        Text(stringResource(R.string.home_ingredients), fontSize = 20.sp)
-        LazyVerticalGrid(columns = GridCells.Adaptive(90.dp),
-            content = {
-                items(ingredients.size) {index ->
-                    Text(ingredients[index])
+        Column(modifier = modifier.padding(horizontal = 50.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)){
+            Text(stringResource(R.string.home_options), fontSize = 20.sp)
+            TimeInput(text = stringResource(R.string.home_options_time), state = time)
+            Text(stringResource(R.string.home_ingredients), fontSize = 20.sp)
+            LazyVerticalGrid(columns = GridCells.Adaptive(90.dp),
+                content = {
+                    items(ingredients.size) {index ->
+                        Text(ingredients[index])
+                    }
                 }
-            }
-        )
+            )
+        }
+
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = {
                 /*ChatGPT*/
@@ -95,13 +98,18 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                 Text(stringResource(R.string.home_generate))
             }
         }
-        RecipeList(recipes = recipes.value, navController, onFavouriteToggle = {},
+        RecipeList(
+            recipes = recipes.value,
+            navController = navController,
+            onFavouriteToggle = {
+            },
             onAddToFavorites = { recipe ->
                 handleFirestoreAdd(recipe, db)
             },
             onRemoveFromFavorites = { recipe ->
                 handleFirestoreRemove(recipe, db)
-            })
+            }
+        )
     }
 }
 
