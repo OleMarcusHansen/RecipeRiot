@@ -89,20 +89,46 @@ fun saveIngredientstoDb(db: FirebaseFirestore, ingredientList: List<Pair<String,
     }
 }
 
+fun getIngredients(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit) {
+    val user = Firebase.auth.currentUser
+    // TODO: Ensure logged in
+    val docRef = user?.let { db.collection("ingredients").document(it.uid) }
+    docRef?.get()?.addOnSuccessListener { document ->
+        if (document != null && document.exists()) {
+            callback(document.data)
+        } else {
+            val emptyData = emptyMap<String, Any>()
+            docRef?.set(emptyData)
+                ?.addOnSuccessListener {
+                    callback(emptyData)
+                }
+                ?.addOnFailureListener { exception ->
+                    Log.d(TAG, "Error: Could not create doc", exception)
+                    callback(null)
+                }
+        }
+    }?.addOnFailureListener { exception ->
+        Log.d(TAG, "get failed with ", exception)
+        callback(null)
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, modifier: Modifier = Modifier) {
     var newIngredient by remember { mutableStateOf("") }
     var ingredientsList by remember {
-        mutableStateOf(
-            listOf(
-                "Løk" to mutableStateOf(false),
-                "Poteter" to mutableStateOf(false),
-                "Mel" to mutableStateOf(false),
-                "Melk" to mutableStateOf(false),
-                "Kjøttdeig" to mutableStateOf(false)
-            )
-        )
+        mutableStateOf(emptyList<Pair<String, MutableState<Boolean>>>())
+    }
+
+    //Fetch data from Firestore
+    getIngredients(db) { data ->
+        if (data != null) {
+            val firestoreIngredients = data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
+            ingredientsList = firestoreIngredients
+        } else {
+            println("No data or error")
+        }
     }
 
     //Til snackbar
