@@ -37,6 +37,7 @@ import no.hiof.reciperiot.R
 fun AuthenticationScreen(
     onSignInClick: (String, String) -> Unit,
     //TODO: Fix notification
+    showNotification: (String) -> Unit,
     //showNotification: (String) -> Unit,
     //TODO: Implement sign up
     //onSignUpClick: () -> Unit
@@ -74,6 +75,7 @@ fun AuthenticationScreen(
                             Log.d(TAG, "Testicular torsion \n${user.uid}")
                         }
                         // Sign in successful, navigate to the main app screen.
+                        showNotification("Nils") // Pass a sample user string for now
                     } else {
                         //onSignInClick(email, password)
                         // Sign in failed, display an error message.
@@ -100,6 +102,7 @@ fun AuthenticationScreen(
                             if (user != null) {
                                 Log.d(TAG, "Testicular torsion \n${user.uid}")
                             }
+                            showNotification(email)
                             // Sign in successful, navigate to the main app screen.
                         } else {
                             //onSignInClick(email, password)
