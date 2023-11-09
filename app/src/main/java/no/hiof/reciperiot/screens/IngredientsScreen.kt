@@ -94,16 +94,25 @@ fun getIngredients(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit)
     // TODO: Ensure logged in
     val docRef = user?.let { db.collection("ingredients").document(it.uid) }
     docRef?.get()?.addOnSuccessListener { document ->
-        if (document != null) {
+        if (document != null && document.exists()) {
             callback(document.data)
         } else {
-            callback(null)
+            val emptyData = emptyMap<String, Any>()
+            docRef?.set(emptyData)
+                ?.addOnSuccessListener {
+                    callback(emptyData)
+                }
+                ?.addOnFailureListener { exception ->
+                    Log.d(TAG, "Error: Could not create doc", exception)
+                    callback(null)
+                }
         }
     }?.addOnFailureListener { exception ->
         Log.d(TAG, "get failed with ", exception)
         callback(null)
     }
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, modifier: Modifier = Modifier) {
