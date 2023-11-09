@@ -10,6 +10,7 @@ data class Recipe(
     val cookingTime: String = "",
     var isFavourite: Boolean = true,
     var recipe_instructions: String = "",
+    var recipe_nutrition: String = "",
     var userid: String = ""
 
 )

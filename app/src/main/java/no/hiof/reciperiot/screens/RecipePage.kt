@@ -38,6 +38,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.data.RecipeSource
 import no.hiof.reciperiot.model.Recipe
+import org.json.JSONException
+import org.json.JSONObject
 
 @Composable
 fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFirestore) {
@@ -119,6 +121,56 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
+                    Text(
+                        text = "Nutrition:",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 26.sp
+                    )
+                    var calories = "N/A"
+                    var protein = "N/A"
+                    var carbohydrates = "N/A"
+                    var fat = "N/A"
+                    try{
+                        val nutrition = JSONObject(recipe.recipe_nutrition)
+                        calories = nutrition.getString("calories")
+                        protein = nutrition.getString("protein")
+                        carbohydrates = nutrition.getString("carbohydrates")
+                        fat = nutrition.getString("fat")
+                    }
+                    catch (e: Exception){
+                        print(e)
+                    }
+                    Text(
+                        text = "Calories: $calories",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 20.sp
+                    )
+                    Text(
+                        text = "Protein: $protein",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 20.sp
+                    )
+                    Text(
+                        text = "Carbohydrates: $carbohydrates",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 20.sp
+                    )
+                    Text(
+                        text = "Fat: $fat",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 20.sp
+                    )
+
                     Text(
                         text = "Instruksjoner:",
                         modifier = Modifier
