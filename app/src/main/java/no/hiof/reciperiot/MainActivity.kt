@@ -137,6 +137,9 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
                     onSignInClick = { email, password ->
                         navController.navigate(Screen.Home.route)
 
+                    },
+                    showNotification = { user ->
+                        notificationService.showNotification(user)
                     }
                 )
                 /*
