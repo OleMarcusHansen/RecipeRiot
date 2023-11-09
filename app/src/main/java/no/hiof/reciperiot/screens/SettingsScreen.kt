@@ -1,5 +1,11 @@
 package no.hiof.reciperiot.screens
 
+import android.annotation.SuppressLint
+import android.app.LocaleManager
+import android.content.Context
+import android.os.Build
+import android.os.LocaleList
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -26,15 +32,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.getSystemService
+import androidx.core.os.LocaleListCompat
+import no.hiof.reciperiot.R
+
+
 
 @Composable
 fun SettingsScreen(logout: () -> Unit, modifier : Modifier = Modifier) {
+    val context = LocalContext.current
     var darkTheme by remember { mutableStateOf(false) }
     var otherSetting by remember { mutableStateOf(false) }
 
     var langExpanded by remember { mutableStateOf(false)}
-    val langItems = listOf("English", "Norwegian")
+    val langItems = listOf(stringResource(R.string.english), stringResource(R.string.norwegian))
     var langSelectedIndex by remember { mutableStateOf(0) }
 
     Column(modifier = modifier
@@ -44,22 +58,28 @@ fun SettingsScreen(logout: () -> Unit, modifier : Modifier = Modifier) {
         SwitchSetting(bool = otherSetting, update = {newValue -> otherSetting = newValue}, text = "Other setting")
         Row{
             Text("Language")
-            Box(modifier = Modifier.fillMaxSize()
+            Box(modifier = Modifier
+                .fillMaxSize()
                 .wrapContentSize(Alignment.TopStart)
                 .clip(shape = RoundedCornerShape(15.dp))) {
                 Text(
                     langItems[langSelectedIndex],
-                    Modifier.clickable(onClick = { langExpanded = true })
+                    Modifier
+                        .clickable(onClick = { langExpanded = true })
                         .background(Color.Gray)
                         .padding(10.dp)
                         .clip(shape = RoundedCornerShape(15.dp))
                 )
+
+
+                // FIX THIS, DOES NOT WORK WITH INDEX. DROPDOWN MENU
                 DropdownMenu(expanded = langExpanded,
                     onDismissRequest = { langExpanded = false }) {
                     langItems.forEachIndexed { index, s ->
                         DropdownMenuItem(text = { Text(s) }, onClick = {
                             langSelectedIndex = index
                             langExpanded = false
+                            changeLocales(context = context, "nb")
                         })
                     }
                 }
@@ -69,6 +89,18 @@ fun SettingsScreen(logout: () -> Unit, modifier : Modifier = Modifier) {
             Text("Log out")
         }
     }
+}
+
+fun changeLocales(context: Context, localeString: String) {
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        context.getSystemService(LocaleManager::class.java)
+            .applicationLocales = LocaleList.forLanguageTags(localeString)
+    }
+    else {
+        AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(localeString))
+    }
+
 }
 
 @Composable
