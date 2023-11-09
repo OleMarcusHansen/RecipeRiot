@@ -1,2 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">RecipeRiot</string>
+    <string name="nav_home">Hjem</string>
+    <string name="nav_ingredients">Ingredienser</string>
+    <string name="nav_shopping">Handleliste</string>
+    <string name="nav_settings">Innstillinger</string>
+    <string name="nav_login">Logg inn</string>
+    <string name="nav_favourites">Favoritter</string>
+
+    <string name="username">Brukernavn: </string>
+    <string name="password">Passord: </string>
+    <string name="login">Logg inn</string>
+
+    <string name="home_generate">Generer Oppskrift</string>
+    <string name="home_options">Valg</string>
+    <string name="home_options_time">Tid i minutter: </string>
+    <string name="home_ingredients">Ingredienser</string>
+    <string name="nav_recipepage">Oppskriftsside</string>
+    <string name="english">Engelsk</string>
+    <string name="norwegian">Norsk</string>
+</resources>
