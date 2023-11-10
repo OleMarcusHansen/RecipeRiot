@@ -52,6 +52,7 @@ import no.hiof.reciperiot.impl.NotificationService
 import no.hiof.reciperiot.screens.AuthenticationScreen
 import no.hiof.reciperiot.screens.FavouriteMeals
 import no.hiof.reciperiot.screens.HomeScreen
+import no.hiof.reciperiot.screens.HomeViewModel
 import no.hiof.reciperiot.screens.IngredientsScreen
 import no.hiof.reciperiot.screens.LoginScreen
 import no.hiof.reciperiot.screens.RecipePage1

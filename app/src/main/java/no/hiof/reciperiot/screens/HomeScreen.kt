@@ -33,6 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -59,19 +60,19 @@ import org.json.JSONObject
 import java.io.IOException
 
 @Composable
-fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, client: OkHttpClient, modifier: Modifier = Modifier, db: FirebaseFirestore) {
+fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, client: OkHttpClient, modifier: Modifier = Modifier, db: FirebaseFirestore, homeViewModel: HomeViewModel = viewModel()) {
     // Options
-    val time = remember { mutableStateOf("20") }
+    //val time = remember { mutableStateOf("20") }
 
     // Ingredienser fra databasen, som i ingredientsscreen
     //var ingredients = listOf("Banana", "Eggs", "Bacon", "Ham", "Turkey")
 
-    var ingredients by remember {
+    /*var ingredients by remember {
         mutableStateOf(emptyList<String>())
-    }
+    }*/
 
     //Fetch data from Firestore
-    getIngredients(db) { data ->
+    /*getIngredients(db) { data ->
         if (data != null) {
             val firestoreIngredients = data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
             ingredients = firestoreIngredients
@@ -80,10 +81,12 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
         } else {
             println("No data or error")
         }
-    }
+    }*/
+
+    homeViewModel.getIngredientsFromFirestore(db)
 
     // Liste med recipes. For å kanskje generere flere samtidig
-    val recipes = remember { mutableStateOf(emptyList<Recipe>()) }
+    //val recipes = remember { mutableStateOf(emptyList<Recipe>()) }
 
     // Til snackbar
     val scope = rememberCoroutineScope()
@@ -93,12 +96,12 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
         Column(modifier = modifier.padding(horizontal = 50.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)){
             Text(stringResource(R.string.home_options), fontSize = 20.sp)
-            TimeInput(text = stringResource(R.string.home_options_time), state = time)
+            TimeInput(text = stringResource(R.string.home_options_time), state = homeViewModel.time)
             Text(stringResource(R.string.home_ingredients), fontSize = 20.sp)
             LazyVerticalGrid(columns = GridCells.Adaptive(90.dp),
                 content = {
-                    items(ingredients.size) {index ->
-                        Text(ingredients[index])
+                    items(homeViewModel.ingredients.size) {index ->
+                        Text(homeViewModel.ingredients[index])
                     }
                 }
             )
@@ -109,8 +112,8 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                 /*ChatGPT*/
 
                 scope.launch {
-                    val newRecipes = generateGPT(client, ingredients, time.value)
-                    recipes.value = newRecipes
+                    val newRecipes = homeViewModel.generateGPT(client, homeViewModel.ingredients, homeViewModel.time.value)
+                    homeViewModel.recipes.value = newRecipes
                     snackbarHost.showSnackbar("Oppskrift generert")
                 }
             }) {
@@ -118,7 +121,7 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
             }
         }
         RecipeList(
-            recipes = recipes.value,
+            recipes = homeViewModel.recipes.value,
             navController = navController,
             onFavouriteToggle = {
             },
@@ -146,7 +149,7 @@ fun TimeInput(text : String, state : MutableState<String>){
         )
     }
 }
-
+/*
 suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: String): List<Recipe> = withContext(Dispatchers.IO) {
     // ... (Your existing code)
     println("start gpt generate")
@@ -311,4 +314,4 @@ suspend fun Call.await(): Response = withContext(Dispatchers.IO) {
     } catch (e: CancellationException) {
         throw e
     }
-}
+}*/
