@@ -16,4 +16,6 @@
     <string name="home_options_time">Time in minutes: </string>
     <string name="home_ingredients">Ingredients</string>
     <string name="nav_recipepage">recipepage</string>
+    <string name="norwegian">Norwegian</string>
+    <string name="english">English</string>
 </resources>

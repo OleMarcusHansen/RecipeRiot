@@ -4,12 +4,16 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -35,10 +39,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.google.firebase.Firebase
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -48,7 +54,7 @@ import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.data.RecipeSource
 import no.hiof.reciperiot.model.Recipe
-
+import org.json.JSONObject
 
 
 @Composable
@@ -93,9 +99,11 @@ fun handleFirestoreAdd(recipe: Recipe, db: FirebaseFirestore) {
         "id" to "",
         "title" to recipe.title,
         "imageResourceId" to recipe.imageResourceId,
+        "imageURL" to recipe.imageURL,
         "cookingTime" to recipe.cookingTime,
         "isFavourite" to recipe.isFavourite,
         "recipe_instructions" to recipe.recipe_instructions,
+        "recipe_nutrition" to recipe.recipe_nutrition,
         "userid" to recipe.userid
     )
 
@@ -183,10 +191,11 @@ fun RecipeCard(
         shape = RoundedCornerShape(8.dp),
         elevation = CardDefaults.cardElevation(8.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(8.dp)
+        Row(
+            modifier = Modifier.padding(8.dp).fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Image(
+            /*Image(
                 //painter = painterResource(id = recipe.imageResourceId),
                 painter = painterResource(id = R.drawable.food),
                 contentDescription = null,
@@ -195,15 +204,52 @@ fun RecipeCard(
                     .fillMaxWidth()
                     .height(180.dp)
                     .clip(RoundedCornerShape(8.dp))
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = recipe.title,
-                style = MaterialTheme.typography.headlineMedium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Box(
+            )*/
+            //Spacer(modifier = Modifier.height(8.dp))
+            Column(modifier = Modifier.width(200.dp)){
+                Text(
+                    text = recipe.title,
+                    style = MaterialTheme.typography.headlineMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(recipe.cookingTime)
+                var calories = "N/A"
+                try {
+                    calories = JSONObject(recipe.recipe_nutrition).getString("calories")
+                }
+                catch (e: Exception){
+                    print(e)
+                }
+                Text("Calories: $calories")
+            }
+            Column(modifier = Modifier.width(with(LocalDensity.current) { 256.toDp() }),
+                horizontalAlignment = Alignment.End){
+                AsyncImage(model = recipe.imageURL, contentDescription = "Image of the recipe")
+                IconToggleButton(
+                    checked = isFavourite,
+                    onCheckedChange = {
+                        isFavourite = !isFavourite
+                        onFavouriteToggle(recipe.copy(isFavourite = isFavourite))
+                        if (isFavourite) {
+                            onAddToFavorites(recipe)
+                        } else {
+                            onRemoveFromFavorites(recipe)
+                        }
+                        Log.d("RecipeCard", "Favourite toggled for recipe: ${recipe.title}, isFavourite: $isFavourite")
+                    }) {
+                    Icon(
+                        imageVector = if (isFavourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = null,
+                        tint = Color.Black,
+                        modifier = modifier.graphicsLayer {
+                            scaleX = 1.3f
+                            scaleY = 1.3f
+                        },
+                    )
+                }
+            }
+            /*Box(
                 modifier = Modifier.fillMaxWidth(),
                 contentAlignment = Alignment.CenterEnd
             ) {
@@ -229,7 +275,7 @@ fun RecipeCard(
                         },
                     )
                 }
-            }
+            }*/
         }
     }
 }

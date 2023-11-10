@@ -53,7 +53,6 @@ import no.hiof.reciperiot.screens.AuthenticationScreen
 import no.hiof.reciperiot.screens.FavouriteMeals
 import no.hiof.reciperiot.screens.HomeScreen
 import no.hiof.reciperiot.screens.IngredientsScreen
-import no.hiof.reciperiot.screens.LoginScreen
 import no.hiof.reciperiot.screens.RecipePage1
 import no.hiof.reciperiot.screens.SettingsScreen
 import no.hiof.reciperiot.screens.ShoppingListScreen
@@ -83,14 +82,18 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     // Call LoginScreen with the showNotification function
-                    LoginScreen(login = { /* Handle successful login */ }, showNotification = { user ->
+                    /*LoginScreen(login = { /* Handle successful login */ }, showNotification = { user ->
                         service.showNotification(user)
-                    })
+                    })*/
 
                     MainApp(service, client, db)
                 }
             }
         }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Firebase.auth.signOut()
     }
 }
 sealed class Screen(val route: String, val title: Int, val icon: ImageVector){
@@ -137,6 +140,9 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
                     onSignInClick = { email, password ->
                         navController.navigate(Screen.Home.route)
 
+                    },
+                    showNotification = { user ->
+                        notificationService.showNotification(user)
                     }
                 )
                 /*

@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.example.compose.AppTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
@@ -88,20 +89,46 @@ fun saveIngredientstoDb(db: FirebaseFirestore, ingredientList: List<Pair<String,
     }
 }
 
+fun getIngredients(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit) {
+    val user = Firebase.auth.currentUser
+    // TODO: Ensure logged in
+    val docRef = user?.let { db.collection("ingredients").document(it.uid) }
+    docRef?.get()?.addOnSuccessListener { document ->
+        if (document != null && document.exists()) {
+            callback(document.data)
+        } else {
+            val emptyData = emptyMap<String, Any>()
+            docRef?.set(emptyData)
+                ?.addOnSuccessListener {
+                    callback(emptyData)
+                }
+                ?.addOnFailureListener { exception ->
+                    Log.d(TAG, "Error: Could not create doc", exception)
+                    callback(null)
+                }
+        }
+    }?.addOnFailureListener { exception ->
+        Log.d(TAG, "get failed with ", exception)
+        callback(null)
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, modifier: Modifier = Modifier) {
     var newIngredient by remember { mutableStateOf("") }
     var ingredientsList by remember {
-        mutableStateOf(
-            listOf(
-                "Løk" to mutableStateOf(false),
-                "Poteter" to mutableStateOf(false),
-                "Mel" to mutableStateOf(false),
-                "Melk" to mutableStateOf(false),
-                "Kjøttdeig" to mutableStateOf(false)
-            )
-        )
+        mutableStateOf(emptyList<Pair<String, MutableState<Boolean>>>())
+    }
+
+    //Fetch data from Firestore
+    getIngredients(db) { data ->
+        if (data != null) {
+            val firestoreIngredients = data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
+            ingredientsList = firestoreIngredients
+        } else {
+            println("No data or error")
+        }
     }
 
     //Til snackbar
@@ -117,6 +144,8 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
             snackbarHost.showSnackbar("Saved ingredients!")
         }
     }
+
+
 
     // Counter for å genere rader for lazyColumn
     val rowCount = 1
@@ -162,30 +191,26 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
                 }
             )
         }
-
-
         FloatingActionButton(onClick = {saveIngredients()},
             modifier = modifier.padding(16.dp),
             containerColor = MaterialTheme.colorScheme.primaryContainer,
 
-        ) {
+            ) {
             Icon(Icons.Filled.Add, "Floating action button")
         }
-
-
     }
-
     }
 
 }
 
 
+// Preview does not work
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     AppTheme {
         val snackbarHostState = remember { SnackbarHostState() }
-        val db = FirebaseFirestore.getInstance()
+        val db = Firebase.firestore
         AppTheme {
             IngredientsScreen(snackbarHost = snackbarHostState, db = db)
         }
