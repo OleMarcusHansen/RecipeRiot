@@ -3,18 +3,14 @@ package no.hiof.reciperiot.screens
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Secrets
@@ -112,11 +108,11 @@ class HomeViewModel : ViewModel() {
                 println(messageJSON)
 
                 // Image creation
-                //val imageResponse = generateImage(client, messageJSON.getString("recipe_name"))
-                //val imageResponseURL = JSONObject(imageResponse).getJSONArray("data").getJSONObject(0).getString("url")
+                val imageResponse = generateImage(client, messageJSON.getString("recipe_name"))
+                val imageResponseURL = JSONObject(imageResponse).getJSONArray("data").getJSONObject(0).getString("url")
 
                 // Standard image
-                val imageResponseURL = "https://cdn.discordapp.com/attachments/1148561836724207708/1172157068497666048/image.png?ex=655f4b56&is=654cd656&hm=a296565e26720c460d137ee7941dd195e597378e26b6e77cc7d1320551067ad0&"
+                //val imageResponseURL = "https://cdn.discordapp.com/attachments/1148561836724207708/1172157068497666048/image.png?ex=655f4b56&is=654cd656&hm=a296565e26720c460d137ee7941dd195e597378e26b6e77cc7d1320551067ad0&"
 
                 val recipes = listOf(
                     Recipe(
@@ -160,7 +156,7 @@ class HomeViewModel : ViewModel() {
 
         //prompt
         //bør bli justert og testet for å få best mulig resultat
-        val prompt = """$recipe"""
+        val prompt = """Dish called $recipe"""
 
         println(prompt)
 
