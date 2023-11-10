@@ -54,7 +54,6 @@ import no.hiof.reciperiot.screens.FavouriteMeals
 import no.hiof.reciperiot.screens.HomeScreen
 import no.hiof.reciperiot.screens.HomeViewModel
 import no.hiof.reciperiot.screens.IngredientsScreen
-import no.hiof.reciperiot.screens.LoginScreen
 import no.hiof.reciperiot.screens.RecipePage1
 import no.hiof.reciperiot.screens.SettingsScreen
 import no.hiof.reciperiot.screens.ShoppingListScreen
@@ -92,6 +91,10 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        Firebase.auth.signOut()
     }
 }
 sealed class Screen(val route: String, val title: Int, val icon: ImageVector){
