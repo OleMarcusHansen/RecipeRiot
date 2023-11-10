@@ -1,20 +1,14 @@
 package no.hiof.reciperiot.screens
 
-import android.content.ContentValues.TAG
-import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.Text
@@ -25,27 +19,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.firestore.FirebaseFirestore
-import no.hiof.reciperiot.R
 import no.hiof.reciperiot.data.RecipeSource
-import no.hiof.reciperiot.model.Recipe
-import org.json.JSONException
 import org.json.JSONObject
 
 @Composable
 fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFirestore) {
     val recipeSource = remember { RecipeSource() }
     val recipe = recipeSource.loadRecipes().firstOrNull { it.id == recipeId }
-    var isFavourite by rememberSaveable { mutableStateOf(recipe?.isFavourite ?: false) }
+    var favourite by rememberSaveable { mutableStateOf(recipe?.favourite ?: false) }
 
     LazyColumn {
         if (recipe != null) {
@@ -68,10 +56,10 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                     )*/
                     AsyncImage(model = recipe.imageURL, contentDescription = "Image of the recipe")
                     IconToggleButton(
-                        checked = isFavourite,
+                        checked = favourite,
                         onCheckedChange = {
-                            isFavourite = !isFavourite
-                            if (isFavourite) {
+                            favourite = !favourite
+                            if (favourite) {
                                 handleFirestoreAdd(recipe, db)
                             } else {
                                 handleFirestoreRemove(recipe, db)
@@ -81,7 +69,7 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             .padding(16.dp)
                     ) {
                         Icon(
-                            imageVector = if (isFavourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            imageVector = if (favourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = null,
                             tint = Color.Black,
                             modifier = Modifier
@@ -108,7 +96,7 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                         fontSize = 20.sp
                     )
                     Text(
-                        text = "${recipe.isFavourite}",
+                        text = "${recipe.favourite}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
