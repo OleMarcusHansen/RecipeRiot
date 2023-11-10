@@ -90,7 +90,7 @@ fun handleFirestoreAdd(recipe: Recipe, db: FirebaseFirestore) {
         "imageResourceId" to recipe.imageResourceId,
         "imageURL" to recipe.imageURL,
         "cookingTime" to recipe.cookingTime,
-        "isFavourite" to recipe.isFavourite,
+        "favourite" to recipe.favourite,
         "recipe_instructions" to recipe.recipe_instructions,
         "recipe_nutrition" to recipe.recipe_nutrition,
         "userid" to recipe.userid
@@ -112,7 +112,7 @@ fun firestoreCleanup(db: FirebaseFirestore) {
     val user = com.google.firebase.ktx.Firebase.auth.currentUser
     val query = db.collection("FavouriteMeals")
         .whereEqualTo("userid", user?.uid)
-        .whereEqualTo("isFavourite", false)
+        .whereEqualTo("favourite", false)
     query.get()
         .addOnSuccessListener { documents ->
             val batch = db.batch()
@@ -199,7 +199,7 @@ fun RecipeCard(
     onRemoveFromFavorites: (Recipe) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var isFavourite by rememberSaveable { mutableStateOf(recipe.isFavourite) }
+    var favourite by rememberSaveable { mutableStateOf(recipe.favourite) }
 
     Card(
         modifier = modifier
@@ -248,19 +248,19 @@ fun RecipeCard(
                 horizontalAlignment = Alignment.End){
                 AsyncImage(model = recipe.imageURL, contentDescription = "Image of the recipe")
                 IconToggleButton(
-                    checked = isFavourite,
+                    checked = favourite,
                     onCheckedChange = {
-                        isFavourite = !isFavourite
-                        onFavouriteToggle(recipe.copy(isFavourite = isFavourite))
-                        if (isFavourite) {
+                        favourite = !favourite
+                        onFavouriteToggle(recipe.copy(favourite = favourite))
+                        if (favourite) {
                             onAddToFavorites(recipe)
                         } else {
                             onRemoveFromFavorites(recipe)
                         }
-                        Log.d("RecipeCard", "Favourite toggled for recipe: ${recipe.title}, isFavourite: $isFavourite")
+                        Log.d("RecipeCard", "Favourite toggled for recipe: ${recipe.title}, favourite: $favourite")
                     }) {
                     Icon(
-                        imageVector = if (isFavourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        imageVector = if (favourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = null,
                         tint = Color.Black,
                         modifier = modifier.graphicsLayer {
@@ -275,19 +275,19 @@ fun RecipeCard(
                 contentAlignment = Alignment.CenterEnd
             ) {
                 IconToggleButton(
-                    checked = isFavourite,
+                    checked = favourite,
                     onCheckedChange = {
-                        isFavourite = !isFavourite
-                        onFavouriteToggle(recipe.copy(isFavourite = isFavourite))
-                        if (isFavourite) {
+                        favourite = !favourite
+                        onFavouriteToggle(recipe.copy(favourite = favourite))
+                        if (favourite) {
                             onAddToFavorites(recipe)
                         } else {
                             onRemoveFromFavorites(recipe)
                         }
-                        Log.d("RecipeCard", "Favourite toggled for recipe: ${recipe.title}, isFavourite: $isFavourite")
+                        Log.d("RecipeCard", "Favourite toggled for recipe: ${recipe.title}, favourite: $favourite")
                     }) {
                     Icon(
-                        imageVector = if (isFavourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        imageVector = if (favourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = null,
                         tint = Color.Black,
                         modifier = modifier.graphicsLayer {
