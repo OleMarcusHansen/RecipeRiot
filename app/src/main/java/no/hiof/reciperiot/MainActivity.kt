@@ -1,7 +1,9 @@
 package no.hiof.reciperiot
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -52,11 +54,11 @@ import no.hiof.reciperiot.impl.NotificationService
 import no.hiof.reciperiot.screens.AuthenticationScreen
 import no.hiof.reciperiot.screens.FavouriteMeals
 import no.hiof.reciperiot.screens.HomeScreen
-import no.hiof.reciperiot.screens.HomeViewModel
 import no.hiof.reciperiot.screens.IngredientsScreen
 import no.hiof.reciperiot.screens.RecipePage1
 import no.hiof.reciperiot.screens.SettingsScreen
 import no.hiof.reciperiot.screens.ShoppingListScreen
+import no.hiof.reciperiot.screens.firestoreCleanup
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
@@ -94,6 +96,8 @@ class MainActivity : ComponentActivity() {
     }
     override fun onDestroy() {
         super.onDestroy()
+        Log.d(TAG, "Destroy")
+        firestoreCleanup(db)
         Firebase.auth.signOut()
     }
 }
