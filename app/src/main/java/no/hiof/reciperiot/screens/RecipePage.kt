@@ -33,7 +33,6 @@ import org.json.JSONObject
 fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFirestore) {
     val recipeSource = remember { RecipeSource() }
     val recipe = recipeSource.loadRecipes().firstOrNull { it.id == recipeId }
-    var favourite by rememberSaveable { mutableStateOf(recipe?.favourite ?: false) }
 
     LazyColumn {
         if (recipe != null) {
@@ -45,21 +44,19 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     AsyncImage(model = recipe.imageURL, contentDescription = "Image of the recipe")
+                    var favourite by remember { mutableStateOf(recipe.favourite) }
                     IconToggleButton(
                         checked = favourite,
                         onCheckedChange = {
                             favourite = !favourite
-                            if (favourite) {
-                                updateRecipeFavouriteStatus(recipe, db, favourite)
-                            } else {
-                                updateRecipeFavouriteStatus(recipe, db, favourite)
-                            }
+
+                            updateRecipeFavouriteStatus(recipe, db, favourite)
                         },
                         modifier = Modifier
                             .padding(16.dp)
                     ) {
                         Icon(
-                            imageVector = if (recipe.favourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            imageVector = if (favourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = null,
                             tint = Color.Black,
                             modifier = Modifier

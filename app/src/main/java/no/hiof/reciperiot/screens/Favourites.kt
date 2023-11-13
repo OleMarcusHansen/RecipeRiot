@@ -182,12 +182,9 @@ fun RecipeCard(
                     onCheckedChange = {
                         favourite = !favourite
                         onFavouriteToggle(recipe.copy(favourite = favourite))
-                        if (favourite) {
-                            updateRecipeFavouriteStatus(recipe, favourite)
-                        } else {
-                            updateRecipeFavouriteStatus(recipe, favourite)
 
-                        }
+                        updateRecipeFavouriteStatus(recipe, favourite)
+
                         Log.d("RecipeCard", "Favourite toggled for recipe: ${recipe.title}, favourite: $favourite")
                     }) {
                     Icon(
