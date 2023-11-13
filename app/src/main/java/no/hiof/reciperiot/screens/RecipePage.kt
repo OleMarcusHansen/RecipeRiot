@@ -69,7 +69,7 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             .padding(16.dp)
                     ) {
                         Icon(
-                            imageVector = if (favourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            imageVector = if (recipe.favourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = null,
                             tint = Color.Black,
                             modifier = Modifier
