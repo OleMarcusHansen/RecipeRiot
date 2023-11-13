@@ -30,8 +30,11 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -75,10 +78,12 @@ class MainActivity : ComponentActivity() {
     val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        val darkTheme = mutableStateOf(false)
         super.onCreate(savedInstanceState)
         val service = NotificationService(applicationContext)
         setContent {
-            AppTheme {
+            AppTheme(useDarkTheme = darkTheme.value) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -89,7 +94,7 @@ class MainActivity : ComponentActivity() {
                         service.showNotification(user)
                     })*/
 
-                    MainApp(service, client, db)
+                    MainApp(service, client, db, darkTheme)
                 }
             }
         }
@@ -114,7 +119,7 @@ sealed class Screen(val route: String, val title: Int, val icon: ImageVector){
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: FirebaseFirestore , modifier: Modifier = Modifier) {
+fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: FirebaseFirestore, darkTheme: MutableState<Boolean>, modifier: Modifier = Modifier) {
     val navController = rememberNavController()
 
     val bottomNavigationScreens = listOf(
@@ -175,7 +180,8 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
             composable(Screen.Settings.route) {
                 SettingsScreen(logout = {navController.navigate("login")
                     Firebase.auth.signOut()
-                })
+                },
+                    darkTheme)
             }
             composable("${Screen.RecipePage.route}/{recipeid}",
                 arguments = listOf(navArgument("recipeid"){ type = NavType.StringType})

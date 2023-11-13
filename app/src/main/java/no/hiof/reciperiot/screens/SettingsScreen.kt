@@ -20,9 +20,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,9 +44,9 @@ import no.hiof.reciperiot.R
 
 
 @Composable
-fun SettingsScreen(logout: () -> Unit, modifier : Modifier = Modifier) {
+fun SettingsScreen(logout: () -> Unit, darkTheme: MutableState<Boolean> = mutableStateOf(false), modifier : Modifier = Modifier) {
     val context = LocalContext.current
-    var darkTheme by remember { mutableStateOf(false) }
+    //var darkTheme by remember { mutableStateOf(false) }
     var otherSetting by remember { mutableStateOf(false) }
 
     var langExpanded by remember { mutableStateOf(false)}
@@ -55,7 +57,10 @@ fun SettingsScreen(logout: () -> Unit, modifier : Modifier = Modifier) {
     Column(modifier = modifier
         .padding(horizontal = 50.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)){
-        SwitchSetting(bool = darkTheme, update = {newValue -> darkTheme = newValue}, text = "Dark theme")
+        SwitchSetting(bool = darkTheme.value,
+            update = { newValue ->
+                darkTheme.value = newValue
+                     }, text = "Dark theme")
         SwitchSetting(bool = otherSetting, update = {newValue -> otherSetting = newValue}, text = "Other setting")
         Row{
             Text(stringResource(id = R.string.language))
