@@ -57,55 +57,29 @@ fun FavouriteMeals(navController: NavController, db: FirebaseFirestore) {
         navController = navController,
         onFavouriteToggle = {
         },
-        onAddToFavorites = { recipe ->
-            handleFirestoreAdd(recipe, db)
-        },
-        onRemoveFromFavorites = { recipe ->
-            handleFirestoreRemove(recipe, db)
+        updateRecipeFavouriteStatus = { recipe ->
+            updateRecipeFavouriteStatus(recipe, db)
         }
+
     )
 }
-private fun updateRecipeId(recipe: Recipe, documentId: String, db: FirebaseFirestore) {
-    val updatedRecipe = mapOf("id" to documentId)
+
+fun updateRecipeFavouriteStatus(recipe: Recipe, db: FirebaseFirestore) {
+    val docid = recipe.id
+    val updatedRecipe = mapOf("favourite" to !recipe.favourite)
     val user = com.google.firebase.ktx.Firebase.auth.currentUser
 
     if (user != null) {
         db.collection("FavouriteMeals")
-            .document(documentId)
+            .document(docid)
             .set(updatedRecipe, SetOptions.merge())
             .addOnSuccessListener {
-                Log.d(TAG, "Recipe ID updated successfully")
+                Log.d(TAG, "Recipe favourite updated successfully")
             }
             .addOnFailureListener { e ->
-                Log.e(TAG, "Error updating recipe ID", e)
+                Log.e(TAG, "Error updating recipe favourite", e)
             }
     }
-}
-fun handleFirestoreAdd(recipe: Recipe, db: FirebaseFirestore) {
-    val user = com.google.firebase.ktx.Firebase.auth.currentUser
-
-    val recipeadd = mapOf(
-        "id" to "",
-        "title" to recipe.title,
-        "imageResourceId" to recipe.imageResourceId,
-        "imageURL" to recipe.imageURL,
-        "cookingTime" to recipe.cookingTime,
-        "favourite" to recipe.favourite,
-        "recipe_instructions" to recipe.recipe_instructions,
-        "recipe_nutrition" to recipe.recipe_nutrition,
-        "userid" to recipe.userid
-    )
-
-    db.collection("FavouriteMeals")
-        .add(recipeadd)
-        .addOnSuccessListener { documentReference ->
-            val updatedRecipe = recipe.copy(id = documentReference.id)
-            updateRecipeId(updatedRecipe, documentReference.id, db)
-            Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-        }
-        .addOnFailureListener { e ->
-            Log.w(TAG, "Error adding document", e)
-        }
 }
 
 fun firestoreCleanup(db: FirebaseFirestore) {
@@ -138,43 +112,14 @@ fun firestoreCleanup(db: FirebaseFirestore) {
 }
 
 
-fun handleFirestoreRemove(recipe: Recipe, db: FirebaseFirestore) {
-    val user = com.google.firebase.ktx.Firebase.auth.currentUser
-    Log.d(TAG, "Before get()")
-    db.collection("FavouriteMeals")
-        .whereEqualTo("userid", user?.uid)
-        .whereEqualTo("id", recipe.id)
-        .get()
-        .addOnSuccessListener { documents ->
-            for (document in documents) {
-                // Get the document ID
-                val documentId = document.id
 
-                // Delete the document based on the document ID
-                db.collection("FavouriteMeals")
-                    .document(documentId)
-                    .delete()
-                    .addOnSuccessListener {
-                        Log.d(TAG, "DocumentSnapshot successfully deleted with ID: $documentId")
-                    }
-                    .addOnFailureListener { e ->
-                        Log.w(TAG, "Error deleting document with ID: $documentId", e)
-                    }
-            }
-        }
-        .addOnFailureListener { e ->
-            Log.w(TAG, "Error getting documents", e)
-        }
-    Log.d(TAG, "After get()")
-}
 
 @Composable
 fun RecipeList(
     recipes: List<Recipe>,
     navController: NavController,
     onFavouriteToggle: (Recipe) -> Unit,
-    onAddToFavorites: (Recipe) -> Unit,
-    onRemoveFromFavorites: (Recipe) -> Unit,
+    updateRecipeFavouriteStatus: (Recipe) -> Unit,
     modifier: Modifier = Modifier) {
     LazyColumn(userScrollEnabled = true, modifier = modifier) {
         items(recipes) { recipe ->
@@ -184,8 +129,7 @@ fun RecipeList(
                     navController.navigate("${Screen.RecipePage.route}/${selectedRecipe}")
                 },
                 onFavouriteToggle = onFavouriteToggle,
-                onAddToFavorites = onAddToFavorites,
-                onRemoveFromFavorites = onRemoveFromFavorites
+                updateRecipeFavouriteStatus = updateRecipeFavouriteStatus
             )
         }
     }
@@ -195,8 +139,7 @@ fun RecipeCard(
     recipe: Recipe,
     onRecipeClick: (String) -> Unit,
     onFavouriteToggle: (Recipe) -> Unit,
-    onAddToFavorites: (Recipe) -> Unit,
-    onRemoveFromFavorites: (Recipe) -> Unit,
+    updateRecipeFavouriteStatus: (Recipe) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var favourite by rememberSaveable { mutableStateOf(recipe.favourite) }
@@ -216,17 +159,6 @@ fun RecipeCard(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            /*Image(
-                //painter = painterResource(id = recipe.imageResourceId),
-                painter = painterResource(id = R.drawable.food),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-                    .clip(RoundedCornerShape(8.dp))
-            )*/
-            //Spacer(modifier = Modifier.height(8.dp))
             Column(modifier = Modifier.width(200.dp)){
                 Text(
                     text = recipe.title,
@@ -253,9 +185,10 @@ fun RecipeCard(
                         favourite = !favourite
                         onFavouriteToggle(recipe.copy(favourite = favourite))
                         if (favourite) {
-                            onAddToFavorites(recipe)
+                            updateRecipeFavouriteStatus(recipe)
                         } else {
-                            onRemoveFromFavorites(recipe)
+                            updateRecipeFavouriteStatus(recipe)
+
                         }
                         Log.d("RecipeCard", "Favourite toggled for recipe: ${recipe.title}, favourite: $favourite")
                     }) {
@@ -270,33 +203,6 @@ fun RecipeCard(
                     )
                 }
             }
-            /*Box(
-                modifier = Modifier.fillMaxWidth(),
-                contentAlignment = Alignment.CenterEnd
-            ) {
-                IconToggleButton(
-                    checked = favourite,
-                    onCheckedChange = {
-                        favourite = !favourite
-                        onFavouriteToggle(recipe.copy(favourite = favourite))
-                        if (favourite) {
-                            onAddToFavorites(recipe)
-                        } else {
-                            onRemoveFromFavorites(recipe)
-                        }
-                        Log.d("RecipeCard", "Favourite toggled for recipe: ${recipe.title}, favourite: $favourite")
-                    }) {
-                    Icon(
-                        imageVector = if (favourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                        contentDescription = null,
-                        tint = Color.Black,
-                        modifier = modifier.graphicsLayer {
-                            scaleX = 1.3f
-                            scaleY = 1.3f
-                        },
-                    )
-                }
-            }*/
         }
     }
 }
