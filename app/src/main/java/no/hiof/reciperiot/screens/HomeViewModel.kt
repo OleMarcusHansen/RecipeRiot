@@ -84,6 +84,7 @@ class HomeViewModel : ViewModel() {
             .addOnSuccessListener { documentReference ->
                 val updatedRecipe = recipe.copy(id = documentReference.id)
                 updateRecipeId(updatedRecipe, documentReference.id, db)
+
                 Log.d(ContentValues.TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
             }
             .addOnFailureListener { e ->
@@ -102,10 +103,13 @@ class HomeViewModel : ViewModel() {
                 .set(updatedRecipe, SetOptions.merge())
                 .addOnSuccessListener {
                     Log.d(ContentValues.TAG, "Recipe ID updated successfully")
+                    recipes.value = listOf(recipe)
                 }
                 .addOnFailureListener { e ->
                     Log.e(ContentValues.TAG, "Error updating recipe ID", e)
                 }
+        } else {
+            println("No data or error")
         }
     }
 

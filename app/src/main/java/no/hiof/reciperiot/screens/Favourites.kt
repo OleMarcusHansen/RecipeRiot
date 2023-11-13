@@ -111,9 +111,6 @@ fun firestoreCleanup(db: FirebaseFirestore) {
         }
 }
 
-
-
-
 @Composable
 fun RecipeList(
     recipes: List<Recipe>,
@@ -134,14 +131,15 @@ fun RecipeList(
         }
     }
 }
+
 @Composable
 fun RecipeCard(
     recipe: Recipe,
     onRecipeClick: (String) -> Unit,
     onFavouriteToggle: (Recipe) -> Unit,
     updateRecipeFavouriteStatus: (Recipe, Boolean) -> Unit,
-    modifier: Modifier = Modifier
-) {
+    modifier: Modifier = Modifier) {
+
     var favourite by rememberSaveable { mutableStateOf(recipe.favourite) }
 
     Card(

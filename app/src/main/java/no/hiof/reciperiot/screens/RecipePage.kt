@@ -44,16 +44,6 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    /*Image(
-                        painter = painterResource(id = recipe.imageResourceId),
-                        //painter = painterResource(id = R.drawable.food),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                    )*/
                     AsyncImage(model = recipe.imageURL, contentDescription = "Image of the recipe")
                     IconToggleButton(
                         checked = favourite,
@@ -96,7 +86,14 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                         fontSize = 20.sp
                     )
                     Text(
-                        text = "${recipe.favourite}",
+                        text = "favourite status: ${recipe.favourite}",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 20.sp
+                    )
+                    Text(
+                        text = recipe.userid,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
@@ -173,26 +170,30 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
-                    Text(
-                        text = recipe.userid,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        fontSize = 20.sp
-                    )
+
 
                 }
             }
         } else {
             item {
                 Text(
-                    text = "du har kommet til feil side as",
+                    text = "du har kommet til feil side as, siden fikk ikke recipe," +
+                            "enten ligger den ikke i db eller så er det en annen feil",
                     color = Color.Black,
                     fontSize = 28.sp,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(16.dp)
                 )
+                Text(
+                    text = recipeId,
+                    color = Color.Black,
+                    fontSize = 28.sp,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                )
+
             }
         }
     }

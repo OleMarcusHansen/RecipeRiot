@@ -8,7 +8,45 @@ import com.google.firebase.ktx.Firebase
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.model.Recipe
 
+
+class RecipeSource() {
+    val user = Firebase.auth.currentUser
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
+    private val collectionReference: CollectionReference = firestore.collection("FavouriteMeals")
+    private val recipes: MutableList<Recipe> = mutableListOf()
+
+    init {
+        collectionReference
+            .whereEqualTo("userid", user?.uid)
+            //.whereEqualTo("favourite", true) {todo}
+            .addSnapshotListener { snapshot, exception ->
+            if (exception != null) {
+                Log.e("FirestoreError", "Error fetching data: ${exception.message}")
+                return@addSnapshotListener
+            }
+
+            recipes.clear()
+            snapshot?.documents?.forEach { documentSnapshot ->
+                val recipe = documentSnapshot.toObject(Recipe::class.java)
+                Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes.size}")
+                Log.d("FirestoreData", "recipe data: ${recipes}")
+                Log.d("FirestoreData", "recipe id: ${documentSnapshot.reference.id}")
+
+
+
+                recipe?.let { recipes.add(it) }
+            }
+        }
+    }
+
+
+    fun loadRecipes(): List<Recipe> {
+        return recipes
+    }
+}
+
 class RecipeSource1() {
+    //dette er en backup av recipesource for feilsøking og andre ting
     private val recipes: MutableList<Recipe> = mutableListOf(
         Recipe("r","mat", R.drawable.food, "test",
             "45min", true, "dsf", "agI84BahTTXBHvltC1dfNndLk0n2"),
@@ -27,58 +65,5 @@ class RecipeSource1() {
     fun loadRecipes(): List<Recipe> {
         return recipes.toList()
     }
-
-    fun updateRecipe(recipeId: String, favourite: Boolean) {
-        recipes.find { it.id == recipeId }?.favourite = favourite
-    }
-}
-
-class RecipeSource() {
-    val user = Firebase.auth.currentUser
-    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
-    private val collectionReference: CollectionReference = firestore.collection("FavouriteMeals")
-    private val recipes: MutableList<Recipe> = mutableListOf()
-
-    init {
-        collectionReference
-            .whereEqualTo("userid", user?.uid)
-            //.whereEqualTo("favourite", true)
-            .addSnapshotListener { snapshot, exception ->
-            if (exception != null) {
-                Log.e("FirestoreError", "Error fetching data: ${exception.message}")
-                return@addSnapshotListener
-            }
-
-            recipes.clear()
-            snapshot?.documents?.forEach { documentSnapshot ->
-                val recipe = documentSnapshot.toObject(Recipe::class.java)
-                Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes.size}")
-                Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes}")
-                Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${documentSnapshot.reference.id}")
-
-
-
-                recipe?.let { recipes.add(it) }
-            }
-        }
-    }
-
-
-    fun loadRecipes(): List<Recipe> {
-        return recipes
-    }
-
-    fun updateRecipe(recipeId: String, favourite: Boolean) {
-        val recipeRef = collectionReference.document(recipeId)
-        recipeRef.update("favourite", favourite)
-            .addOnSuccessListener {
-                Log.d("FirestoreUpdate", "Recipe updated successfully.")
-            }
-            .addOnFailureListener { e ->
-                Log.e("FirestoreError", "Error updating recipe: ${e.message}")
-            }
-    }
-
-
 }
 

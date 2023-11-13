@@ -1,5 +1,6 @@
 package no.hiof.reciperiot.screens
 
+import android.app.Activity.RESULT_OK
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -23,7 +24,8 @@ fun ShoppingListScreen(modifier: Modifier = Modifier) {
     // Create a remember variable to hold the text entered in the input field
     val textState = remember { mutableStateOf("") }
 
-    Card(modifier = modifier.fillMaxSize().padding(10.dp, 0.dp, 10.dp, 95.dp),
+    Card(
+        modifier = modifier.fillMaxSize().padding(10.dp, 0.dp, 10.dp, 95.dp),
         elevation = CardDefaults.cardElevation(8.dp)){
         TextField(value = textState.value,
             onValueChange = { newText ->
