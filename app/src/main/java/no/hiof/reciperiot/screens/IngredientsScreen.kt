@@ -1,11 +1,11 @@
 package no.hiof.reciperiot.screens
 import android.content.ContentValues.TAG
-import android.graphics.Paint.Align
 import android.util.Log
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,12 +13,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -32,24 +33,33 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.view.HapticFeedbackConstantsCompat.*
 import com.example.compose.AppTheme
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun IngredientRow(
     name: String,
     checkedState: MutableState<Boolean>,
     onCheckedChange: (Boolean) -> Unit)
 {
+
+    val haptics = LocalHapticFeedback.current
+    var expandedMenu by remember { mutableStateOf(false)}
+    var menuRowId by rememberSaveable { mutableStateOf(name) }
 
     Row(
         modifier = Modifier
@@ -59,7 +69,18 @@ fun IngredientRow(
     ) {
         Text(
             text = name,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier
+                .weight(1f)
+                .combinedClickable(
+                    onClick = {},
+                    onLongClick = {
+                        menuRowId = name
+                        expandedMenu = true
+                        haptics.performHapticFeedback(
+                            androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress
+                        )
+                    }
+                )
         )
 
         Spacer(modifier = Modifier.width(8.dp))
@@ -71,7 +92,32 @@ fun IngredientRow(
             },
             modifier = Modifier.size(24.dp)
         )
+
+        DropdownMenu(expanded = expandedMenu, onDismissRequest = {expandedMenu = false}) {
+            // When clicking delete, delete ingrident from firebase
+            DropdownMenuItem(text = { Text(text = "Delete")}, onClick = {
+                menuRowId?.let { ingredientName ->
+                    deleteIngredientFromDb(Firebase.firestore, ingredientName)
+                }
+            })
+
+        }
     }
+}
+
+fun deleteIngredientFromDb(db: FirebaseFirestore, ingredientName: String) {
+    val user = Firebase.auth.currentUser
+    val docRef = user?.let { db.collection("ingredients").document(it.uid) }
+
+    // Delete the specific field from the document
+    docRef?.update(ingredientName, FieldValue.delete())
+        ?.addOnSuccessListener {
+            Log.d(TAG, "Ingredient deleted successfully")
+        }
+        ?.addOnFailureListener { e ->
+            Log.w(TAG, "Error deleting ingredient", e)
+        }
+
 }
 
 // Saves names and checked states to fireStore
@@ -192,8 +238,10 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
                     }
                 }
 
+
                 ingredientsList.forEach { (name, checkedState) ->
                     IngredientRow(
+
                         name = name,
                         checkedState = checkedState,
                         onCheckedChange = { newValue ->
