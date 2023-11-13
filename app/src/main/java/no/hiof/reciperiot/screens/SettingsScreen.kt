@@ -58,7 +58,7 @@ fun SettingsScreen(logout: () -> Unit, modifier : Modifier = Modifier) {
         SwitchSetting(bool = darkTheme, update = {newValue -> darkTheme = newValue}, text = "Dark theme")
         SwitchSetting(bool = otherSetting, update = {newValue -> otherSetting = newValue}, text = "Other setting")
         Row{
-            Text("Language")
+            Text(stringResource(id = R.string.language))
             Box(modifier = Modifier
                 .fillMaxSize()
                 .wrapContentSize(Alignment.TopStart)
