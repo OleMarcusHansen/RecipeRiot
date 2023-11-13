@@ -1,13 +1,19 @@
 package no.hiof.reciperiot.screens
 import android.content.ContentValues.TAG
+import android.graphics.Paint.Align
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.ui.Alignment.Companion.BottomEnd
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -145,60 +151,82 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
         }
     }
 
-
-
     // Counter for å genere rader for lazyColumn
     val rowCount = 1
 
-    LazyColumn(
-        modifier = modifier
-            .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+    Box(
+        modifier = Modifier.fillMaxSize()
+    )
+    {
+        LazyColumn(
+            modifier = modifier
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
 
-    ) {items(count = rowCount) {item ->
+            ) {
+            items(count = rowCount) { item ->
 
-        // Input field for adding new ingredients
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            OutlinedTextField(
-                value = newIngredient,
-                onValueChange = { newIngredient = it },
-                label = { Text("Add an ingredient") }
-            )
-            Button(onClick = {
-                if (newIngredient.isNotBlank()) {
-                    ingredientsList = ingredientsList.toMutableList().plus(newIngredient to mutableStateOf(true))
-                    newIngredient = ""
+                // Input field for adding new ingredients
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    OutlinedTextField(
+                        value = newIngredient,
+                        onValueChange = { newIngredient = it },
+                        label = { Text("Add an ingredient") }
+                    )
+                    Button(onClick = {
+                        if (newIngredient.isNotBlank()) {
+                            ingredientsList = ingredientsList.toMutableList()
+                                .plus(newIngredient to mutableStateOf(true))
+                            newIngredient = ""
 
-                    scope.launch{
-                        snackbarHost.showSnackbar("Ingredient added")
+                            scope.launch {
+                                snackbarHost.showSnackbar("Ingredient added")
+                            }
+                        }
+                    }) {
+                        Text(text = "Add")
                     }
                 }
-            }) {
-                Text(text = "Add")
+
+                ingredientsList.forEach { (name, checkedState) ->
+                    IngredientRow(
+                        name = name,
+                        checkedState = checkedState,
+                        onCheckedChange = { newValue ->
+                            checkedState.value = newValue
+                        }
+                    )
+                }
             }
         }
 
-        ingredientsList.forEach { (name, checkedState) ->
-            IngredientRow(
-                name = name,
-                checkedState = checkedState,
-                onCheckedChange = { newValue ->
-                    checkedState.value = newValue
-                }
-            )
-        }
-        FloatingActionButton(onClick = {saveIngredients()},
-            modifier = modifier.padding(16.dp),
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
 
-            ) {
-            Icon(Icons.Filled.Add, "Floating action button")
+        Column(modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center) {
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            Row(modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+                ) {
+                FloatingActionButton(
+                    onClick = { saveIngredients() },
+                    modifier = modifier
+                        .padding(16.dp),
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+
+                    ) {
+                    Icon(Icons.Filled.Add, "Floating action button")
+                }
+            }
+
         }
-    }
+
+
     }
 
 }
@@ -207,12 +235,10 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
 // Preview does not work
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun IngredientScreenPreview() {
     AppTheme {
         val snackbarHostState = remember { SnackbarHostState() }
         val db = Firebase.firestore
-        AppTheme {
-            IngredientsScreen(snackbarHost = snackbarHostState, db = db)
-        }
+        IngredientsScreen(snackbarHost = snackbarHostState, db = db)
     }
 }
