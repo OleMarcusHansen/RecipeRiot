@@ -2,9 +2,12 @@ package no.hiof.reciperiot.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -43,37 +46,40 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                         .padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    AsyncImage(model = recipe.imageURL, contentDescription = "Image of the recipe")
-                    var favourite by remember { mutableStateOf(recipe.favourite) }
-                    IconToggleButton(
-                        checked = favourite,
-                        onCheckedChange = {
-                            favourite = !favourite
-
-                            updateRecipeFavouriteStatus(recipe, db, favourite)
-                        },
-                        modifier = Modifier
-                            .padding(16.dp)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Icon(
-                            imageVector = if (favourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                            contentDescription = null,
-                            tint = Color.Black,
+                        Text(
+                            text = recipe.title,
                             modifier = Modifier
-                                .graphicsLayer {
-                                    scaleX = 1.3f
-                                    scaleY = 1.3f
-                                },
+                                .padding(top = 8.dp)
+                                .width(300.dp),
+                            fontSize = 30.sp
                         )
-                    }
+                        var favourite by remember { mutableStateOf(recipe.favourite) }
+                        IconToggleButton(
+                            checked = favourite,
+                            onCheckedChange = {
+                                favourite = !favourite
 
-                    Text(
-                        text = recipe.title,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        fontSize = 30.sp
-                    )
+                                updateRecipeFavouriteStatus(recipe, db, favourite)
+                            },
+                            modifier = Modifier
+                                .padding(16.dp)
+                        ) {
+                            Icon(
+                                imageVector = if (favourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                                contentDescription = null,
+                                tint = Color.Black,
+                                modifier = Modifier
+                                    .graphicsLayer {
+                                        scaleX = 1.3f
+                                        scaleY = 1.3f
+                                    },
+                            )
+                        }
+                    }
 
                     Text(
                         text = recipe.cookingTime,
@@ -103,6 +109,13 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
+
+                    AsyncImage(
+                        model = recipe.imageURL,
+                        contentDescription = "Image of the recipe",
+                        modifier = Modifier.height(400.dp)
+                    )
+
                     Text(
                         text = "Nutrition:",
                         modifier = Modifier
