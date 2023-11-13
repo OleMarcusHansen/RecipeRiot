@@ -17,6 +17,8 @@
     <string name="home_options_time">Tid i minutter: </string>
     <string name="home_ingredients">Ingredienser</string>
     <string name="nav_recipepage">Oppskriftsside</string>
+
+    <string name="language">Språk</string>
     <string name="english">Engelsk</string>
     <string name="norwegian">Norsk</string>
 </resources>

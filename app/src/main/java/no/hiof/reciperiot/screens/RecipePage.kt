@@ -60,16 +60,16 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                         onCheckedChange = {
                             favourite = !favourite
                             if (favourite) {
-                                handleFirestoreAdd(recipe, db)
+                                updateRecipeFavouriteStatus(recipe, db, favourite)
                             } else {
-                                handleFirestoreRemove(recipe, db)
+                                updateRecipeFavouriteStatus(recipe, db, favourite)
                             }
                         },
                         modifier = Modifier
                             .padding(16.dp)
                     ) {
                         Icon(
-                            imageVector = if (favourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                            imageVector = if (recipe.favourite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                             contentDescription = null,
                             tint = Color.Black,
                             modifier = Modifier

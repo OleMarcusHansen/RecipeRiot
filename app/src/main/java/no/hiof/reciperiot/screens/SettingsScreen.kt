@@ -50,6 +50,7 @@ fun SettingsScreen(logout: () -> Unit, modifier : Modifier = Modifier) {
     var langExpanded by remember { mutableStateOf(false)}
     val langItems = listOf(stringResource(R.string.english), stringResource(R.string.norwegian))
     var langSelectedIndex by remember { mutableStateOf(0) }
+    val langLocaleStrings = listOf("en", "nb")
 
     Column(modifier = modifier
         .padding(horizontal = 50.dp),
@@ -57,7 +58,7 @@ fun SettingsScreen(logout: () -> Unit, modifier : Modifier = Modifier) {
         SwitchSetting(bool = darkTheme, update = {newValue -> darkTheme = newValue}, text = "Dark theme")
         SwitchSetting(bool = otherSetting, update = {newValue -> otherSetting = newValue}, text = "Other setting")
         Row{
-            Text("Language")
+            Text(stringResource(id = R.string.language))
             Box(modifier = Modifier
                 .fillMaxSize()
                 .wrapContentSize(Alignment.TopStart)
@@ -79,7 +80,7 @@ fun SettingsScreen(logout: () -> Unit, modifier : Modifier = Modifier) {
                         DropdownMenuItem(text = { Text(s) }, onClick = {
                             langSelectedIndex = index
                             langExpanded = false
-                            changeLocales(context = context, "nb")
+                            changeLocales(context = context, langLocaleStrings[langSelectedIndex])
                         })
                     }
                 }
