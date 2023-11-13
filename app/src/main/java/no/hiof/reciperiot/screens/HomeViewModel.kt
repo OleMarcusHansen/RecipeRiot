@@ -1,5 +1,6 @@
 package no.hiof.reciperiot.screens
 
+import android.content.ContentValues
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -7,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +33,81 @@ class HomeViewModel : ViewModel() {
     val time = mutableStateOf("20")
 
     var ingredients by mutableStateOf(emptyList<String>())
+
+    fun handleFirestoreRemove(recipe: Recipe, db: FirebaseFirestore) {
+        val user = com.google.firebase.ktx.Firebase.auth.currentUser
+        Log.d(ContentValues.TAG, "Before get()")
+        db.collection("FavouriteMeals")
+            .whereEqualTo("userid", user?.uid)
+            .whereEqualTo("id", recipe.id)
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    // Get the document ID
+                    val documentId = document.id
+
+                    // Delete the document based on the document ID
+                    db.collection("FavouriteMeals")
+                        .document(documentId)
+                        .delete()
+                        .addOnSuccessListener {
+                            Log.d(ContentValues.TAG, "DocumentSnapshot successfully deleted with ID: $documentId")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.w(ContentValues.TAG, "Error deleting document with ID: $documentId", e)
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.w(ContentValues.TAG, "Error getting documents", e)
+            }
+        Log.d(ContentValues.TAG, "After get()")
+    }
+
+    fun handleFirestoreAdd(recipe: Recipe, db: FirebaseFirestore) {
+        val user = com.google.firebase.ktx.Firebase.auth.currentUser
+
+        val recipeadd = mapOf(
+            "id" to "",
+            "title" to recipe.title,
+            "imageResourceId" to recipe.imageResourceId,
+            "imageURL" to recipe.imageURL,
+            "cookingTime" to recipe.cookingTime,
+            "favourite" to recipe.favourite,
+            "recipe_instructions" to recipe.recipe_instructions,
+            "recipe_nutrition" to recipe.recipe_nutrition,
+            "userid" to recipe.userid
+        )
+
+        db.collection("FavouriteMeals")
+            .add(recipeadd)
+            .addOnSuccessListener { documentReference ->
+                val updatedRecipe = recipe.copy(id = documentReference.id)
+                updateRecipeId(updatedRecipe, documentReference.id, db)
+                Log.d(ContentValues.TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w(ContentValues.TAG, "Error adding document", e)
+            }
+    }
+
+    private fun updateRecipeId(recipe: Recipe, documentId: String, db: FirebaseFirestore) {
+
+        val updatedRecipe = mapOf("id" to documentId)
+        val user = com.google.firebase.ktx.Firebase.auth.currentUser
+
+        if (user != null) {
+            db.collection("FavouriteMeals")
+                .document(documentId)
+                .set(updatedRecipe, SetOptions.merge())
+                .addOnSuccessListener {
+                    Log.d(ContentValues.TAG, "Recipe ID updated successfully")
+                }
+                .addOnFailureListener { e ->
+                    Log.e(ContentValues.TAG, "Error updating recipe ID", e)
+                }
+        }
+    }
 
     // Function to fetch ingredients from Firestore
     fun getIngredientsFromFirestore(db: FirebaseFirestore) {

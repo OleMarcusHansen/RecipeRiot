@@ -125,11 +125,8 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
             navController = navController,
             onFavouriteToggle = {
             },
-            onAddToFavorites = { recipe ->
-                handleFirestoreAdd(recipe, db)
-            },
-            onRemoveFromFavorites = { recipe ->
-                handleFirestoreRemove(recipe, db)
+            updateRecipeFavouriteStatus = {recipe ->
+                updateRecipeFavouriteStatus(recipe, db)
             }
         )
     }
