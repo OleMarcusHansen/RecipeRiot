@@ -138,7 +138,7 @@ class HomeViewModel : ViewModel() {
         val user = Firebase.auth.currentUser
         //prompt til chatGPT
         //bør bli justert og testet for å få best mulig resultat
-        val prompt = """I have only the ingredients: ${ingredients}. I have ${time} minutes to make food. Generate a recipe for me. Your output should be in JSON format with the keys (recipe_name, recipe_time, recipe_instructions): String, recipe_nutrition: object"""
+        val prompt = """I have only the ingredients: ${ingredients}. I have ${time} minutes to make food. Generate a recipe for me. Your output should be in JSON format: {recipe_name: String, recipe_time: String, recipe_instructions: String, recipe_nutrition: Object}"""
 
         println(prompt)
 
@@ -189,11 +189,11 @@ class HomeViewModel : ViewModel() {
                 println(messageJSON)
 
                 // Image creation
-                //val imageResponse = generateImage(client, messageJSON.getString("recipe_name"))
-                //val imageResponseURL = JSONObject(imageResponse).getJSONArray("data").getJSONObject(0).getString("url")
+                val imageResponse = generateImage(client, messageJSON.getString("recipe_name"))
+                val imageResponseURL = JSONObject(imageResponse).getJSONArray("data").getJSONObject(0).getString("url")
 
                 // Standard image
-                val imageResponseURL = "https://cdn.discordapp.com/attachments/1148561836724207708/1172157068497666048/image.png?ex=655f4b56&is=654cd656&hm=a296565e26720c460d137ee7941dd195e597378e26b6e77cc7d1320551067ad0&"
+                //val imageResponseURL = "https://cdn.discordapp.com/attachments/1148561836724207708/1172157068497666048/image.png?ex=655f4b56&is=654cd656&hm=a296565e26720c460d137ee7941dd195e597378e26b6e77cc7d1320551067ad0&"
 
                 val recipes = listOf(
                     Recipe(
