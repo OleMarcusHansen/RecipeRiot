@@ -57,16 +57,16 @@ fun FavouriteMeals(navController: NavController, db: FirebaseFirestore) {
         navController = navController,
         onFavouriteToggle = {
         },
-        updateRecipeFavouriteStatus = { recipe ->
-            updateRecipeFavouriteStatus(recipe, db)
+        updateRecipeFavouriteStatus = { recipe, fav ->
+            updateRecipeFavouriteStatus(recipe, db, fav)
         }
 
     )
 }
 
-fun updateRecipeFavouriteStatus(recipe: Recipe, db: FirebaseFirestore) {
+fun updateRecipeFavouriteStatus(recipe: Recipe, db: FirebaseFirestore, fav: Boolean) {
     val docid = recipe.id
-    val updatedRecipe = mapOf("favourite" to !recipe.favourite)
+    val updatedRecipe = mapOf("favourite" to fav)
     val user = com.google.firebase.ktx.Firebase.auth.currentUser
 
     if (user != null) {
@@ -119,7 +119,7 @@ fun RecipeList(
     recipes: List<Recipe>,
     navController: NavController,
     onFavouriteToggle: (Recipe) -> Unit,
-    updateRecipeFavouriteStatus: (Recipe) -> Unit,
+    updateRecipeFavouriteStatus: (Recipe, Boolean) -> Unit,
     modifier: Modifier = Modifier) {
     LazyColumn(userScrollEnabled = true, modifier = modifier) {
         items(recipes) { recipe ->
@@ -139,7 +139,7 @@ fun RecipeCard(
     recipe: Recipe,
     onRecipeClick: (String) -> Unit,
     onFavouriteToggle: (Recipe) -> Unit,
-    updateRecipeFavouriteStatus: (Recipe) -> Unit,
+    updateRecipeFavouriteStatus: (Recipe, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var favourite by rememberSaveable { mutableStateOf(recipe.favourite) }
@@ -185,9 +185,9 @@ fun RecipeCard(
                         favourite = !favourite
                         onFavouriteToggle(recipe.copy(favourite = favourite))
                         if (favourite) {
-                            updateRecipeFavouriteStatus(recipe)
+                            updateRecipeFavouriteStatus(recipe, favourite)
                         } else {
-                            updateRecipeFavouriteStatus(recipe)
+                            updateRecipeFavouriteStatus(recipe, favourite)
 
                         }
                         Log.d("RecipeCard", "Favourite toggled for recipe: ${recipe.title}, favourite: $favourite")

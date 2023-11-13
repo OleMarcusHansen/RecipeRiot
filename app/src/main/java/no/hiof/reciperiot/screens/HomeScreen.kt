@@ -114,6 +114,7 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                 scope.launch {
                     val newRecipes = homeViewModel.generateGPT(client, homeViewModel.ingredients, homeViewModel.time.value)
                     homeViewModel.recipes.value = newRecipes
+                    homeViewModel.handleFirestoreAdd(newRecipes[0], db)
                     snackbarHost.showSnackbar("Oppskrift generert")
                 }
             }) {
@@ -125,8 +126,8 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
             navController = navController,
             onFavouriteToggle = {
             },
-            updateRecipeFavouriteStatus = {recipe ->
-                updateRecipeFavouriteStatus(recipe, db)
+            updateRecipeFavouriteStatus = {recipe, fav ->
+                updateRecipeFavouriteStatus(recipe, db, fav)
             }
         )
     }

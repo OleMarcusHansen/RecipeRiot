@@ -60,9 +60,9 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                         onCheckedChange = {
                             favourite = !favourite
                             if (favourite) {
-                                handleFirestoreAdd(recipe, db)
+                                updateRecipeFavouriteStatus(recipe, db, favourite)
                             } else {
-                                handleFirestoreRemove(recipe, db)
+                                updateRecipeFavouriteStatus(recipe, db, favourite)
                             }
                         },
                         modifier = Modifier
