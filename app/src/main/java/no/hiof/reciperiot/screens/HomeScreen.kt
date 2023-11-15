@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import no.hiof.reciperiot.R
+import no.hiof.reciperiot.ViewModels.RecipeViewModel
 import no.hiof.reciperiot.ViewModels.HomeViewModel
 import okhttp3.OkHttpClient
 
@@ -105,7 +106,7 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
             navController = navController,
             onFavouriteToggle = {},
             updateRecipeFavouriteStatus = {recipe, fav ->
-                updateRecipeFavouriteStatus(recipe, db, fav)
+                RecipeViewModel().updateRecipeFavouriteStatus(recipe, db, fav)
                 Log.e("FirestoreError", "Error fetching data: ${homeViewModel.recipes.value}")
             }
         )

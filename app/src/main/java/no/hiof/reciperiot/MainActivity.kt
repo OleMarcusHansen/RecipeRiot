@@ -53,6 +53,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import no.hiof.reciperiot.ViewModels.RecipeViewModel
 import no.hiof.reciperiot.impl.NotificationService
 import no.hiof.reciperiot.screens.AuthenticationScreen
 import no.hiof.reciperiot.screens.FavouriteMeals
@@ -61,7 +62,6 @@ import no.hiof.reciperiot.screens.IngredientsScreen
 import no.hiof.reciperiot.screens.RecipePage1
 import no.hiof.reciperiot.screens.SettingsScreen
 import no.hiof.reciperiot.screens.ShoppingListScreen
-import no.hiof.reciperiot.screens.firestoreCleanup
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
@@ -102,7 +102,7 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "Destroy")
-        firestoreCleanup(db)
+        RecipeViewModel().firestoreCleanup(db)
         Firebase.auth.signOut()
     }
 }
