@@ -25,14 +25,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.firestore.FirebaseFirestore
+import no.hiof.reciperiot.ViewModels.RecipeViewModel
 import no.hiof.reciperiot.data.RecipeSource
 import org.json.JSONObject
 
 @Composable
-fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFirestore) {
+fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFirestore, RecipeViewModel: RecipeViewModel = viewModel()) {
     val recipeSource = remember { RecipeSource() }
     val recipe = recipeSource.loadRecipes().firstOrNull { it.id == recipeId }
 
@@ -62,7 +64,7 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             onCheckedChange = {
                                 favourite = !favourite
 
-                                updateRecipeFavouriteStatus(recipe, db, favourite)
+                                RecipeViewModel.updateRecipeFavouriteStatus(recipe, db, favourite)
                             },
                             modifier = Modifier
                                 .padding(16.dp)
