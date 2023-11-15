@@ -30,12 +30,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.compose.AppTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ViewModels.IngredientsViewModel
 
 
@@ -104,7 +106,7 @@ fun getIngredients(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IngredientsScreen(modifier: Modifier = Modifier, snackbarHost : SnackbarHostState, db: FirebaseFirestore, ingredientScreenViewModel: IngredientsViewModel = viewModel()) {
+fun IngredientsScreen(navController: NavController, modifier: Modifier = Modifier, snackbarHost : SnackbarHostState, db: FirebaseFirestore, ingredientScreenViewModel: IngredientsViewModel = viewModel()) {
 
 
     //Fetch data from Firestore
@@ -127,7 +129,9 @@ fun IngredientsScreen(modifier: Modifier = Modifier, snackbarHost : SnackbarHost
         saveIngredientstoDb(db, ingredientsToSave)
 
         scope.launch{
+            navController.navigate(Screen.Home.route)
             snackbarHost.showSnackbar("Saved ingredients!")
+
         }
 
     }
@@ -212,16 +216,4 @@ fun IngredientsScreen(modifier: Modifier = Modifier, snackbarHost : SnackbarHost
 
     }
 
-}
-
-
-// Preview does not work
-@Preview(showBackground = true)
-@Composable
-fun IngredientScreenPreview() {
-    AppTheme {
-        val snackbarHostState = remember { SnackbarHostState() }
-        val db = Firebase.firestore
-        IngredientsScreen(snackbarHost = snackbarHostState, db = db)
-    }
 }
