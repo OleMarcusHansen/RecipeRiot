@@ -1,4 +1,5 @@
 package no.hiof.reciperiot.screens
+
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -22,24 +23,19 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.compose.AppTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ViewModels.IngredientsViewModel
-
 
 
 /* Commented out for extrating to viewmodel
@@ -71,8 +67,8 @@ fun saveIngredientstoDb(db: FirebaseFirestore, ingredientList: List<Pair<String,
     //TODO: ensure logged in
     if (docRef != null) {
         docRef.set(data)
-            .addOnSuccessListener {docRef ->
-                Log.d(TAG,"DocumentSnapcshot added!")
+            .addOnSuccessListener { docRef ->
+                Log.d(TAG, "DocumentSnapcshot added!")
             }
             .addOnFailureListener { e ->
                 Log.w(TAG, "Error adding document", e)
@@ -89,7 +85,7 @@ fun getIngredients(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit)
             callback(document.data)
         } else {
             val emptyData = emptyMap<String, Any>()
-            docRef?.set(emptyData)
+            docRef.set(emptyData)
                 ?.addOnSuccessListener {
                     callback(emptyData)
                 }
@@ -106,13 +102,20 @@ fun getIngredients(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IngredientsScreen(navController: NavController, modifier: Modifier = Modifier, snackbarHost : SnackbarHostState, db: FirebaseFirestore, ingredientScreenViewModel: IngredientsViewModel = viewModel()) {
+fun IngredientsScreen(
+    navController: NavController,
+    modifier: Modifier = Modifier,
+    snackbarHost: SnackbarHostState,
+    db: FirebaseFirestore,
+    ingredientScreenViewModel: IngredientsViewModel = viewModel()
+) {
 
 
     //Fetch data from Firestore
     getIngredients(db) { data ->
         if (data != null) {
-            val firestoreIngredients = data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
+            val firestoreIngredients =
+                data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
             ingredientScreenViewModel.ingredientsList = firestoreIngredients
         } else {
             println("No data or error")
@@ -123,12 +126,13 @@ fun IngredientsScreen(navController: NavController, modifier: Modifier = Modifie
     val scope = rememberCoroutineScope()
 
     val saveIngredients = {
-        val ingredientsToSave = ingredientScreenViewModel.ingredientsList.map { (name, checkedState) ->
-            name to checkedState.value
-        }
+        val ingredientsToSave =
+            ingredientScreenViewModel.ingredientsList.map { (name, checkedState) ->
+                name to checkedState.value
+            }
         saveIngredientstoDb(db, ingredientsToSave)
 
-        scope.launch{
+        scope.launch {
             navController.navigate(Screen.Home.route)
             snackbarHost.showSnackbar("Saved ingredients!")
 
@@ -164,8 +168,13 @@ fun IngredientsScreen(navController: NavController, modifier: Modifier = Modifie
                     )
                     Button(onClick = {
                         if (ingredientScreenViewModel.newIngredient.isNotBlank()) {
-                            ingredientScreenViewModel.ingredientsList = ingredientScreenViewModel.ingredientsList.toMutableList()
-                                .plus(ingredientScreenViewModel.newIngredient to mutableStateOf(true))
+                            ingredientScreenViewModel.ingredientsList =
+                                ingredientScreenViewModel.ingredientsList.toMutableList()
+                                    .plus(
+                                        ingredientScreenViewModel.newIngredient to mutableStateOf(
+                                            true
+                                        )
+                                    )
                             ingredientScreenViewModel.newIngredient = ""
 
                             scope.launch {
@@ -192,14 +201,17 @@ fun IngredientsScreen(navController: NavController, modifier: Modifier = Modifie
         }
 
 
-        Column(modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.Center) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.Center
+        ) {
 
             Spacer(modifier = Modifier.weight(1f))
 
-            Row(modifier = Modifier.fillMaxWidth(),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
-                ) {
+            ) {
                 FloatingActionButton(
                     onClick = { saveIngredients() },
                     modifier = modifier
