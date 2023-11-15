@@ -1,6 +1,5 @@
 package no.hiof.reciperiot.screens
 
-import android.annotation.SuppressLint
 import android.app.LocaleManager
 import android.content.Context
 import android.os.Build
@@ -20,7 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -33,11 +31,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.getSystemService
 import androidx.core.os.LocaleListCompat
 import no.hiof.reciperiot.R
 
@@ -77,8 +73,6 @@ fun SettingsScreen(logout: () -> Unit, darkTheme: MutableState<Boolean> = mutabl
                         .clip(shape = RoundedCornerShape(15.dp))
                 )
 
-
-                // FIX THIS, DOES NOT WORK WITH INDEX. DROPDOWN MENU
                 DropdownMenu(expanded = langExpanded,
                     onDismissRequest = { langExpanded = false }) {
                     langItems.forEachIndexed { index, s ->
@@ -91,10 +85,23 @@ fun SettingsScreen(logout: () -> Unit, darkTheme: MutableState<Boolean> = mutabl
                 }
             }
         }
-        Button(onClick = { logout() }) {
-            Text("Log out")
-        }
+
     }
+
+    Column(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp),
+        verticalArrangement = Arrangement.Center)
+    {
+        Row (Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center){
+            Button(onClick = { logout() }) {
+                Text("Log out")
+            }
+        }
+
+    }
+
+
 }
 
 fun changeLocales(context: Context, localeString: String) {
