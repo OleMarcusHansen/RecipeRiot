@@ -1,8 +1,6 @@
 package no.hiof.reciperiot.screens
 import android.content.ContentValues.TAG
 import android.util.Log
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,15 +9,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -28,83 +21,26 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat.*
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.compose.AppTheme
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import no.hiof.reciperiot.ViewModels.IngredientsViewModel
 
-@OptIn(ExperimentalFoundationApi::class)
-@Composable
-fun IngredientRow(
-    name: String,
-    checkedState: MutableState<Boolean>,
-    onCheckedChange: (Boolean) -> Unit)
-{
 
-    val haptics = LocalHapticFeedback.current
-    var expandedMenu by remember { mutableStateOf(false)}
-    var menuRowId by rememberSaveable { mutableStateOf(name) }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceAround
-    ) {
-        Text(
-            text = name,
-            modifier = Modifier
-                .weight(1f)
-                .combinedClickable(
-                    onClick = {},
-                    onLongClick = {
-                        menuRowId = name
-                        expandedMenu = true
-                        haptics.performHapticFeedback(
-                            androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress
-                        )
-                    }
-                )
-        )
-
-        Spacer(modifier = Modifier.width(8.dp))
-
-        Checkbox(
-            checked = checkedState.value,
-            onCheckedChange = { newValue ->
-                onCheckedChange(newValue)
-            },
-            modifier = Modifier.size(24.dp)
-        )
-
-        DropdownMenu(expanded = expandedMenu, onDismissRequest = {expandedMenu = false}) {
-            // When clicking delete, delete ingrident from firebase
-            DropdownMenuItem(text = { Text(text = "Delete")}, onClick = {
-                menuRowId?.let { ingredientName ->
-                    deleteIngredientFromDb(Firebase.firestore, ingredientName)
-                }
-            })
-
-        }
-    }
-}
-
+/* Commented out for extrating to viewmodel
 fun deleteIngredientFromDb(db: FirebaseFirestore, ingredientName: String) {
     val user = Firebase.auth.currentUser
     val docRef = user?.let { db.collection("ingredients").document(it.uid) }
@@ -119,6 +55,7 @@ fun deleteIngredientFromDb(db: FirebaseFirestore, ingredientName: String) {
         }
 
 }
+*/
 
 // Saves names and checked states to fireStore
 fun saveIngredientstoDb(db: FirebaseFirestore, ingredientList: List<Pair<String, Boolean>>) {
@@ -167,17 +104,14 @@ fun getIngredients(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit)
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, modifier: Modifier = Modifier) {
-    var newIngredient by remember { mutableStateOf("") }
-    var ingredientsList by remember {
-        mutableStateOf(emptyList<Pair<String, MutableState<Boolean>>>())
-    }
+fun IngredientsScreen(modifier: Modifier = Modifier, snackbarHost : SnackbarHostState, db: FirebaseFirestore, ingredientScreenViewModel: IngredientsViewModel = viewModel()) {
+
 
     //Fetch data from Firestore
     getIngredients(db) { data ->
         if (data != null) {
             val firestoreIngredients = data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
-            ingredientsList = firestoreIngredients
+            ingredientScreenViewModel.ingredientsList = firestoreIngredients
         } else {
             println("No data or error")
         }
@@ -187,7 +121,7 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
     val scope = rememberCoroutineScope()
 
     val saveIngredients = {
-        val ingredientsToSave = ingredientsList.map { (name, checkedState) ->
+        val ingredientsToSave = ingredientScreenViewModel.ingredientsList.map { (name, checkedState) ->
             name to checkedState.value
         }
         saveIngredientstoDb(db, ingredientsToSave)
@@ -220,15 +154,15 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     OutlinedTextField(
-                        value = newIngredient,
-                        onValueChange = { newIngredient = it },
+                        value = ingredientScreenViewModel.newIngredient,
+                        onValueChange = { ingredientScreenViewModel.newIngredient = it },
                         label = { Text("Add an ingredient") }
                     )
                     Button(onClick = {
-                        if (newIngredient.isNotBlank()) {
-                            ingredientsList = ingredientsList.toMutableList()
-                                .plus(newIngredient to mutableStateOf(true))
-                            newIngredient = ""
+                        if (ingredientScreenViewModel.newIngredient.isNotBlank()) {
+                            ingredientScreenViewModel.ingredientsList = ingredientScreenViewModel.ingredientsList.toMutableList()
+                                .plus(ingredientScreenViewModel.newIngredient to mutableStateOf(true))
+                            ingredientScreenViewModel.newIngredient = ""
 
                             scope.launch {
                                 snackbarHost.showSnackbar("Ingredient added")
@@ -240,8 +174,8 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
                 }
 
 
-                ingredientsList.forEach { (name, checkedState) ->
-                    IngredientRow(
+                ingredientScreenViewModel.ingredientsList.forEach { (name, checkedState) ->
+                    ingredientScreenViewModel.IngredientRow(
 
                         name = name,
                         checkedState = checkedState,
