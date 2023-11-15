@@ -9,7 +9,7 @@ import no.hiof.reciperiot.R
 import no.hiof.reciperiot.model.Recipe
 
 
-class RecipeSource() {
+class RecipeSource {
     val user = Firebase.auth.currentUser
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val collectionReference: CollectionReference = firestore.collection("FavouriteMeals")
@@ -20,23 +20,26 @@ class RecipeSource() {
             .whereEqualTo("userid", user?.uid)
             //.whereEqualTo("favourite", true)
             .addSnapshotListener { snapshot, exception ->
-            if (exception != null) {
-                Log.e("FirestoreError", "Error fetching data: ${exception.message}")
-                return@addSnapshotListener
+                if (exception != null) {
+                    Log.e("FirestoreError", "Error fetching data: ${exception.message}")
+                    return@addSnapshotListener
+                }
+
+                recipes.clear()
+                snapshot?.documents?.forEach { documentSnapshot ->
+                    val recipe = documentSnapshot.toObject(Recipe::class.java)
+                    Log.d(
+                        "FirestoreData",
+                        "Data fetched successfully. Number of recipes: ${recipes.size}"
+                    )
+                    Log.d("FirestoreData", "recipe data: ${recipes}")
+                    Log.d("FirestoreData", "recipe id: ${documentSnapshot.reference.id}")
+
+
+
+                    recipe?.let { recipes.add(it) }
+                }
             }
-
-            recipes.clear()
-            snapshot?.documents?.forEach { documentSnapshot ->
-                val recipe = documentSnapshot.toObject(Recipe::class.java)
-                Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes.size}")
-                Log.d("FirestoreData", "recipe data: ${recipes}")
-                Log.d("FirestoreData", "recipe id: ${documentSnapshot.reference.id}")
-
-
-
-                recipe?.let { recipes.add(it) }
-            }
-        }
     }
 
 
@@ -45,23 +48,35 @@ class RecipeSource() {
     }
 }
 
-class RecipeSource1() {
+class RecipeSource1 {
     //dette er en backup av recipesource for feilsøking og andre ting
     private val recipes: MutableList<Recipe> = mutableListOf(
-        Recipe("r","mat", R.drawable.food, "test",
-            "45min", true, "dsf", "agI84BahTTXBHvltC1dfNndLk0n2"),
-        Recipe("r", "pizza", R.drawable.food, "test",
-            "30min", false,
+        Recipe(
+            "r", "mat", R.drawable.food, "test",
+            "45min", true, "dsf", "agI84BahTTXBHvltC1dfNndLk0n2"
+        ),
+        Recipe(
+            "r",
+            "pizza",
+            R.drawable.food,
+            "test",
+            "30min",
+            false,
             "1. Preheat a panini press or a stovetop grill pan over medium-high heat.\n\n" +
                     "2. Take 2 slices of bread and lay them out on a clean surface.\n\n" +
                     "3. Place a slice of turkey ham on each of the bread slices.\n\n" +
                     "4. Add a few slices of cheese on top of the turkey ham.\n\n" +
                     "5. Thinly slice some onions and place them on the cheese.\n\n" +
                     "6. Add a few pickles for some extra flavor.\n\n" +
-                    "7. Top each sandwich with another slice of bread to form a sandwich.\n\n", "agI84BahTTXBHvltC1dfNndLk0n2"),
-        Recipe("r", "hamburger", R.drawable.hamburger, "test",
-            "2000min", true, "bare lag den bror", "agI84BahTTXBHvltC1dfNndLk0n2")
+                    "7. Top each sandwich with another slice of bread to form a sandwich.\n\n",
+            "agI84BahTTXBHvltC1dfNndLk0n2"
+        ),
+        Recipe(
+            "r", "hamburger", R.drawable.hamburger, "test",
+            "2000min", true, "bare lag den bror", "agI84BahTTXBHvltC1dfNndLk0n2"
+        )
     )
+
     fun loadRecipes(): List<Recipe> {
         return recipes.toList()
     }
