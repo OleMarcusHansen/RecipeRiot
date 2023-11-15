@@ -1,7 +1,5 @@
 package no.hiof.reciperiot.screens
 
-import android.content.ContentValues
-import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
@@ -11,43 +9,42 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.firebase.firestore.FirebaseFirestore
+import no.hiof.reciperiot.ViewModels.ShoppingListViewModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShoppingListScreen(modifier: Modifier = Modifier, db: FirebaseFirestore) {
-    val textState = remember { mutableStateOf("") }
-    val prevState = remember { mutableStateOf("") }
-    getShoppingList(db) { data ->
-        if (textState.value.isEmpty()) {
-            textState.value = data.toString()
+fun ShoppingListScreen(modifier: Modifier = Modifier, db: FirebaseFirestore, ShoppingListViewModel: ShoppingListViewModel = viewModel()) {
+    //val textState = remember { mutableStateOf("") }
+    //val prevState = remember { mutableStateOf("") }
+    ShoppingListViewModel.getShoppingList(db) { data ->
+        if (ShoppingListViewModel.textState.isEmpty()) {
+            ShoppingListViewModel.textState = data.toString()
         }
     }
     Card(modifier = modifier
         .fillMaxSize()
         .padding(10.dp, 0.dp, 10.dp, 95.dp),
         elevation = CardDefaults.cardElevation(8.dp)){
-        TextField(value = textState.value,
+        TextField(value = ShoppingListViewModel.textState,
             onValueChange = { newText ->
-                textState.value = newText
+                ShoppingListViewModel.textState = newText
             },
             textStyle = TextStyle(fontSize = 16.sp),
             label = {Text("Shopping List")},
             modifier = modifier.fillMaxSize()
         )
     }
-    LaunchedEffect(textState.value) {
-        if (prevState.value != textState.value) {
-            saveShoppinglistToDb(db, textState.value)
-            prevState.value = textState.value
+    LaunchedEffect(ShoppingListViewModel.textState) {
+        //TODO: sjekke om if burde være i viewmodel
+        if (ShoppingListViewModel.prevState != ShoppingListViewModel.textState) {
+            ShoppingListViewModel.saveShoppinglistToDb(db, ShoppingListViewModel.textState)
+            ShoppingListViewModel.prevState = ShoppingListViewModel.textState
         }
     }
     // Button to save the shopping list
@@ -61,60 +58,5 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, db: FirebaseFirestore) {
     ) {
         Text(text = "Save Shopping List")
     }
-     */
-}
-fun getShoppingList(db: FirebaseFirestore, callback: (shoppingListContent: String) -> Unit) {
-    val user = Firebase.auth.currentUser
-    // TODO: Ensure logged in
-    val docRef = user?.let { db.collection("shoppinglist").document(it.uid) }
-    docRef?.get()?.addOnSuccessListener { document ->
-        if (document != null && document.exists()) {
-            val shoppingListContent = document.getString("shoppingListContent") ?: ""
-            callback(shoppingListContent)
-        } else {
-            val emptyData = emptyMap<String, Any>()
-            docRef?.set(emptyData)
-                ?.addOnSuccessListener {
-                    callback("")
-                }
-                ?.addOnFailureListener { exception ->
-                    Log.d(ContentValues.TAG, "Error: Could not create doc", exception)
-                    callback("")
-                }
-        }
-    }?.addOnFailureListener { exception ->
-        Log.d(ContentValues.TAG, "get failed with ", exception)
-        callback("")
-    }
-}
-fun saveShoppinglistToDb(db: FirebaseFirestore, shoppingListContent: String) {
-    val user = Firebase.auth.currentUser
-    // TODO: Ensure user is logged in
-    if (user != null) {
-        val docRef = db.collection("shoppinglist").document(user.uid)
-        val data = hashMapOf(
-            "shoppingListContent" to shoppingListContent
-        )
-        docRef.set(data)
-            .addOnSuccessListener {
-                // Successfully saved the shopping list to the database
-                Log.d("ShoppingListScreen", "Shopping list saved to the database.")
-            }
-            .addOnFailureListener { e ->
-                Log.e("ShoppingListScreen", "Error saving shopping list to the database: $e")
-            }
-    } else {
-        // Handle the case when the user is not logged in
-        Log.e("ShoppingListScreen", "User is not logged in.")
-    }
-}
-@Preview
-@Composable
-fun ShoppingListScreenPreview() {
-    /*
-    AppTheme {
-        ShoppingListScreen()
-    }
-
      */
 }
