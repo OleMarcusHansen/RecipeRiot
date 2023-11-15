@@ -86,15 +86,17 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
             Button(onClick = {
 
                 /*ChatGPT*/
-
                 scope.launch {
+                    homeViewModel.buttonEnabled.value = false
                     snackbarHost.showSnackbar("Genererer oppskrift")
                     val newRecipes = homeViewModel.generateGPT(client, homeViewModel.ingredients, homeViewModel.time.value)
                     //homeViewModel.recipes.value = newRecipes
                     homeViewModel.handleFirestoreAdd(newRecipes[0], db)
+                    homeViewModel.buttonEnabled.value = true
                     snackbarHost.showSnackbar("Oppskrift generert")
                 }
-            }) {
+            },
+                enabled = homeViewModel.buttonEnabled.value) {
                 Text(stringResource(R.string.home_generate))
             }
         }
