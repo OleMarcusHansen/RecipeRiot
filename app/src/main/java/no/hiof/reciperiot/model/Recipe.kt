@@ -11,6 +11,7 @@ data class Recipe(
     var favourite: Boolean = true,
     var recipe_instructions: String = "",
     var recipe_nutrition: String = "",
+    var recipe_ingredients: String = "",
     var userid: String = ""
 
 )

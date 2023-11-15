@@ -79,6 +79,7 @@ class HomeViewModel : ViewModel() {
             "favourite" to recipe.favourite,
             "recipe_instructions" to recipe.recipe_instructions,
             "recipe_nutrition" to recipe.recipe_nutrition,
+            "recipe_ingredients" to recipe.recipe_ingredients,
             "userid" to recipe.userid
         )
 
@@ -141,7 +142,7 @@ class HomeViewModel : ViewModel() {
         val user = Firebase.auth.currentUser
         //prompt til chatGPT
         //bør bli justert og testet for å få best mulig resultat
-        val prompt = """I have only the ingredients: ${ingredients}. I have ${time} minutes to make food. Generate a recipe for me. Your output should be in JSON format: {recipe_name: String, recipe_time: String, recipe_instructions: String, recipe_nutrition: Object}"""
+        val prompt = """I have only the ingredients: ${ingredients}. I have ${time} minutes to make food. Generate a recipe for me. Your output should be in JSON format: {recipe_name: String, recipe_time: String, recipe_instructions: String, recipe_nutrition: Object, recipe_ingredients: Array}"""
 
         println(prompt)
 
@@ -178,6 +179,7 @@ class HomeViewModel : ViewModel() {
                 false,
                 "Timed out",
                 "{\"calories\":0,\"protein\":0,\"carbohydrates\":0,\"fat\":0}",
+                "[\"Bread\"]",
                 user!!.uid
             )
             return@withContext listOf(defaultRecipe)
@@ -209,6 +211,7 @@ class HomeViewModel : ViewModel() {
                         false,
                         messageJSON.getString("recipe_instructions"),
                         messageJSON.getString("recipe_nutrition"),
+                        messageJSON.getString("recipe_ingredients"),
                         user!!.uid
                     )
                 )
@@ -232,6 +235,7 @@ class HomeViewModel : ViewModel() {
             false,
             "Something failed",
             "{\"calories\":0,\"protein\":0,\"carbohydrates\":0,\"fat\":0}",
+            "[\"Failure\"]",
             user!!.uid
         )
         return@withContext listOf(defaultRecipe)

@@ -29,6 +29,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.firestore.FirebaseFirestore
 import no.hiof.reciperiot.data.RecipeSource
+import org.json.JSONArray
 import org.json.JSONObject
 
 @Composable
@@ -164,6 +165,30 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
+
+                    Text(
+                        text = "Ingredients:",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 26.sp
+                    )
+                    var ingredients: JSONArray = JSONArray("[\"N/A\"]")
+                    try{
+                        ingredients = JSONArray(recipe.recipe_ingredients)
+                    }
+                    catch (e: Exception){
+                        print(e)
+                    }
+                    for (i in 0 until ingredients.length()){
+                        Text(
+                            text=ingredients[i].toString(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            fontSize = 20.sp
+                        )
+                    }
 
                     Text(
                         text = "Instruksjoner:",
