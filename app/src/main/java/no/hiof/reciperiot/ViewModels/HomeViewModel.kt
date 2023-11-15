@@ -26,6 +26,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
@@ -134,9 +135,7 @@ class HomeViewModel : ViewModel() {
     // Liste med recipes. For å kanskje generere flere samtidig
     val recipes = mutableStateOf(emptyList<Recipe>())
 
-    suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: String): List<Recipe> = withContext(
-        Dispatchers.IO) {
-        // ... (Your existing code)
+    suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: String): List<Recipe> = withContext(Dispatchers.IO) {
         println("start gpt generate")
 
         val user = Firebase.auth.currentUser
@@ -155,9 +154,7 @@ class HomeViewModel : ViewModel() {
         }
     """
         val postBody: RequestBody = body.toRequestBody(mediaType)
-
         val url = "https://api.openai.com/v1/chat/completions"
-
         val request : Request = Request.Builder()
             .url(url)
             .post(postBody)
@@ -169,7 +166,7 @@ class HomeViewModel : ViewModel() {
             client.newCall(request).await()
         } catch (exception: IOException) {
             // Log error and return default timeout recipe
-            Log.e("ChatCompletionError", "Error calling API ${exception.message}")
+            Log.e("ChatCompletionError", "Error calling API: ${exception.message}")
             val defaultRecipe = Recipe(
                 "ik",
                 "Burned toast",
@@ -190,6 +187,7 @@ class HomeViewModel : ViewModel() {
             val responseString = response.body?.string()
             println(responseString)
             if (responseString != null) {
+                try{
                 val responseJSON = JSONObject(responseString)
                 val messageJSON = JSONObject(responseJSON.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content"))
                 println(messageJSON)
@@ -216,6 +214,10 @@ class HomeViewModel : ViewModel() {
                     )
                 )
                 return@withContext recipes
+                }
+                catch (exception: JSONException){
+                    Log.e("ChatCompletionError", "Error parsing chat completion to JSON: ${exception.message}")
+                }
             }
         }
         else{
@@ -225,7 +227,7 @@ class HomeViewModel : ViewModel() {
         }
 
         // Log error and return default failed recipe
-        Log.e("ChatCompletionError", "Error calling API")
+        Log.e("ChatCompletionError", "Error generating recipe")
         val defaultRecipe = Recipe(
             "uh",
             "Failed tomato soup",
@@ -241,12 +243,12 @@ class HomeViewModel : ViewModel() {
         return@withContext listOf(defaultRecipe)
     }
 
-    suspend fun generateImage(client: OkHttpClient, recipe: String): String {
+    suspend fun generateImage(client: OkHttpClient, recipeName: String): String {
         println("start image generate")
 
         //prompt
         //bør bli justert og testet for å få best mulig resultat
-        val prompt = """Dish called $recipe"""
+        val prompt = """Dish called $recipeName"""
 
         println(prompt)
 
@@ -259,9 +261,7 @@ class HomeViewModel : ViewModel() {
         }
     """
         val postBody: RequestBody = body.toRequestBody(mediaType)
-
         val url = "https://api.openai.com/v1/images/generations"
-
         val request : Request = Request.Builder()
             .url(url)
             .post(postBody)
@@ -277,7 +277,6 @@ class HomeViewModel : ViewModel() {
             return """"created": 1699533459,"data": [{"url": "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&"}]}"""
         }
 
-        // Handle the response and return the list of recipes
         if (response.isSuccessful) {
             val responseString = response.body?.string()
             println(responseString)
