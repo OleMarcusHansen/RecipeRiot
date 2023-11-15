@@ -188,7 +188,8 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
             item {
                 Text(
                     text = "du har kommet til feil side as, siden fikk ikke recipe," +
-                            "enten ligger den ikke i db eller så er det en annen feil",
+                            "enten ligger den ikke i db eller så er det en annen feil"+
+                    "mest sannsynlig er dette en formateringsfeil av jasonfilen fra chatgpt",
                     color = Color.Black,
                     fontSize = 28.sp,
                     modifier = Modifier
