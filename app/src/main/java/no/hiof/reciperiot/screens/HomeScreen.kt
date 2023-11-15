@@ -84,11 +84,12 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
 
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = {
-
-                /*ChatGPT*/
                 scope.launch {
                     homeViewModel.buttonEnabled.value = false
                     snackbarHost.showSnackbar("Genererer oppskrift")
+                }
+                /*ChatGPT*/
+                scope.launch {
                     val newRecipes = homeViewModel.generateGPT(client, homeViewModel.ingredients, homeViewModel.time.value)
                     //homeViewModel.recipes.value = newRecipes
                     homeViewModel.handleFirestoreAdd(newRecipes[0], db)
