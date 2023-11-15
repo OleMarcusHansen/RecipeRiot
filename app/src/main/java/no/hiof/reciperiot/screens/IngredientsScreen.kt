@@ -195,6 +195,7 @@ fun IngredientsScreen(snackbarHost : SnackbarHostState, db: FirebaseFirestore, m
         scope.launch{
             snackbarHost.showSnackbar("Saved ingredients!")
         }
+
     }
 
     // Counter for å genere rader for lazyColumn

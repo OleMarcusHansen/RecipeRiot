@@ -18,7 +18,7 @@ class RecipeSource() {
     init {
         collectionReference
             .whereEqualTo("userid", user?.uid)
-            //.whereEqualTo("favourite", true) {todo}
+            //.whereEqualTo("favourite", true)
             .addSnapshotListener { snapshot, exception ->
             if (exception != null) {
                 Log.e("FirestoreError", "Error fetching data: ${exception.message}")

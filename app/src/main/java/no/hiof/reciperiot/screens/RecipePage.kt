@@ -96,7 +96,7 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                         fontSize = 20.sp
                     )
                     Text(
-                        text = recipe.userid,
+                        text = "userid: ${recipe.userid}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
@@ -189,7 +189,7 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                 Text(
                     text = "du har kommet til feil side as, siden fikk ikke recipe," +
                             "enten ligger den ikke i db eller så er det en annen feil"+
-                    "mest sannsynlig er dette en formateringsfeil av jasonfilen fra chatgpt",
+                    "mest sannsynlig er dette en formateringsfeil av jsonfilen fra chatgpt",
                     color = Color.Black,
                     fontSize = 28.sp,
                     modifier = Modifier
@@ -197,7 +197,7 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                         .padding(16.dp)
                 )
                 Text(
-                    text = recipeId,
+                    text = "recipeid: ${recipe?.id}",
                     color = Color.Black,
                     fontSize = 28.sp,
                     modifier = Modifier

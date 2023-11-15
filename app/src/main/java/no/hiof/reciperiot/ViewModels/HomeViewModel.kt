@@ -1,4 +1,4 @@
-package no.hiof.reciperiot.screens
+package no.hiof.reciperiot.ViewModels
 
 import android.content.ContentValues
 import android.util.Log
@@ -17,6 +17,7 @@ import kotlinx.coroutines.withContext
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Secrets
 import no.hiof.reciperiot.model.Recipe
+import no.hiof.reciperiot.screens.getIngredients
 import okhttp3.Call
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
