@@ -34,10 +34,9 @@ class IngredientsViewModel : ViewModel() {
     var newIngredient by mutableStateOf("")
     var ingredientsList by mutableStateOf(emptyList<Pair<String, MutableState<Boolean>>>())
 
-
     private val repository = IngredientsRepository() // Create a repository for data operations
 
-   //  val ingredientsList = repository.ingredientsList from repo
+    // val ingredientsList = repository.ingredientsList From repo
 
     @OptIn(ExperimentalFoundationApi::class)
     @Composable
