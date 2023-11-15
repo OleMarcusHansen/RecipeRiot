@@ -35,6 +35,8 @@ class HomeViewModel : ViewModel() {
 
     var ingredients by mutableStateOf(emptyList<String>())
 
+    val buttonEnabled = mutableStateOf(true)
+
     fun handleFirestoreRemove(recipe: Recipe, db: FirebaseFirestore) {
         val user = com.google.firebase.ktx.Firebase.auth.currentUser
         Log.d(ContentValues.TAG, "Before get()")
