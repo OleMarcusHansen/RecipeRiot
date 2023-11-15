@@ -174,7 +174,8 @@ class HomeViewModel : ViewModel() {
                 "60",
                 false,
                 "Timed out",
-                "{\"calories\":0,\"protein\":0,\"carbohydrates\":0,\"fat\":0}"
+                "{\"calories\":0,\"protein\":0,\"carbohydrates\":0,\"fat\":0}",
+                user!!.uid
             )
             return@withContext listOf(defaultRecipe)
         }
@@ -227,7 +228,8 @@ class HomeViewModel : ViewModel() {
             "60",
             false,
             "Something failed",
-            "{\"calories\":0,\"protein\":0,\"carbohydrates\":0,\"fat\":0}"
+            "{\"calories\":0,\"protein\":0,\"carbohydrates\":0,\"fat\":0}",
+            user!!.uid
         )
         return@withContext listOf(defaultRecipe)
     }
