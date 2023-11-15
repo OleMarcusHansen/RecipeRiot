@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -133,7 +134,7 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
     val snackBarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        topBar = { AppTopBar() },
+        topBar = { AppTopBar(navController, modifier) },
         bottomBar = {
             BottomNavBar(
                 navController = navController,
@@ -215,7 +216,8 @@ fun BottomNavBar(navController: NavController, bottomNavigationScreens: List<Scr
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppTopBar(modifier: Modifier = Modifier) {
+fun AppTopBar(navController: NavController,
+              modifier: Modifier = Modifier) {
     TopAppBar(
         modifier = modifier.padding(16.dp),
         title = { Text(text = "") },
@@ -227,7 +229,11 @@ fun AppTopBar(modifier: Modifier = Modifier) {
             ){
             Image(
                 painter = painterResource(id = R.drawable.reciperiot),
-                contentDescription = null
+                contentDescription = null,
+                modifier = Modifier.clickable {
+                    navController.navigate(Screen.Home.route)
+                }
+
             )}
         }
     )
