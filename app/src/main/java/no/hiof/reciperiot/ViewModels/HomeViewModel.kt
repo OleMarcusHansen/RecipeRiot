@@ -260,7 +260,7 @@ class HomeViewModel : ViewModel() {
             )
             return@withContext listOf(defaultRecipe)
         }
-        catch (exception: IOException){
+        catch (exception: Exception){
             Log.e("ParseError", "Error parsing time to int: ${exception.message}")
             println("Ingredients list empty or time is invalid")
             val defaultRecipe = Recipe(
