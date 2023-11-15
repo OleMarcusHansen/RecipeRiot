@@ -1,7 +1,6 @@
 package no.hiof.reciperiot.screens
 
 import android.content.ContentValues
-import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -25,20 +24,19 @@ import com.google.firebase.firestore.FirebaseFirestore
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingListScreen(modifier: Modifier = Modifier, db: FirebaseFirestore) {
-    // Create a remember variable to hold the text entered in the input field
     val textState = remember { mutableStateOf("") }
+    val prevState = remember { mutableStateOf("") }
     getShoppingList(db) { data ->
         if (textState.value.isEmpty()) {
             textState.value = data.toString()
         }
     }
-
-
-    Card(modifier = modifier.fillMaxSize().padding(10.dp, 0.dp, 10.dp, 95.dp),
+    Card(modifier = modifier
+        .fillMaxSize()
+        .padding(10.dp, 0.dp, 10.dp, 95.dp),
         elevation = CardDefaults.cardElevation(8.dp)){
         TextField(value = textState.value,
             onValueChange = { newText ->
-                // Update the textState with the new text when it changes
                 textState.value = newText
             },
             textStyle = TextStyle(fontSize = 16.sp),
@@ -47,8 +45,10 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, db: FirebaseFirestore) {
         )
     }
     LaunchedEffect(textState.value) {
-        // This block will run when textState.value changes
-        saveShoppinglistToDb(db, textState.value)
+        if (prevState.value != textState.value) {
+            saveShoppinglistToDb(db, textState.value)
+            prevState.value = textState.value
+        }
     }
     // Button to save the shopping list
     /*
@@ -61,7 +61,6 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, db: FirebaseFirestore) {
     ) {
         Text(text = "Save Shopping List")
     }
-
      */
 }
 fun getShoppingList(db: FirebaseFirestore, callback: (shoppingListContent: String) -> Unit) {
@@ -89,40 +88,26 @@ fun getShoppingList(db: FirebaseFirestore, callback: (shoppingListContent: Strin
     }
 }
 fun saveShoppinglistToDb(db: FirebaseFirestore, shoppingListContent: String) {
-    if (shoppingListContent == "") {
-        Log.d(TAG, "error tom shoppinglist")
+    val user = Firebase.auth.currentUser
+    // TODO: Ensure user is logged in
+    if (user != null) {
+        val docRef = db.collection("shoppinglist").document(user.uid)
+        val data = hashMapOf(
+            "shoppingListContent" to shoppingListContent
+        )
+        docRef.set(data)
+            .addOnSuccessListener {
+                // Successfully saved the shopping list to the database
+                Log.d("ShoppingListScreen", "Shopping list saved to the database.")
+            }
+            .addOnFailureListener { e ->
+                Log.e("ShoppingListScreen", "Error saving shopping list to the database: $e")
+            }
     } else {
-        val user = Firebase.auth.currentUser
-        // TODO: Ensure user is logged in
-
-        if (user != null) {
-            val docRef = db.collection("shoppinglist").document(user.uid)
-            val data = hashMapOf(
-                "shoppingListContent" to shoppingListContent
-            )
-
-            docRef.set(data)
-                .addOnSuccessListener {
-                    // Successfully saved the shopping list to the database
-                    Log.d("ShoppingListScreen", "Shopping list saved to the database.")
-                }
-                .addOnFailureListener { e ->
-                    Log.e("ShoppingListScreen", "Error saving shopping list to the database: $e")
-                }
-        } else {
-            // Handle the case when the user is not logged in
-            Log.e("ShoppingListScreen", "User is not logged in.")
-        }
+        // Handle the case when the user is not logged in
+        Log.e("ShoppingListScreen", "User is not logged in.")
     }
 }
-
-
-
-
-
-
-
-
 @Preview
 @Composable
 fun ShoppingListScreenPreview() {
