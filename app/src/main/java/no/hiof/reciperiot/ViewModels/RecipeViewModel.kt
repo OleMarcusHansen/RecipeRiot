@@ -13,6 +13,7 @@ import no.hiof.reciperiot.model.Recipe
 
 class RecipeViewModel : ViewModel() {
 
+
     val recipes by mutableStateOf(RecipeRepository().loadFavourites())
     val history by mutableStateOf(RecipeRepository().loadRecipes())
 

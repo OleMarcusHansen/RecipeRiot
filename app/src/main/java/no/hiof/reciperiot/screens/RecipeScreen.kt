@@ -82,14 +82,7 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             )
                         }
                     }
-
-                    Text(
-                        text = recipe.cookingTime,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        fontSize = 20.sp
-                    )
+                    /*
                     Text(
                         text = "favourite status: ${recipe.favourite}",
                         modifier = Modifier
@@ -112,10 +105,19 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                         fontSize = 20.sp
                     )
 
+                     */
+
                     AsyncImage(
                         model = recipe.imageURL,
                         contentDescription = "Image of the recipe",
                         modifier = Modifier.height(400.dp)
+                    )
+                    Text(
+                        text = "Cooktime: ${recipe.cookingTime}",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 20.sp
                     )
 
                     Text(
