@@ -16,30 +16,36 @@ class RecipeRepository {
     private val collectionReference: CollectionReference = firestore.collection("FavouriteMeals")
     private val recipes: MutableList<Recipe> = mutableListOf()
 
-    init {
+
+    fun getRecipes(test: Boolean){
         collectionReference
             .whereEqualTo("userid", user?.uid)
-            //.whereEqualTo("favourite", true)
+            .whereEqualTo("favourite", test)
             .addSnapshotListener { snapshot, exception ->
-            if (exception != null) {
-                Log.e("FirestoreError", "Error fetching data: ${exception.message}")
-                return@addSnapshotListener
+                if (exception != null) {
+                    Log.e("FirestoreError", "Error fetching data: ${exception.message}")
+                    return@addSnapshotListener
+                }
+
+                recipes.clear()
+                snapshot?.documents?.forEach { documentSnapshot ->
+                    val recipe = documentSnapshot.toObject(Recipe::class.java)
+
+                    Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes.size}")
+                    Log.d("FirestoreData", "recipe data: ${recipes}")
+                    Log.d("FirestoreData", "recipe id: ${documentSnapshot.reference.id}")
+
+                    recipe?.let { recipes.add(it) }
+                }
             }
-
-            recipes.clear()
-            snapshot?.documents?.forEach { documentSnapshot ->
-                val recipe = documentSnapshot.toObject(Recipe::class.java)
-
-                Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes.size}")
-                Log.d("FirestoreData", "recipe data: ${recipes}")
-                Log.d("FirestoreData", "recipe id: ${documentSnapshot.reference.id}")
-
-                recipe?.let { recipes.add(it) }
-            }
-        }
     }
 
     fun loadRecipes(): List<Recipe> {
+        getRecipes(true)
+        return recipes
+    }
+    fun loadHistory(): List<Recipe> {
+        getRecipes(false)
         return recipes
     }
 
