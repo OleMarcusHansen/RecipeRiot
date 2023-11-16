@@ -9,7 +9,7 @@ import no.hiof.reciperiot.ViewModels.RecipeViewModel
 @Composable
 fun HistoryScreen(navController: NavController, db: FirebaseFirestore, RecipeViewModel: RecipeViewModel = viewModel()) {
     RecipeList(
-        recipes = RecipeViewModel.recipes,
+        recipes = RecipeViewModel.history,
         navController = navController,
         onFavouriteToggle = {
         },

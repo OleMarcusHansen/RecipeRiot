@@ -237,7 +237,7 @@ fun AppTopBar(navController: NavController,
                 painter = painterResource(id = R.drawable.reciperiot),
                 contentDescription = null,
                 modifier = Modifier.clickable {
-                    navController.navigate(Screen.History.route)
+                    navController.navigate(Screen.History.route) // {TODO} skal være Home
                 }
 
             )}

@@ -14,6 +14,7 @@ import no.hiof.reciperiot.model.Recipe
 class RecipeViewModel : ViewModel() {
 
     val recipes by mutableStateOf(RecipeRepository().loadRecipes())
+    val history by mutableStateOf(RecipeRepository().loadHistory())
 
 
     fun updateRecipeFavouriteStatus(recipe: Recipe, db: FirebaseFirestore, fav: Boolean) {
