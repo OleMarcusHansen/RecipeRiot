@@ -9,7 +9,7 @@ import no.hiof.reciperiot.R
 import no.hiof.reciperiot.model.Recipe
 
 
-class RecipeSource() {
+class RecipeRepository() {
     val user = Firebase.auth.currentUser
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val collectionReference: CollectionReference = firestore.collection("FavouriteMeals")

@@ -30,14 +30,14 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.firestore.FirebaseFirestore
 import no.hiof.reciperiot.ViewModels.RecipeViewModel
-import no.hiof.reciperiot.data.RecipeSource
+import no.hiof.reciperiot.data.RecipeRepository
 import org.json.JSONArray
 import org.json.JSONObject
 
 @Composable
 fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFirestore, RecipeViewModel: RecipeViewModel = viewModel()) {
-    val recipeSource = remember { RecipeSource() }
-    val recipe = recipeSource.loadRecipes().firstOrNull { it.id == recipeId }
+    val recipeRepository = remember { RecipeRepository() }
+    val recipe = recipeRepository.loadRecipes().firstOrNull { it.id == recipeId }
 
     LazyColumn {
         if (recipe != null) {
