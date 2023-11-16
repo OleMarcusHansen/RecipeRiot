@@ -16,6 +16,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Secrets
+import no.hiof.reciperiot.data.RecipeRepository
 import no.hiof.reciperiot.model.Recipe
 import no.hiof.reciperiot.screens.getIngredients
 import okhttp3.Call
@@ -33,90 +34,10 @@ import java.io.IOException
 class HomeViewModel : ViewModel() {
     // Options
     val time = mutableStateOf("20")
-
     var ingredients by mutableStateOf(emptyList<String>())
-
     val buttonEnabled = mutableStateOf(true)
 
-    fun handleFirestoreRemove(recipe: Recipe, db: FirebaseFirestore) {
-        val user = com.google.firebase.ktx.Firebase.auth.currentUser
-        Log.d(ContentValues.TAG, "Before get()")
-        db.collection("FavouriteMeals")
-            .whereEqualTo("userid", user?.uid)
-            .whereEqualTo("id", recipe.id)
-            .get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    // Get the document ID
-                    val documentId = document.id
-
-                    // Delete the document based on the document ID
-                    db.collection("FavouriteMeals")
-                        .document(documentId)
-                        .delete()
-                        .addOnSuccessListener {
-                            Log.d(ContentValues.TAG, "DocumentSnapshot successfully deleted with ID: $documentId")
-                        }
-                        .addOnFailureListener { e ->
-                            Log.w(ContentValues.TAG, "Error deleting document with ID: $documentId", e)
-                        }
-                }
-            }
-            .addOnFailureListener { e ->
-                Log.w(ContentValues.TAG, "Error getting documents", e)
-            }
-        Log.d(ContentValues.TAG, "After get()")
-    }
-
-    fun handleFirestoreAdd(recipe: Recipe, db: FirebaseFirestore) {
-        val user = com.google.firebase.ktx.Firebase.auth.currentUser
-
-        val recipeadd = mapOf(
-            "id" to "",
-            "title" to recipe.title,
-            "imageResourceId" to recipe.imageResourceId,
-            "imageURL" to recipe.imageURL,
-            "cookingTime" to recipe.cookingTime,
-            "favourite" to recipe.favourite,
-            "recipe_instructions" to recipe.recipe_instructions,
-            "recipe_nutrition" to recipe.recipe_nutrition,
-            "recipe_ingredients" to recipe.recipe_ingredients,
-            "userid" to recipe.userid
-        )
-
-        db.collection("FavouriteMeals")
-            .add(recipeadd)
-            .addOnSuccessListener { documentReference ->
-                val updatedRecipe = recipe.copy(id = documentReference.id)
-                updateRecipeId(updatedRecipe, documentReference.id, db)
-
-                Log.d(ContentValues.TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-            }
-            .addOnFailureListener { e ->
-                Log.w(ContentValues.TAG, "Error adding document", e)
-            }
-    }
-
-    private fun updateRecipeId(recipe: Recipe, documentId: String, db: FirebaseFirestore) {
-
-        val updatedRecipe = mapOf("id" to documentId)
-        val user = com.google.firebase.ktx.Firebase.auth.currentUser
-
-        if (user != null) {
-            db.collection("FavouriteMeals")
-                .document(documentId)
-                .set(updatedRecipe, SetOptions.merge())
-                .addOnSuccessListener {
-                    Log.d(ContentValues.TAG, "Recipe ID updated successfully")
-                    recipes.value = listOf(recipe)
-                }
-                .addOnFailureListener { e ->
-                    Log.e(ContentValues.TAG, "Error updating recipe ID", e)
-                }
-        } else {
-            println("No data or error")
-        }
-    }
+    private val repository = RecipeRepository()
 
     // Function to fetch ingredients from Firestore
     fun getIngredientsFromFirestore(db: FirebaseFirestore) {
@@ -134,6 +55,11 @@ class HomeViewModel : ViewModel() {
 
     // Liste med recipes. For å kanskje generere flere samtidig
     val recipes = mutableStateOf(emptyList<Recipe>())
+
+    fun addToDatabase(recipe: Recipe){
+        repository.handleFirestoreAdd(recipe)
+        recipes.value = repository.loadRecipes()
+    }
 
     suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: String): List<Recipe> = withContext(Dispatchers.IO) {
         val user = Firebase.auth.currentUser
