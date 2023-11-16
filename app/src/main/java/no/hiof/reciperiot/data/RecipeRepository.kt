@@ -15,31 +15,44 @@ class RecipeRepository() {
     private val collectionReference: CollectionReference = firestore.collection("FavouriteMeals")
     private val recipes: MutableList<Recipe> = mutableListOf()
 
-    init {
-        collectionReference
-            .whereEqualTo("userid", user?.uid)
-            //.whereEqualTo("favourite", true)
-            .addSnapshotListener { snapshot, exception ->
+
+    fun getRecipes(test: Boolean){
+        val query = if (test) {
+            collectionReference
+                .whereEqualTo("userid", user?.uid)
+                .whereEqualTo("favourite", true)
+        } else {
+            collectionReference
+                .whereEqualTo("userid", user?.uid)
+        }
+
+
+        query.addSnapshotListener { snapshot, exception ->
             if (exception != null) {
-                Log.e("FirestoreError", "Error fetching data: ${exception.message}")
+                Log.e("FirestoreError", "Feil ved henting av data: ${exception.message}")
                 return@addSnapshotListener
             }
 
-            recipes.clear()
-            snapshot?.documents?.forEach { documentSnapshot ->
-                val recipe = documentSnapshot.toObject(Recipe::class.java)
+                recipes.clear()
+                snapshot?.documents?.forEach { documentSnapshot ->
+                    val recipe = documentSnapshot.toObject(Recipe::class.java)
 
-                Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes.size}")
-                Log.d("FirestoreData", "recipe data: ${recipes}")
-                Log.d("FirestoreData", "recipe id: ${documentSnapshot.reference.id}")
+                    Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes.size}")
+                    Log.d("FirestoreData", "recipe data: ${recipes}")
+                    Log.d("FirestoreData", "recipe id: ${documentSnapshot.reference.id}")
 
-                recipe?.let { recipes.add(it) }
+                    recipe?.let { recipes.add(it) }
+                }
             }
-        }
     }
 
 
+    fun loadFavourites(): List<Recipe> {
+        getRecipes(true)
+        return recipes
+    }
     fun loadRecipes(): List<Recipe> {
+        getRecipes(false)
         return recipes
     }
 }

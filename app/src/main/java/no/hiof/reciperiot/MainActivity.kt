@@ -54,7 +54,6 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import no.hiof.reciperiot.ViewModels.RecipeViewModel
 import no.hiof.reciperiot.impl.NotificationService
 import no.hiof.reciperiot.screens.AuthenticationScreen
 import no.hiof.reciperiot.screens.FavouriteMeals
@@ -104,7 +103,7 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d(TAG, "Destroy")
-        RecipeViewModel().firestoreCleanup(db)
+        //RecipeViewModel().firestoreCleanup(db)
         Firebase.auth.signOut()
     }
 }
@@ -237,7 +236,7 @@ fun AppTopBar(navController: NavController,
                 painter = painterResource(id = R.drawable.reciperiot),
                 contentDescription = null,
                 modifier = Modifier.clickable {
-                    navController.navigate(Screen.History.route)
+                    navController.navigate(Screen.History.route) // {TODO} skal være Home
                 }
 
             )}
