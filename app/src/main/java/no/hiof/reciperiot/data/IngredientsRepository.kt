@@ -44,7 +44,7 @@ class IngredientsRepository {
         }
     }
 
-    suspend fun saveIngredients(ingredientList: List<Pair<String, Boolean>>) {
+    suspend fun saveCheckedStatesOfIngredients(ingredientList: List<Pair<String, Boolean>>) {
         val docRef = user?.let { db.collection("ingredients").document(it.uid) }
         val data = hashMapOf<String, Any>()
         for ((name, checked) in ingredientList) {
