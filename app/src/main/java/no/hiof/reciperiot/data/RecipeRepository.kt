@@ -47,11 +47,11 @@ class RecipeRepository() {
     }
 
 
-    fun loadRecipes(): List<Recipe> {
+    fun loadFavourites(): List<Recipe> {
         getRecipes(true)
         return recipes
     }
-    fun loadHistory(): List<Recipe> {
+    fun loadRecipes(): List<Recipe> {
         getRecipes(false)
         return recipes
     }
