@@ -17,6 +17,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.BottomAppBar
@@ -57,6 +58,7 @@ import no.hiof.reciperiot.ViewModels.RecipeViewModel
 import no.hiof.reciperiot.impl.NotificationService
 import no.hiof.reciperiot.screens.AuthenticationScreen
 import no.hiof.reciperiot.screens.FavouriteMeals
+import no.hiof.reciperiot.screens.HistoryScreen
 import no.hiof.reciperiot.screens.HomeScreen
 import no.hiof.reciperiot.screens.IngredientsScreen
 import no.hiof.reciperiot.screens.RecipePage1
@@ -114,6 +116,7 @@ sealed class Screen(val route: String, val title: Int, val icon: ImageVector){
     object Shopping : Screen("shopping", R.string.nav_shopping, Icons.Default.ShoppingCart)
     object Settings : Screen("settings", R.string.nav_settings, Icons.Default.Settings)
     object RecipePage : Screen("recipepage", R.string.nav_recipepage, Icons.Default.ArrowForward)
+    object History : Screen("history", R.string.history, Icons.Default.List)
 
 }
 @OptIn(ExperimentalMaterial3Api::class)
@@ -188,6 +191,9 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
             ) { backStackEntry ->
                 RecipePage1(navController, backStackEntry.arguments!!.getString("recipeid", "heipa"), db)
             }
+            composable(Screen.History.route) {
+                HistoryScreen(navController, db)
+            }
         }
     }
 }
@@ -231,7 +237,7 @@ fun AppTopBar(navController: NavController,
                 painter = painterResource(id = R.drawable.reciperiot),
                 contentDescription = null,
                 modifier = Modifier.clickable {
-                    navController.navigate(Screen.Home.route)
+                    navController.navigate(Screen.History.route)
                 }
 
             )}
