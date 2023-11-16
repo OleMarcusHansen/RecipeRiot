@@ -48,6 +48,9 @@ class RecipeRepository {
         getRecipes(false)
         return recipes
     }
+    fun loadGeneratedRecipe(): List<Recipe> {
+        return recipes
+    }
 
     fun handleFirestoreAdd(recipe: Recipe) {
         val user = com.google.firebase.ktx.Firebase.auth.currentUser
@@ -91,6 +94,8 @@ class RecipeRepository {
                     Log.d(ContentValues.TAG, "Recipe ID updated successfully")
                     recipes.clear()
                     recipes.add(recipe)
+                    println("updated id")
+                    println(recipe)
                 }
                 .addOnFailureListener { e ->
                     Log.e(ContentValues.TAG, "Error updating recipe ID", e)

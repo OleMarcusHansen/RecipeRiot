@@ -54,11 +54,11 @@ class HomeViewModel : ViewModel() {
     }
 
     // Liste med recipes. For å kanskje generere flere samtidig
-    val recipes = mutableStateOf(emptyList<Recipe>())
+    val recipes = mutableStateOf(repository.loadGeneratedRecipe())
 
     fun addToDatabase(recipe: Recipe){
         repository.handleFirestoreAdd(recipe)
-        recipes.value = repository.loadRecipes()
+        //recipes.value = repository.loadGeneratedRecipe()
     }
 
     suspend fun generateGPT(client: OkHttpClient, ingredients: List<String>, time: String): List<Recipe> = withContext(Dispatchers.IO) {
