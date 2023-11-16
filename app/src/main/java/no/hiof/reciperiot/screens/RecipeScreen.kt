@@ -30,13 +30,14 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.firestore.FirebaseFirestore
 import no.hiof.reciperiot.ViewModels.RecipeViewModel
-import no.hiof.reciperiot.data.RecipeSource
+import no.hiof.reciperiot.data.RecipeRepository
+import org.json.JSONArray
 import org.json.JSONObject
 
 @Composable
 fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFirestore, RecipeViewModel: RecipeViewModel = viewModel()) {
-    val recipeSource = remember { RecipeSource() }
-    val recipe = recipeSource.loadRecipes().firstOrNull { it.id == recipeId }
+    val recipeRepository = remember { RecipeRepository() }
+    val recipe = recipeRepository.loadRecipes().firstOrNull { it.id == recipeId }
 
     LazyColumn {
         if (recipe != null) {
@@ -166,6 +167,30 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
+
+                    Text(
+                        text = "Ingredients:",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        fontSize = 26.sp
+                    )
+                    var ingredients: JSONArray = JSONArray("[\"N/A\"]")
+                    try{
+                        ingredients = JSONArray(recipe.recipe_ingredients)
+                    }
+                    catch (e: Exception){
+                        print(e)
+                    }
+                    for (i in 0 until ingredients.length()){
+                        Text(
+                            text=ingredients[i].toString(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp),
+                            fontSize = 20.sp
+                        )
+                    }
 
                     Text(
                         text = "Instruksjoner:",
