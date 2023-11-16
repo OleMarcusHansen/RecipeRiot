@@ -17,14 +17,21 @@ class RecipeRepository() {
 
 
     fun getRecipes(test: Boolean){
-        collectionReference
-            .whereEqualTo("userid", user?.uid)
-            .whereEqualTo("favourite", test)
-            .addSnapshotListener { snapshot, exception ->
-                if (exception != null) {
-                    Log.e("FirestoreError", "Error fetching data: ${exception.message}")
-                    return@addSnapshotListener
-                }
+        val query = if (test) {
+            collectionReference
+                .whereEqualTo("userid", user?.uid)
+                .whereEqualTo("favourite", true)
+        } else {
+            collectionReference
+                .whereEqualTo("userid", user?.uid)
+        }
+
+
+        query.addSnapshotListener { snapshot, exception ->
+            if (exception != null) {
+                Log.e("FirestoreError", "Feil ved henting av data: ${exception.message}")
+                return@addSnapshotListener
+            }
 
                 recipes.clear()
                 snapshot?.documents?.forEach { documentSnapshot ->
