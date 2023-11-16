@@ -20,5 +20,6 @@
     <string name="language">Language</string>
     <string name="norwegian">Norwegian</string>
     <string name="english">English</string>
-    <string name="history">Hisotry</string>
+    <string name="history">History</string>
+    <string name="prev_generate">Previously generated</string>
 </resources>

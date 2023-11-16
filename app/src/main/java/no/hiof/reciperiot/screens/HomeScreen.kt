@@ -31,6 +31,7 @@ import androidx.navigation.NavController
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import no.hiof.reciperiot.R
+import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ViewModels.RecipeViewModel
 import no.hiof.reciperiot.ViewModels.HomeViewModel
 import okhttp3.OkHttpClient
@@ -76,6 +77,14 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
             },
                 enabled = homeViewModel.buttonEnabled.value) {
                 Text(stringResource(R.string.home_generate))
+            }
+        }
+        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Button(onClick = {
+                navController.navigate(Screen.History.route)
+                },
+                enabled = homeViewModel.buttonEnabled.value) {
+                Text(stringResource(R.string.prev_generate))
             }
         }
         RecipeList(
