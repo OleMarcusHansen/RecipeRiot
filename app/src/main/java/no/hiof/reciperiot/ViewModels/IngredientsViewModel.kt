@@ -102,7 +102,7 @@ class IngredientsViewModel : ViewModel() {
 
     fun saveIngredients(ingredientsToSave: List<Pair<String, Boolean>>) {
         viewModelScope.launch {
-            repository.saveIngredients(ingredientsToSave)
+            repository.saveCheckedStatesOfIngredients(ingredientsToSave)
         }
     }
 
