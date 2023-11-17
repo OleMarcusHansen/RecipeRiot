@@ -182,7 +182,7 @@ fun IngredientsScreen(
 
 
     //Fetch data from Firestore
-    getIngredients(db) { data ->
+    ingredientScreenViewModel.getIngredients1(db) { data ->
         if (data != null) {
             val firestoreIngredients =
                 data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
@@ -200,7 +200,7 @@ fun IngredientsScreen(
             ingredientScreenViewModel.ingredientsList.map { (name, checkedState) ->
                 name to checkedState.value
             }
-        saveIngredientstoDb(db, ingredientsToSave)
+        ingredientScreenViewModel.saveIngredientstoDb1(db, ingredientsToSave)
 
         scope.launch {
             navController.navigate(Screen.Home.route)

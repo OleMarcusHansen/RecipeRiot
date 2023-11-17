@@ -2,6 +2,7 @@ package no.hiof.reciperiot.ViewModels
 
 import android.content.ContentValues
 import android.util.Log
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +39,7 @@ class RecipeViewModel : ViewModel() {
                 .addOnFailureListener { e ->
                     Log.e(ContentValues.TAG, "Error updating recipe favourite", e)
                 }
+
         }
     }
 
