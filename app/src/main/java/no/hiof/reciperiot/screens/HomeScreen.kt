@@ -68,11 +68,9 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                 scope.launch {
                     val newRecipes = homeViewModel.generateGPT(client, homeViewModel.ingredients, homeViewModel.time.value)
                     //homeViewModel.recipes.value = newRecipes
-                    println(homeViewModel.recipes.value)
                     homeViewModel.addToDatabase(newRecipes[0])
                     homeViewModel.buttonEnabled.value = true
                     snackbarHost.showSnackbar("Oppskrift generert")
-                    println(homeViewModel.recipes.value)
                 }
             },
                 enabled = homeViewModel.buttonEnabled.value) {
