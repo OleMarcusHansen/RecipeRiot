@@ -66,15 +66,15 @@ class HomeViewModel : ViewModel() {
 
         try {
             if (ingredients.isEmpty() || time == "" || time.toInt() <= 0){
-                println("Ingredients list empty or time is invalid")
+                Log.e("InvalidInput", "User provided invalid input for ingredients and/or time")
                 val defaultRecipe = Recipe(
                     "iv",
-                    "Empty bowl",
+                    "Empty bowl - please try again",
                     R.drawable.food,
                     "https://cdn.discordapp.com/attachments/1148561836724207708/1174328461351997492/image.png?ex=6567319b&is=6554bc9b&hm=554c6bc1c7793a83a9bc3f1b72b5f26edda4a14f243d6bbc25eb318170b28347&",
                     "0",
                     false,
-                    "Get an empty bowl",
+                    "Make sure to add ingredients and provide time as a positive integer",
                     "{\"calories\":0,\"protein\":0,\"carbohydrates\":0,\"fat\":0}",
                     "[\"Empty bowl\"]",
                     user!!.uid
@@ -113,12 +113,12 @@ class HomeViewModel : ViewModel() {
                 Log.e("ChatCompletionError", "Error calling API: ${exception.message}")
                 val defaultRecipe = Recipe(
                     "ik",
-                    "Burned toast",
+                    "Burned toast - please try again",
                     R.drawable.food,
                     "https://cdn.discordapp.com/attachments/1148561836724207708/1172152256683065384/image.png?ex=655f46db&is=654cd1db&hm=2450543bf60afc32ad2c67d54b00328112ba7cd43656abb0d32b34f60d339d98&",
                     "60",
                     false,
-                    "Timed out",
+                    "Recipe generation timed out, please try again",
                     "{\"calories\":0,\"protein\":0,\"carbohydrates\":0,\"fat\":0}",
                     "[\"Bread\"]",
                     user!!.uid
@@ -174,12 +174,12 @@ class HomeViewModel : ViewModel() {
             Log.e("ChatCompletionError", "Error generating recipe")
             val defaultRecipe = Recipe(
                 "uh",
-                "Failed tomato soup",
+                "Failed tomato soup - please try again",
                 R.drawable.food,
                 "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&",
                 "60",
                 false,
-                "Something failed",
+                "Something failed, please try again",
                 "{\"calories\":0,\"protein\":0,\"carbohydrates\":0,\"fat\":0}",
                 "[\"Failure\"]",
                 user!!.uid
@@ -190,13 +190,13 @@ class HomeViewModel : ViewModel() {
             Log.e("ParseError", "Error parsing time to int: ${exception.message}")
             println("Ingredients list empty or time is invalid")
             val defaultRecipe = Recipe(
-                "uh",
-                "Failed tomato soup",
+                "ih",
+                "Failed tomato soup - please try again",
                 R.drawable.food,
                 "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&",
                 "60",
                 false,
-                "Something failed",
+                "Make sure to provide time as a positive integer",
                 "{\"calories\":0,\"protein\":0,\"carbohydrates\":0,\"fat\":0}",
                 "[\"Failure\"]",
                 user!!.uid
