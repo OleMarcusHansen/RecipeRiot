@@ -15,8 +15,8 @@ class RecipeRepository {
     val user = Firebase.auth.currentUser
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val collectionReference: CollectionReference = firestore.collection("FavouriteMeals")
-    //private val recipes: MutableList<Recipe> = mutableListOf()
-    private val recipes = mutableStateListOf<Recipe>()
+    private val recipes: MutableList<Recipe> = mutableStateListOf()
+
 
     fun getRecipes(test: Boolean){
         val query = if (test) {

@@ -18,6 +18,8 @@ class RecipeViewModel : ViewModel() {
     val history by mutableStateOf(RecipeRepository().loadRecipes())
 
 
+
+
     fun updateRecipeFavouriteStatus(recipe: Recipe, db: FirebaseFirestore, fav: Boolean) {
         val docid = recipe.id
         val updatedRecipe = mapOf("favourite" to fav)
