@@ -54,13 +54,11 @@ import org.json.JSONObject
 @Composable
 fun FavouriteMeals(navController: NavController, db: FirebaseFirestore, RecipeViewModel: RecipeViewModel = viewModel()) {
 
-    var searchText by remember { mutableStateOf("") }
-
     Column {
         TextField(
-            value = searchText,
+            value = RecipeViewModel.searchText,
             onValueChange = { newText ->
-                searchText = newText
+                RecipeViewModel.searchText = newText
             },
             label = { Text("Search") },
             modifier = Modifier
@@ -68,7 +66,7 @@ fun FavouriteMeals(navController: NavController, db: FirebaseFirestore, RecipeVi
                 .padding(16.dp))
 
         RecipeList(
-            recipes = RecipeViewModel.recipes.filter { it.title.contains(searchText, true) },
+            recipes = RecipeViewModel.recipes.filter { it.title.contains(RecipeViewModel.searchText, true) },
             navController = navController,
             onFavouriteToggle = {},
             updateRecipeFavouriteStatus = { recipe, fav ->

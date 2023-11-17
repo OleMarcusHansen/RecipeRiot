@@ -258,7 +258,7 @@ fun IngredientsScreen(
 
 
                 ingredientScreenViewModel.ingredientsList.forEach { (name, checkedState) ->
-                    ingredientScreenViewModel.IngredientRow(
+                    IngredientRow(
 
                         name = name,
                         checkedState = checkedState,

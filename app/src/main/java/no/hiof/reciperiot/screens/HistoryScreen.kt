@@ -21,13 +21,12 @@ import no.hiof.reciperiot.ViewModels.RecipeViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(navController: NavController, db: FirebaseFirestore, RecipeViewModel: RecipeViewModel = viewModel()) {
-    var searchText by remember { mutableStateOf("") }
 
     Column {
         TextField(
-            value = searchText,
+            value = RecipeViewModel.searchText,
             onValueChange = { newText ->
-                searchText = newText
+                RecipeViewModel.searchText = newText
             },
             label = { Text("Search") },
             modifier = Modifier
@@ -35,7 +34,7 @@ fun HistoryScreen(navController: NavController, db: FirebaseFirestore, RecipeVie
                 .padding(16.dp))
 
         RecipeList(
-            recipes = RecipeViewModel.history.filter { it.title.contains(searchText, true) },
+            recipes = RecipeViewModel.history.filter { it.title.contains(RecipeViewModel.searchText, true) },
             navController = navController,
             onFavouriteToggle = {},
             updateRecipeFavouriteStatus = { recipe, fav ->
