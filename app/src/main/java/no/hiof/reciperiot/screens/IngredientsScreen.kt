@@ -100,6 +100,63 @@ fun getIngredients(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit)
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun IngredientRow(
+    name: String,
+    checkedState: MutableState<Boolean>,
+    ingredientViewModel: IngredientsViewModel = viewModel(),
+    onCheckedChange: (Boolean) -> Unit)
+{
+
+    val haptics = LocalHapticFeedback.current
+    var expandedMenu by remember { mutableStateOf(false)}
+    var menuRowId by rememberSaveable { mutableStateOf(name) }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.SpaceAround
+    ) {
+        Text(
+            text = name,
+            modifier = Modifier
+                .weight(1f)
+                .combinedClickable(
+                    onClick = {},
+                    onLongClick = {
+                        menuRowId = name
+                        expandedMenu = true
+                        haptics.performHapticFeedback(
+                            androidx.compose.ui.hapticfeedback.HapticFeedbackType.LongPress
+                        )
+                    }
+                )
+        )
+
+        Spacer(modifier = Modifier.width(8.dp))
+
+        Checkbox(
+            checked = checkedState.value,
+            onCheckedChange = { newValue ->
+                onCheckedChange(newValue)
+            },
+            modifier = Modifier.size(24.dp)
+        )
+
+        DropdownMenu(expanded = expandedMenu, onDismissRequest = {expandedMenu = false}) {
+            // When clicking delete, delete ingrident from firebase
+            DropdownMenuItem(text = { Text(text = "Delete") }, onClick = {
+                menuRowId.let { ingredientName ->
+                    ingredientViewModel.deleteIngredient(ingredientName)
+                }
+            })
+
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun IngredientsScreen(

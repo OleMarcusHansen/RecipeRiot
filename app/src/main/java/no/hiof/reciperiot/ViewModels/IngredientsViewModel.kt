@@ -36,43 +36,6 @@ class IngredientsViewModel : ViewModel() {
 
     private val repository = IngredientsRepository() // Create a repository for data operations
 
-    // val ingredientsList = repository.ingredientsList From repo
-
-    @OptIn(ExperimentalFoundationApi::class)
-    @Composable
-    fun IngredientRow(
-        name: String,
-        checkedState: MutableState<Boolean>,
-        onCheckedChange: (Boolean) -> Unit)
-    {
-
-        val haptics = LocalHapticFeedback.current
-        var expandedMenu by remember { mutableStateOf(false)}
-        var menuRowId by rememberSaveable { mutableStateOf(name) }
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceAround
-        ) {
-            Text(
-                text = name,
-                modifier = Modifier
-                    .weight(1f)
-                    .combinedClickable(
-                        onClick = {},
-                        onLongClick = {
-                            menuRowId = name
-                            expandedMenu = true
-                            haptics.performHapticFeedback(
-                                HapticFeedbackType.LongPress
-                            )
-                        }
-                    )
-            )
-
-            Spacer(modifier = Modifier.width(8.dp))
 
             Checkbox(
                 checked = checkedState.value,
