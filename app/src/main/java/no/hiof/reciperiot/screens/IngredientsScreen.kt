@@ -200,7 +200,11 @@ fun IngredientsScreen(
             ingredientScreenViewModel.ingredientsList.map { (name, checkedState) ->
                 name to checkedState.value
             }
-        ingredientScreenViewModel.saveIngredientstoDb1(db, ingredientsToSave)
+        ingredientScreenViewModel.saveIngredientstoDb1(ingredientsToSave)
+
+    }
+
+    val reRoutetoHomeScreen = {
 
         scope.launch {
             navController.navigate(Screen.Home.route)
@@ -209,6 +213,7 @@ fun IngredientsScreen(
         }
 
     }
+
 
     // Counter for å genere rader for lazyColumn
     val rowCount = 1
@@ -236,15 +241,19 @@ fun IngredientsScreen(
                         onValueChange = { ingredientScreenViewModel.newIngredient = it },
                         label = { Text("Add an ingredient") }
                     )
+
+                    // Add ingredient button, adds ingredient to list
                     Button(onClick = {
-                        if (ingredientScreenViewModel.newIngredient.isNotBlank()) {
+                        if (ingredientScreenViewModel.newIngredient != "") {
                             ingredientScreenViewModel.ingredientsList =
-                                ingredientScreenViewModel.ingredientsList.toMutableList()
-                                    .plus(
-                                        ingredientScreenViewModel.newIngredient to mutableStateOf(
-                                            true
-                                        )
-                                    )
+                                ingredientScreenViewModel.ingredientsList + Pair(
+                                    ingredientScreenViewModel.newIngredient,
+                                    mutableStateOf(true)
+                                )
+
+                            // save new ingredient to firestore
+                            saveIngredients()
+
                             ingredientScreenViewModel.newIngredient = ""
 
                             scope.launch {
@@ -283,7 +292,8 @@ fun IngredientsScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
                 FloatingActionButton(
-                    onClick = { saveIngredients() },
+                    onClick = { saveIngredients()
+                              reRoutetoHomeScreen()},
                     modifier = modifier
                         .padding(16.dp),
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
