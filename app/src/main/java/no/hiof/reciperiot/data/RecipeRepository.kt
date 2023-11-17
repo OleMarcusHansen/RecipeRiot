@@ -1,6 +1,7 @@
 package no.hiof.reciperiot.data
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,7 +14,7 @@ class RecipeRepository() {
     val user = Firebase.auth.currentUser
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val collectionReference: CollectionReference = firestore.collection("FavouriteMeals")
-    private val recipes: MutableList<Recipe> = mutableListOf()
+    private val recipes: MutableList<Recipe> = mutableStateListOf()
 
 
     fun getRecipes(test: Boolean){
