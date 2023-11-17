@@ -8,15 +8,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import no.hiof.reciperiot.data.IngredientsRepository
 
 class IngredientsViewModel : ViewModel() {
     private val db = Firebase.firestore
@@ -40,7 +36,7 @@ class IngredientsViewModel : ViewModel() {
                 Log.w(ContentValues.TAG, "Error deleting document", e)
             }
     }
-    fun saveIngredientstoDb1(ingredientList: List<Pair<String, Boolean>>) {
+    fun saveIngredientsToDb(ingredientList: List<Pair<String, Boolean>>) {
         //TODO: ensure logged in
         val docRef = user?.let { db.collection("ingredients").document(it.uid) }
         val data = hashMapOf<String, Any>()
@@ -58,7 +54,7 @@ class IngredientsViewModel : ViewModel() {
                 }
         }
     }
-    fun getIngredients1(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit) {
+    fun getIngredientsToIngredientScreen(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit) {
         val user = Firebase.auth.currentUser
         // TODO: Ensure logged in
         val docRef = user?.let { db.collection("ingredients").document(it.uid) }
