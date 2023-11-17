@@ -69,6 +69,8 @@ fun deleteIngredientFromDb(db: FirebaseFirestore, ingredientName: String) {
 */
 
 // Saves names and checked states to fireStore
+
+/* Commented out for extrating to viewmodel
 fun saveIngredientstoDb(db: FirebaseFirestore, ingredientList: List<Pair<String, Boolean>>) {
     val user = Firebase.auth.currentUser
     //TODO: ensure logged in
@@ -89,6 +91,9 @@ fun saveIngredientstoDb(db: FirebaseFirestore, ingredientList: List<Pair<String,
     }
 }
 
+ */
+
+// Used in HomeViewModel to get ingredients from firestore
 fun getIngredients(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit) {
     val user = Firebase.auth.currentUser
     // TODO: Ensure logged in
@@ -182,7 +187,7 @@ fun IngredientsScreen(
 
 
     //Fetch data from Firestore
-    ingredientScreenViewModel.getIngredients1(db) { data ->
+    ingredientScreenViewModel.getIngredientsToIngredientScreen() { data ->
         if (data != null) {
             val firestoreIngredients =
                 data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
@@ -200,7 +205,7 @@ fun IngredientsScreen(
             ingredientScreenViewModel.ingredientsList.map { (name, checkedState) ->
                 name to checkedState.value
             }
-        ingredientScreenViewModel.saveIngredientstoDb1(ingredientsToSave)
+        ingredientScreenViewModel.saveIngredientsToDb(ingredientsToSave)
 
     }
 
