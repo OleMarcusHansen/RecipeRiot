@@ -21,8 +21,6 @@ class IngredientsViewModel : ViewModel() {
     var newIngredient by mutableStateOf("")
     var ingredientsList by mutableStateOf(emptyList<Pair<String, MutableState<Boolean>>>())
 
-
-
     fun deleteIngredient(ingredientName: String) {
 
         val docRef = user?.let { db.collection("ingredients").document(it.uid) }
@@ -54,8 +52,7 @@ class IngredientsViewModel : ViewModel() {
                 }
         }
     }
-    fun getIngredientsToIngredientScreen(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit) {
-        val user = Firebase.auth.currentUser
+    fun getIngredientsToIngredientScreen(callback: (Map<String, Any>?) -> Unit) {
         // TODO: Ensure logged in
         val docRef = user?.let { db.collection("ingredients").document(it.uid) }
         docRef?.get()?.addOnSuccessListener { document ->

@@ -187,7 +187,7 @@ fun IngredientsScreen(
 
 
     //Fetch data from Firestore
-    ingredientScreenViewModel.getIngredientsToIngredientScreen(db) { data ->
+    ingredientScreenViewModel.getIngredientsToIngredientScreen() { data ->
         if (data != null) {
             val firestoreIngredients =
                 data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
