@@ -82,12 +82,11 @@ class HomeViewModel : ViewModel() {
                 return@withContext listOf(defaultRecipe)
             }
 
-            println("start gpt generate")
             //prompt til chatGPT
             //bør bli justert og testet for å få best mulig resultat
             val prompt = """I have only the ingredients: ${ingredients}. I have ${time} minutes to make food. Generate a recipe for me. Your output should be in JSON format: {recipe_name: String, recipe_time: String, recipe_instructions: String, recipe_nutrition: Object, recipe_ingredients: Array}"""
 
-            println(prompt)
+            Log.i("RecipeGeneration", "Start generating recipe with prompt: $prompt")
 
             //kalle chatCompletion api
             val mediaType: MediaType = "application/json; charset=utf-8".toMediaType()
@@ -129,12 +128,13 @@ class HomeViewModel : ViewModel() {
             // Handle the response and return the list of recipes
             if (response.isSuccessful) {
                 val responseString = response.body?.string()
-                println(responseString)
+                //println(responseString)
                 if (responseString != null) {
                     try{
                         val responseJSON = JSONObject(responseString)
                         val messageJSON = JSONObject(responseJSON.getJSONArray("choices").getJSONObject(0).getJSONObject("message").getString("content"))
                         println(messageJSON)
+                        Log.i("RecipeGeneration", "Finished ChatCompletion with output message: $messageJSON")
 
                         // Image creation
                         //val imageResponse = generateImage(client, messageJSON.getString("recipe_name"))
@@ -161,10 +161,24 @@ class HomeViewModel : ViewModel() {
                     }
                     catch (exception: JSONException){
                         Log.e("ChatCompletionError", "Error parsing chat completion to JSON: ${exception.message}")
+                        val defaultRecipe = Recipe(
+                            "uh",
+                            "Failed tomato soup - please try again",
+                            R.drawable.food,
+                            "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&",
+                            "60",
+                            false,
+                            "Chat generation output failed, please try again",
+                            "{\"calories\":0,\"protein\":0,\"carbohydrates\":0,\"fat\":0}",
+                            "[\"Failure\"]",
+                            user!!.uid
+                        )
+                        return@withContext listOf(defaultRecipe)
                     }
                 }
             }
             else{
+                Log.e("ChatCompletion", "ChatCompletion unsuccessful: ${response.message}")
                 println(response.message)
                 println(response)
                 println(response.body)
@@ -188,7 +202,6 @@ class HomeViewModel : ViewModel() {
         }
         catch (exception: Exception){
             Log.e("ParseError", "Error parsing time to int: ${exception.message}")
-            println("Ingredients list empty or time is invalid")
             val defaultRecipe = Recipe(
                 "ih",
                 "Failed tomato soup - please try again",
@@ -206,13 +219,11 @@ class HomeViewModel : ViewModel() {
     }
 
     suspend fun generateImage(client: OkHttpClient, recipeName: String): String {
-        println("start image generate")
-
         //prompt
         //bør bli justert og testet for å få best mulig resultat
         val prompt = """Dish called $recipeName"""
 
-        println(prompt)
+        Log.i("ImageGeneration", "Start generating image with prompt: $prompt")
 
         //kalle chatCompletion api
         val mediaType: MediaType = "application/json; charset=utf-8".toMediaType()
@@ -241,7 +252,7 @@ class HomeViewModel : ViewModel() {
 
         if (response.isSuccessful) {
             val responseString = response.body?.string()
-            println(responseString)
+            Log.i("ImageGeneration", "Finished image generation with output: $responseString")
             if (responseString != null) {
                 return responseString
             }
