@@ -73,5 +73,18 @@ class IngredientsViewModel : ViewModel() {
             Log.d(ContentValues.TAG, "get failed with ", exception)
             callback(null)
         }
+
     }
+    fun fetchDataFromFireStore() {
+        getIngredientsToIngredientScreen() { data ->
+            if (data != null) {
+                val firestoreIngredients =
+                    data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
+                ingredientsList = firestoreIngredients
+            } else {
+                println("No data or error")
+            }
+        }
+    }
+
 }

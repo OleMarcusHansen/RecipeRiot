@@ -181,12 +181,14 @@ fun IngredientsScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     snackbarHost: SnackbarHostState,
-    db: FirebaseFirestore,
     ingredientScreenViewModel: IngredientsViewModel = viewModel()
 ) {
 
 
     //Fetch data from Firestore
+    ingredientScreenViewModel.fetchDataFromFireStore()
+
+    /*
     ingredientScreenViewModel.getIngredientsToIngredientScreen() { data ->
         if (data != null) {
             val firestoreIngredients =
@@ -196,6 +198,10 @@ fun IngredientsScreen(
             println("No data or error")
         }
     }
+
+     */
+
+
 
     //Til snackbar
     val scope = rememberCoroutineScope()
