@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import no.hiof.reciperiot.data.RecipeRepository
 import no.hiof.reciperiot.model.Recipe
+import org.json.JSONObject
 
 class FavouriteViewModel : ViewModel() {
     val favourites by mutableStateOf(RecipeRepository().loadFavourites())

@@ -35,8 +35,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
-import no.hiof.reciperiot.ViewModels.RecipeViewModel
 import no.hiof.reciperiot.ViewModels.HomeViewModel
+import no.hiof.reciperiot.composables.RecipeList
 import no.hiof.reciperiot.data.RecipeRepository
 import okhttp3.OkHttpClient
 
@@ -81,14 +81,6 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                 Text(stringResource(R.string.home_generate))
             }
         }
-        /*Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Button(onClick = {
-                navController.navigate(Screen.History.route)
-                },
-                enabled = homeViewModel.buttonEnabled.value) {
-                Text(stringResource(R.string.prev_generate))
-            }
-        }*/
         RecipeList(
             recipes = homeViewModel.recipes,
             navController = navController,
@@ -118,7 +110,6 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                 Text(stringResource(R.string.prev_generate), modifier = Modifier.padding(16.dp))
             }
         }
-
     }
 }
 
