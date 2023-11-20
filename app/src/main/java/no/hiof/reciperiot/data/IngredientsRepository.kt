@@ -54,10 +54,5 @@ class IngredientsRepository {
         docRef?.set(data)?.await()
     }
 
-    suspend fun deleteIngredient(ingredientName: String) {
-        val docRef = user?.let { db.collection("ingredients").document(it.uid) }
 
-        // Delete the specific field from the document
-        docRef?.update(ingredientName, FieldValue.delete())?.await()
-    }
 }

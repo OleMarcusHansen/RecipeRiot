@@ -69,6 +69,8 @@ fun deleteIngredientFromDb(db: FirebaseFirestore, ingredientName: String) {
 */
 
 // Saves names and checked states to fireStore
+
+/* Commented out for extrating to viewmodel
 fun saveIngredientstoDb(db: FirebaseFirestore, ingredientList: List<Pair<String, Boolean>>) {
     val user = Firebase.auth.currentUser
     //TODO: ensure logged in
@@ -89,6 +91,9 @@ fun saveIngredientstoDb(db: FirebaseFirestore, ingredientList: List<Pair<String,
     }
 }
 
+ */
+
+// Used in HomeViewModel to get ingredients from firestore
 fun getIngredients(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit) {
     val user = Firebase.auth.currentUser
     // TODO: Ensure logged in
@@ -176,13 +181,15 @@ fun IngredientsScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     snackbarHost: SnackbarHostState,
-    db: FirebaseFirestore,
     ingredientScreenViewModel: IngredientsViewModel = viewModel()
 ) {
 
 
     //Fetch data from Firestore
-    ingredientScreenViewModel.getIngredients1(db) { data ->
+    ingredientScreenViewModel.fetchDataFromFireStore()
+
+    /*
+    ingredientScreenViewModel.getIngredientsToIngredientScreen() { data ->
         if (data != null) {
             val firestoreIngredients =
                 data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
@@ -192,6 +199,10 @@ fun IngredientsScreen(
         }
     }
 
+     */
+
+
+
     //Til snackbar
     val scope = rememberCoroutineScope()
 
@@ -200,7 +211,11 @@ fun IngredientsScreen(
             ingredientScreenViewModel.ingredientsList.map { (name, checkedState) ->
                 name to checkedState.value
             }
-        ingredientScreenViewModel.saveIngredientstoDb1(db, ingredientsToSave)
+        ingredientScreenViewModel.saveIngredientsToDb(ingredientsToSave)
+
+    }
+
+    val reRoutetoHomeScreen = {
 
         scope.launch {
             navController.navigate(Screen.Home.route)
@@ -209,6 +224,7 @@ fun IngredientsScreen(
         }
 
     }
+
 
     // Counter for å genere rader for lazyColumn
     val rowCount = 1
@@ -236,15 +252,19 @@ fun IngredientsScreen(
                         onValueChange = { ingredientScreenViewModel.newIngredient = it },
                         label = { Text("Add an ingredient") }
                     )
+
+                    // Add ingredient button, adds ingredient to list
                     Button(onClick = {
-                        if (ingredientScreenViewModel.newIngredient.isNotBlank()) {
+                        if (ingredientScreenViewModel.newIngredient != "") {
                             ingredientScreenViewModel.ingredientsList =
-                                ingredientScreenViewModel.ingredientsList.toMutableList()
-                                    .plus(
-                                        ingredientScreenViewModel.newIngredient to mutableStateOf(
-                                            true
-                                        )
-                                    )
+                                ingredientScreenViewModel.ingredientsList + Pair(
+                                    ingredientScreenViewModel.newIngredient,
+                                    mutableStateOf(true)
+                                )
+
+                            // save new ingredient to firestore
+                            saveIngredients()
+
                             ingredientScreenViewModel.newIngredient = ""
 
                             scope.launch {
@@ -283,7 +303,8 @@ fun IngredientsScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
                 FloatingActionButton(
-                    onClick = { saveIngredients() },
+                    onClick = { saveIngredients()
+                              reRoutetoHomeScreen()},
                     modifier = modifier
                         .padding(16.dp),
                     containerColor = MaterialTheme.colorScheme.primaryContainer,

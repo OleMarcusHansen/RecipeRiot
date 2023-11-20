@@ -63,7 +63,6 @@ class RecipeRepository {
     }
 
     fun handleFirestoreAdd(recipe: Recipe) {
-        val user = com.google.firebase.ktx.Firebase.auth.currentUser
 
         val recipeadd = mapOf(
             "id" to "",
