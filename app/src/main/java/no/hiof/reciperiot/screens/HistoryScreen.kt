@@ -13,7 +13,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.firebase.firestore.FirebaseFirestore
 import no.hiof.reciperiot.ViewModels.HistoryViewModel
-import no.hiof.reciperiot.ViewModels.RecipeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
