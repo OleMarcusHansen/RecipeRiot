@@ -39,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat.*
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,6 +48,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ViewModels.IngredientsViewModel
 
@@ -244,7 +246,7 @@ fun IngredientsScreen(
 
                     ) {
                     //Icon(Icons.Filled.Add, "Floating action button")
-                    Text("Save")
+                    Text(stringResource(R.string.save), modifier = Modifier.padding(16.dp))
                 }
             }
 
