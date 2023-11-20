@@ -21,4 +21,8 @@
     <string name="language">Språk</string>
     <string name="english">Engelsk</string>
     <string name="norwegian">Norsk</string>
+
+    <string name="history">Historie</string>
+    <string name="prev_generate">Tidligere Generert</string>
+    <string name="save">Lagre</string>
 </resources>

@@ -13,7 +13,8 @@ class RecipeRepository {
     val user = Firebase.auth.currentUser
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val collectionReference: CollectionReference = firestore.collection("FavouriteMeals")
-    private val recipes: MutableList<Recipe> = mutableListOf()
+    private val loadedRecipes: MutableList<Recipe> = mutableListOf()
+    val generatedRecipes: MutableList<Recipe> = mutableStateListOf()
 
 
     fun getRecipes(test: Boolean){
@@ -33,14 +34,15 @@ class RecipeRepository {
                 return@addSnapshotListener
             }
 
-                recipes.clear()
+            loadedRecipes.clear()
                 snapshot?.documents?.forEach { documentSnapshot ->
                     val recipe = documentSnapshot.toObject(Recipe::class.java)
 
-                    Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${recipes.size}")
+                    Log.d("FirestoreData", "Data fetched successfully. Number of recipes: ${loadedRecipes.size}")
+                    Log.d("FirestoreData", "recipe data: ${loadedRecipes}")
                     Log.d("FirestoreData", "recipe id: ${documentSnapshot.reference.id}")
 
-                    recipe?.let { recipes.add(it) }
+                    recipe?.let { loadedRecipes.add(it) }
                 }
             }
     }
@@ -48,14 +50,14 @@ class RecipeRepository {
 
     fun loadFavourites(): List<Recipe> {
         getRecipes(true)
-        return recipes
+        return loadedRecipes
     }
     fun loadRecipes(): List<Recipe> {
         getRecipes(false)
-        return recipes
+        return loadedRecipes
     }
     fun loadGeneratedRecipe(): List<Recipe> {
-        return recipes
+        return generatedRecipes
     }
 
     fun handleFirestoreAdd(recipe: Recipe) {
@@ -97,8 +99,8 @@ class RecipeRepository {
                 .set(updatedRecipe, SetOptions.merge())
                 .addOnSuccessListener {
                     Log.d(ContentValues.TAG, "Recipe ID updated successfully")
-                    recipes.clear()
-                    recipes.add(recipe)
+                    generatedRecipes.clear()
+                    generatedRecipes.add(recipe)
                 }
                 .addOnFailureListener { e ->
                     Log.e(ContentValues.TAG, "Error updating recipe ID", e)

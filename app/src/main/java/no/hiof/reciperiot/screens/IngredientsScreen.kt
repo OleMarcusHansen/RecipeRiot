@@ -39,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat.*
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -47,51 +48,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
+import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ViewModels.IngredientsViewModel
 
 
-/* Commented out for extrating to viewmodel
-fun deleteIngredientFromDb(db: FirebaseFirestore, ingredientName: String) {
-    val user = Firebase.auth.currentUser
-    val docRef = user?.let { db.collection("ingredients").document(it.uid) }
-
-    // Delete the specific field from the document
-    docRef?.update(ingredientName, FieldValue.delete())
-        ?.addOnSuccessListener {
-            Log.d(TAG, "Ingredient deleted successfully")
-        }
-        ?.addOnFailureListener { e ->
-            Log.w(TAG, "Error deleting ingredient", e)
-        }
-
-}
-*/
-
-// Saves names and checked states to fireStore
-
-/* Commented out for extrating to viewmodel
-fun saveIngredientstoDb(db: FirebaseFirestore, ingredientList: List<Pair<String, Boolean>>) {
-    val user = Firebase.auth.currentUser
-    //TODO: ensure logged in
-    val docRef = user?.let { db.collection("ingredients").document(it.uid) }
-    val data = hashMapOf<String, Any>()
-    for ((name, checked) in ingredientList) {
-        data[name] = checked
-    }
-    //TODO: ensure logged in
-    if (docRef != null) {
-        docRef.set(data)
-            .addOnSuccessListener { docRef ->
-                Log.d(TAG, "DocumentSnapcshot added!")
-            }
-            .addOnFailureListener { e ->
-                Log.w(TAG, "Error adding document", e)
-            }
-    }
-}
-
- */
 
 // Used in HomeViewModel to get ingredients from firestore
 fun getIngredients(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit) {
@@ -184,36 +145,11 @@ fun IngredientsScreen(
     ingredientScreenViewModel: IngredientsViewModel = viewModel()
 ) {
 
-
     //Fetch data from Firestore
-    ingredientScreenViewModel.fetchDataFromFireStore()
-
-    /*
-    ingredientScreenViewModel.getIngredientsToIngredientScreen() { data ->
-        if (data != null) {
-            val firestoreIngredients =
-                data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
-            ingredientScreenViewModel.ingredientsList = firestoreIngredients
-        } else {
-            println("No data or error")
-        }
-    }
-
-     */
-
-
+    ingredientScreenViewModel.updateIngredientsList()
 
     //Til snackbar
     val scope = rememberCoroutineScope()
-
-    val saveIngredients = {
-        val ingredientsToSave =
-            ingredientScreenViewModel.ingredientsList.map { (name, checkedState) ->
-                name to checkedState.value
-            }
-        ingredientScreenViewModel.saveIngredientsToDb(ingredientsToSave)
-
-    }
 
     val reRoutetoHomeScreen = {
 
@@ -224,7 +160,6 @@ fun IngredientsScreen(
         }
 
     }
-
 
     // Counter for å genere rader for lazyColumn
     val rowCount = 1
@@ -263,7 +198,7 @@ fun IngredientsScreen(
                                 )
 
                             // save new ingredient to firestore
-                            saveIngredients()
+                            ingredientScreenViewModel.saveIngredientsToDb()
 
                             ingredientScreenViewModel.newIngredient = ""
 
@@ -303,14 +238,15 @@ fun IngredientsScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
                 FloatingActionButton(
-                    onClick = { saveIngredients()
+                    onClick = { ingredientScreenViewModel.saveIngredientsToDb()
                               reRoutetoHomeScreen()},
                     modifier = modifier
                         .padding(16.dp),
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
 
                     ) {
-                    Icon(Icons.Filled.Add, "Floating action button")
+                    //Icon(Icons.Filled.Add, "Floating action button")
+                    Text(stringResource(R.string.save), modifier = Modifier.padding(16.dp))
                 }
             }
 
