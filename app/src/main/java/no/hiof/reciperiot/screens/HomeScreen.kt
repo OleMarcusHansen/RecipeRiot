@@ -86,12 +86,12 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
             }
         }
         RecipeList(
-            recipes = homeViewModel.recipes.value,
+            recipes = homeViewModel.recipes,
             navController = navController,
             onFavouriteToggle = {},
             updateRecipeFavouriteStatus = {recipe, fav ->
                 RecipeViewModel().updateRecipeFavouriteStatus(recipe, db, fav)
-                Log.e("FirestoreError", "Error fetching data: ${homeViewModel.recipes.value}")
+                Log.e("FirestoreError", "Error fetching data: ${homeViewModel.recipes}")
             }
         )
     }

@@ -54,7 +54,8 @@ class HomeViewModel : ViewModel() {
     }
 
     // Liste med recipes. For å kanskje generere flere samtidig
-    val recipes = mutableStateOf(repository.loadGeneratedRecipe())
+    //val recipes = mutableStateOf(repository.loadGeneratedRecipe())
+    val recipes = repository.generatedRecipes
 
     fun addToDatabase(recipe: Recipe){
         repository.handleFirestoreAdd(recipe)
@@ -66,7 +67,7 @@ class HomeViewModel : ViewModel() {
 
         try {
             if (ingredients.isEmpty() || time == "" || time.toInt() <= 0){
-                Log.e("InvalidInput", "User provided invalid input for ingredients and/or time")
+                Log.w("InvalidInput", "Invalid input for ingredients and/or time")
                 val defaultRecipe = Recipe(
                     "iv",
                     "Empty bowl - please try again",
@@ -137,11 +138,11 @@ class HomeViewModel : ViewModel() {
                         Log.i("RecipeGeneration", "Finished ChatCompletion with output message: $messageJSON")
 
                         // Image creation
-                        //val imageResponse = generateImage(client, messageJSON.getString("recipe_name"))
-                        //val imageResponseURL = JSONObject(imageResponse).getJSONArray("data").getJSONObject(0).getString("url")
+                        val imageResponse = generateImage(client, messageJSON.getString("recipe_name"))
+                        val imageResponseURL = JSONObject(imageResponse).getJSONArray("data").getJSONObject(0).getString("url")
 
                         // Standard image
-                        val imageResponseURL = "https://cdn.discordapp.com/attachments/1148561836724207708/1172157068497666048/image.png?ex=655f4b56&is=654cd656&hm=a296565e26720c460d137ee7941dd195e597378e26b6e77cc7d1320551067ad0&"
+                        //val imageResponseURL = "https://cdn.discordapp.com/attachments/1148561836724207708/1172157068497666048/image.png?ex=655f4b56&is=654cd656&hm=a296565e26720c460d137ee7941dd195e597378e26b6e77cc7d1320551067ad0&"
 
                         val recipes = listOf(
                             Recipe(
