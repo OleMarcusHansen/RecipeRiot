@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.Text
@@ -29,6 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.firestore.FirebaseFirestore
+import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ViewModels.RecipeViewModel
 import no.hiof.reciperiot.data.RecipeRepository
 import org.json.JSONArray
@@ -82,7 +84,6 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             )
                         }
                     }
-
                     AsyncImage(
                         model = recipe.imageURL,
                         contentDescription = "Image of the recipe",
@@ -95,7 +96,6 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
-
                     Text(
                         text = "Nutrition:",
                         modifier = Modifier
@@ -145,7 +145,6 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
-
                     Text(
                         text = "Ingredients:",
                         modifier = Modifier
@@ -169,7 +168,6 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             fontSize = 20.sp
                         )
                     }
-
                     Text(
                         text = "Instruksjoner:",
                         modifier = Modifier
@@ -184,31 +182,23 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
-
-
                 }
             }
         } else {
             item {
-                Text(
-                    text = "du har kommet til feil side as, siden fikk ikke recipe," +
-                            "enten ligger den ikke i db eller så er det en annen feil"+
-                    "mest sannsynlig er dette en formateringsfeil av jsonfilen fra chatgpt",
-                    color = Color.Black,
-                    fontSize = 28.sp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
-                Text(
-                    text = "recipeid: ${recipe?.id}",
-                    color = Color.Black,
-                    fontSize = 28.sp,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                )
-
+                Column {
+                    Text(
+                        text = "feil med chatgpt, prøv å generer oppskrift på nytt",
+                        color = Color.Black,
+                        fontSize = 28.sp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    )
+                    Button(onClick = {navController.navigate(Screen.Home.route)}) {
+                        Text(text = "Back")
+                    }
+                }
             }
         }
     }
