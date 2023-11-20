@@ -24,4 +24,13 @@
     <string name="history">History</string>
     <string name="prev_generate">Previously Generated</string>
     <string name="save">Save</string>
+
+    <string name="cooktime">Preparation time: </string>
+    <string name="nutrition">Nutrition:</string>
+    <string name="calories">Calories: </string>
+    <string name="protein">Protein: %1$s</string>
+    <string name="carbohydrates">Carbohydrates: %1$s</string>
+    <string name="fat">Fat: %1$s</string>
+    <string name="ingredients">Ingredients:</string>
+    <string name="instructions">Instructions:</string>
 </resources>

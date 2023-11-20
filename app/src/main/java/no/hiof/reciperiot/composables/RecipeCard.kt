@@ -45,9 +45,7 @@ fun RecipeCard(
     recipeViewModel: RecipeViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-
     var favourite by rememberSaveable { mutableStateOf(recipe.favourite) }
-
     recipeViewModel.getNutrition(recipe = recipe)
 
     Card(

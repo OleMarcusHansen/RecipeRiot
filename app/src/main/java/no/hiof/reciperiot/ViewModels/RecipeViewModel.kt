@@ -3,6 +3,7 @@ package no.hiof.reciperiot.ViewModels
 import androidx.lifecycle.ViewModel
 import no.hiof.reciperiot.data.RecipeRepository
 import no.hiof.reciperiot.model.Recipe
+import org.json.JSONArray
 import org.json.JSONObject
 
 class RecipeViewModel() : ViewModel() {
@@ -27,6 +28,16 @@ class RecipeViewModel() : ViewModel() {
             protein = nutrition.getString("protein")
             carbohydrates = nutrition.getString("carbohydrates")
             fat = nutrition.getString("fat")
+        }
+        catch (e: Exception){
+            print(e)
+        }
+    }
+
+    var ingredients: JSONArray = JSONArray("[\"N/A\"]")
+    fun getIngredients(recipe: Recipe){
+        try{
+            ingredients = JSONArray(recipe.recipe_ingredients)
         }
         catch (e: Exception){
             print(e)

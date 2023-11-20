@@ -25,4 +25,13 @@
     <string name="history">Historie</string>
     <string name="prev_generate">Tidligere Generert</string>
     <string name="save">Lagre</string>
+
+    <string name="cooktime">Tilberedningstid: </string>
+    <string name="nutrition">Næringsinnhold:</string>
+    <string name="calories">Kalorier: </string>
+    <string name="protein">Protein: </string>
+    <string name="carbohydrates">Karbohydrater: </string>
+    <string name="fat">Fett: </string>
+    <string name="ingredients">Ingredienser:</string>
+    <string name="instructions">Instruksjoner:</string>
 </resources>

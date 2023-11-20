@@ -24,12 +24,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.google.firebase.firestore.FirebaseFirestore
+import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ViewModels.RecipeViewModel
 import org.json.JSONArray
@@ -43,6 +45,7 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
     LazyColumn {
         if (recipe != null) {
             recipeViewModel.getNutrition(recipe = recipe)
+            recipeViewModel.getIngredients(recipe = recipe)
 
             item {
                 Column(
@@ -91,64 +94,57 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                         modifier = Modifier.height(400.dp)
                     )
                     Text(
-                        text = "Cooktime: ${recipe.cookingTime}",
+                        text = stringResource(R.string.cooktime, recipe.cookingTime),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
                     Text(
-                        text = "Nutrition:",
+                        text = stringResource(R.string.nutrition),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
                         fontSize = 26.sp
                     )
                     Text(
-                        text = "Calories: ${recipeViewModel.calories}",
+                        text = stringResource(R.string.calories, recipeViewModel.calories),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
                     Text(
-                        text = "Protein: ${recipeViewModel.protein}",
+                        text = stringResource(R.string.protein, recipeViewModel.protein),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
                     Text(
-                        text = "Carbohydrates: ${recipeViewModel.carbohydrates}",
+                        text = stringResource(R.string.carbohydrates, recipeViewModel.carbohydrates),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
                     Text(
-                        text = "Fat: ${recipeViewModel.fat}",
+                        text = stringResource(R.string.fat, recipeViewModel.fat),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
                     Text(
-                        text = "Ingredients:",
+                        text = stringResource(R.string.ingredients),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
                         fontSize = 26.sp
                     )
-                    var ingredients: JSONArray = JSONArray("[\"N/A\"]")
-                    try{
-                        ingredients = JSONArray(recipe.recipe_ingredients)
-                    }
-                    catch (e: Exception){
-                        print(e)
-                    }
-                    for (i in 0 until ingredients.length()){
+                    for (i in 0 until recipeViewModel.ingredients.length()){
                         Text(
-                            text=ingredients[i].toString(),
+                            text = recipeViewModel.ingredients[i].toString(),
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 8.dp),
@@ -156,7 +152,7 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                         )
                     }
                     Text(
-                        text = "Instruksjoner:",
+                        text = stringResource(R.string.instructions),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),

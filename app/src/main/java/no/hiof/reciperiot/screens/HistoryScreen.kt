@@ -13,11 +13,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.firebase.firestore.FirebaseFirestore
 import no.hiof.reciperiot.ViewModels.HistoryViewModel
+import no.hiof.reciperiot.composables.RecipeList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryScreen(navController: NavController, db: FirebaseFirestore, historyViewModel: HistoryViewModel = viewModel()) {
-
     Column {
         TextField(
             value = historyViewModel.searchText,
@@ -27,8 +27,8 @@ fun HistoryScreen(navController: NavController, db: FirebaseFirestore, historyVi
             label = { Text("Search") },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp))
-
+                .padding(16.dp)
+        )
         RecipeList(
             recipes = historyViewModel.history.filter { it.title.contains(historyViewModel.searchText, true) },
             navController = navController,
