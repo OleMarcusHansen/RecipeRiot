@@ -42,6 +42,8 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
 
     LazyColumn {
         if (recipe != null) {
+            recipeViewModel.getNutrition(recipe = recipe)
+
             item {
                 Column(
                     modifier = Modifier
@@ -102,43 +104,29 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             .padding(top = 8.dp),
                         fontSize = 26.sp
                     )
-                    var calories = "N/A"
-                    var protein = "N/A"
-                    var carbohydrates = "N/A"
-                    var fat = "N/A"
-                    try{
-                        val nutrition = JSONObject(recipe.recipe_nutrition)
-                        calories = nutrition.getString("calories")
-                        protein = nutrition.getString("protein")
-                        carbohydrates = nutrition.getString("carbohydrates")
-                        fat = nutrition.getString("fat")
-                    }
-                    catch (e: Exception){
-                        print(e)
-                    }
                     Text(
-                        text = "Calories: $calories",
+                        text = "Calories: ${recipeViewModel.calories}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
                     Text(
-                        text = "Protein: $protein",
+                        text = "Protein: ${recipeViewModel.protein}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
                     Text(
-                        text = "Carbohydrates: $carbohydrates",
+                        text = "Carbohydrates: ${recipeViewModel.carbohydrates}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
                         fontSize = 20.sp
                     )
                     Text(
-                        text = "Fat: $fat",
+                        text = "Fat: ${recipeViewModel.fat}",
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(top = 8.dp),
