@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -13,6 +14,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +24,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -77,14 +81,14 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                 Text(stringResource(R.string.home_generate))
             }
         }
-        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+        /*Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
             Button(onClick = {
                 navController.navigate(Screen.History.route)
                 },
                 enabled = homeViewModel.buttonEnabled.value) {
                 Text(stringResource(R.string.prev_generate))
             }
-        }
+        }*/
         RecipeList(
             recipes = homeViewModel.recipes,
             navController = navController,
@@ -94,6 +98,27 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                 Log.e("FirestoreError", "Error fetching data: ${homeViewModel.recipes}")
             }
         )
+    }
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center
+    ) {
+        Spacer(modifier = Modifier.weight(1f))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            FloatingActionButton(
+                onClick = { navController.navigate(Screen.History.route) },
+                modifier = modifier
+                    .padding(16.dp),
+                containerColor = MaterialTheme.colorScheme.primaryContainer
+                ) {
+                //Icon(Icons.Filled.Add, "Floating action button")
+                Text(stringResource(R.string.prev_generate), modifier = Modifier.padding(16.dp))
+            }
+        }
+
     }
 }
 
