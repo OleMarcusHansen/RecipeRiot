@@ -2,6 +2,7 @@ package no.hiof.reciperiot.data
 
 import android.content.ContentValues
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
