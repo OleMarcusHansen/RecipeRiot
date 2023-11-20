@@ -2,13 +2,11 @@ package no.hiof.reciperiot.data
 
 import android.content.ContentValues
 import android.util.Log
-import androidx.compose.runtime.mutableStateListOf
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import com.google.firebase.ktx.Firebase
-import no.hiof.reciperiot.R
 import no.hiof.reciperiot.model.Recipe
 
 class RecipeRepository {
