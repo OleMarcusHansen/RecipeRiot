@@ -38,9 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.google.firebase.firestore.FirebaseFirestore
 import no.hiof.reciperiot.Screen
-import no.hiof.reciperiot.ViewModels.RecipeViewModel
+import no.hiof.reciperiot.ViewModels.FavouriteViewModel
 import no.hiof.reciperiot.model.Recipe
 import org.json.JSONObject
 
@@ -48,13 +47,13 @@ import org.json.JSONObject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavouriteMeals(navController: NavController, db: FirebaseFirestore, RecipeViewModel: RecipeViewModel = viewModel()) {
+fun FavouriteMeals(navController: NavController, favouriteViewModel: FavouriteViewModel = viewModel()) {
 
     Column {
         TextField(
-            value = RecipeViewModel.searchText,
+            value = favouriteViewModel.searchText,
             onValueChange = { newText ->
-                RecipeViewModel.searchText = newText
+                favouriteViewModel.searchText = newText
             },
             label = { Text("Search") },
             modifier = Modifier
@@ -62,11 +61,11 @@ fun FavouriteMeals(navController: NavController, db: FirebaseFirestore, RecipeVi
                 .padding(16.dp))
 
         RecipeList(
-            recipes = RecipeViewModel.recipes.filter { it.title.contains(RecipeViewModel.searchText, true) },
+            recipes = favouriteViewModel.recipes.filter { it.title.contains(favouriteViewModel.searchText, true) },
             navController = navController,
             onFavouriteToggle = {},
             updateRecipeFavouriteStatus = { recipe, fav ->
-                RecipeViewModel.updateRecipeFavouriteStatus(recipe, db, fav)
+                favouriteViewModel.updateRecipeFavouriteStatus(recipe, fav)
             }
         )
     }

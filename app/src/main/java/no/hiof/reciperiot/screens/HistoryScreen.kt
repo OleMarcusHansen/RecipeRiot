@@ -34,7 +34,7 @@ fun HistoryScreen(navController: NavController, db: FirebaseFirestore, RecipeVie
             navController = navController,
             onFavouriteToggle = {},
             updateRecipeFavouriteStatus = { recipe, fav ->
-                RecipeViewModel.updateRecipeFavouriteStatus(recipe, db, fav)
+                RecipeViewModel.updateRecipeFavouriteStatus(recipe, fav)
             }
         )
     }

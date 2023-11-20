@@ -67,7 +67,7 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             onCheckedChange = {
                                 favourite = !favourite
 
-                                RecipeViewModel.updateRecipeFavouriteStatus(recipe, db, favourite)
+                                RecipeViewModel.updateRecipeFavouriteStatus(recipe, favourite)
                             },
                             modifier = Modifier
                                 .padding(16.dp)

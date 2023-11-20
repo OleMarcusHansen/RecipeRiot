@@ -24,7 +24,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -94,7 +93,7 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
             navController = navController,
             onFavouriteToggle = {},
             updateRecipeFavouriteStatus = {recipe, fav ->
-                RecipeViewModel().updateRecipeFavouriteStatus(recipe, db, fav)
+                RecipeViewModel().updateRecipeFavouriteStatus(recipe, fav)
                 Log.e("FirestoreError", "Error fetching data: ${homeViewModel.recipes}")
             }
         )

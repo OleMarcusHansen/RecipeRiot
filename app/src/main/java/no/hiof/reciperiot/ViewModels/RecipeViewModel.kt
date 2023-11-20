@@ -8,37 +8,18 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 import no.hiof.reciperiot.data.RecipeRepository
 import no.hiof.reciperiot.model.Recipe
 
 class RecipeViewModel : ViewModel() {
-
-
     val recipes by mutableStateOf(RecipeRepository().loadFavourites())
     val history by mutableStateOf(RecipeRepository().loadRecipes())
     var searchText by  mutableStateOf("")
 
+    private val recipeRepository = RecipeRepository()
 
-
-
-    fun updateRecipeFavouriteStatus(recipe: Recipe, db: FirebaseFirestore, fav: Boolean) {
-        val docid = recipe.id
-        val updatedRecipe = mapOf("favourite" to fav)
-        val user = com.google.firebase.ktx.Firebase.auth.currentUser
-
-        if (user != null) {
-            db.collection("FavouriteMeals")
-                .document(docid)
-                .set(updatedRecipe, SetOptions.merge())
-                .addOnSuccessListener {
-                    Log.d(ContentValues.TAG, "Recipe favourite updated successfully")
-                }
-                .addOnFailureListener { e ->
-                    Log.e(ContentValues.TAG, "Error updating recipe favourite", e)
-                }
-
-        }
+    fun updateRecipeFavouriteStatus(recipe: Recipe, fav: Boolean) {
+        recipeRepository.updateRecipeFavouriteStatus(recipe, fav)
     }
 
     fun firestoreCleanup(db: FirebaseFirestore) {

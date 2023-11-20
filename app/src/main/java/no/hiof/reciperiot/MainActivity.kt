@@ -174,7 +174,7 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
                 IngredientsScreen(navController, modifier, snackBarHostState)
             }
             composable(Screen.Favourites.route) {
-                FavouriteMeals(navController, db)
+                FavouriteMeals(navController)
             }
             composable(Screen.Shopping.route) {
                 ShoppingListScreen(db = db)

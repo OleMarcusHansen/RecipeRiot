@@ -57,8 +57,24 @@ class RecipeRepository {
         getRecipes(false)
         return loadedRecipes
     }
-    fun loadGeneratedRecipe(): List<Recipe> {
-        return generatedRecipes
+
+    fun updateRecipeFavouriteStatus(recipe: Recipe, fav: Boolean) {
+        val docid = recipe.id
+        val updatedRecipe = mapOf("favourite" to fav)
+        val user = com.google.firebase.ktx.Firebase.auth.currentUser
+
+        if (user != null) {
+            firestore.collection("FavouriteMeals")
+                .document(docid)
+                .set(updatedRecipe, SetOptions.merge())
+                .addOnSuccessListener {
+                    Log.d(ContentValues.TAG, "Recipe favourite updated successfully")
+                }
+                .addOnFailureListener { e ->
+                    Log.e(ContentValues.TAG, "Error updating recipe favourite", e)
+                }
+
+        }
     }
 
     fun handleFirestoreAdd(recipe: Recipe) {
