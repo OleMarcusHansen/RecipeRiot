@@ -32,14 +32,13 @@ import coil.compose.AsyncImage
 import com.google.firebase.firestore.FirebaseFirestore
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ViewModels.RecipeViewModel
-import no.hiof.reciperiot.data.RecipeRepository
 import org.json.JSONArray
 import org.json.JSONObject
 
 @Composable
-fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFirestore, RecipeViewModel: RecipeViewModel = viewModel()) {
-    val recipeRepository = remember { RecipeRepository() }
-    val recipe = recipeRepository.loadRecipes().firstOrNull { it.id == recipeId }
+fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFirestore, recipeViewModel: RecipeViewModel = viewModel()) {
+    //val recipeRepository = remember { RecipeRepository() }
+    val recipe = recipeViewModel.loadRecipe(recipeId)
 
     LazyColumn {
         if (recipe != null) {
@@ -67,7 +66,7 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                             onCheckedChange = {
                                 favourite = !favourite
 
-                                RecipeViewModel.updateRecipeFavouriteStatus(recipe, favourite)
+                                recipeViewModel.updateRecipeFavouriteStatus(recipe, favourite)
                             },
                             modifier = Modifier
                                 .padding(16.dp)

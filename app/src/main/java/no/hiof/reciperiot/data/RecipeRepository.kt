@@ -77,6 +77,35 @@ class RecipeRepository {
         }
     }
 
+    fun firestoreCleanup(db: FirebaseFirestore) {
+        val user = com.google.firebase.ktx.Firebase.auth.currentUser
+        val query = db.collection("FavouriteMeals")
+            .whereEqualTo("userid", user?.uid)
+            .whereEqualTo("favourite", false)
+        query.get()
+            .addOnSuccessListener { documents ->
+                val batch = db.batch()
+                for (document in documents) {
+                    Log.d(ContentValues.TAG, "$document")
+                    val documentRef = db.collection("FavouriteMeals").document(document.id)
+                    Log.d(ContentValues.TAG, "Deleting document with ID: ${document.id}, Data: ${document.data}")
+
+                    batch.delete(documentRef)
+                }
+
+                batch.commit()
+                    .addOnSuccessListener {
+                        Log.d(ContentValues.TAG, "Documents successfully deleted")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(ContentValues.TAG, "Error deleting documents", e)
+                    }
+            }
+            .addOnFailureListener { e ->
+                Log.w(ContentValues.TAG, "Error getting documents", e)
+            }
+    }
+
     fun handleFirestoreAdd(recipe: Recipe) {
 
         val recipeadd = mapOf(

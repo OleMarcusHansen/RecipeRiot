@@ -61,7 +61,7 @@ fun FavouriteMeals(navController: NavController, favouriteViewModel: FavouriteVi
                 .padding(16.dp))
 
         RecipeList(
-            recipes = favouriteViewModel.recipes.filter { it.title.contains(favouriteViewModel.searchText, true) },
+            recipes = favouriteViewModel.favourites.filter { it.title.contains(favouriteViewModel.searchText, true) },
             navController = navController,
             onFavouriteToggle = {},
             updateRecipeFavouriteStatus = { recipe, fav ->

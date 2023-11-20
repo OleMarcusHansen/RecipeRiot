@@ -8,7 +8,7 @@ import no.hiof.reciperiot.data.RecipeRepository
 import no.hiof.reciperiot.model.Recipe
 
 class FavouriteViewModel : ViewModel() {
-    val recipes by mutableStateOf(RecipeRepository().loadFavourites())
+    val favourites by mutableStateOf(RecipeRepository().loadFavourites())
 
     var searchText by  mutableStateOf("")
 

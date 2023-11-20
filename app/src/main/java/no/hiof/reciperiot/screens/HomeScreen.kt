@@ -37,6 +37,7 @@ import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ViewModels.RecipeViewModel
 import no.hiof.reciperiot.ViewModels.HomeViewModel
+import no.hiof.reciperiot.data.RecipeRepository
 import okhttp3.OkHttpClient
 
 @Composable
@@ -93,7 +94,7 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
             navController = navController,
             onFavouriteToggle = {},
             updateRecipeFavouriteStatus = {recipe, fav ->
-                RecipeViewModel().updateRecipeFavouriteStatus(recipe, fav)
+                RecipeRepository().updateRecipeFavouriteStatus(recipe, fav)
                 Log.e("FirestoreError", "Error fetching data: ${homeViewModel.recipes}")
             }
         )
