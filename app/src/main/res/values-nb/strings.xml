@@ -26,12 +26,12 @@
     <string name="prev_generate">Tidligere Generert</string>
     <string name="save">Lagre</string>
 
-    <string name="cooktime">Tilberedningstid: </string>
+    <string name="cooktime">Tilberedningstid: %1$s</string>
     <string name="nutrition">Næringsinnhold:</string>
-    <string name="calories">Kalorier: </string>
-    <string name="protein">Protein: </string>
-    <string name="carbohydrates">Karbohydrater: </string>
-    <string name="fat">Fett: </string>
+    <string name="calories">Kalorier: %1$s</string>
+    <string name="protein">Protein: %1$s</string>
+    <string name="carbohydrates">Karbohydrater: %1$s</string>
+    <string name="fat">Fett: %1$s</string>
     <string name="ingredients">Ingredienser:</string>
     <string name="instructions">Instruksjoner:</string>
 </resources>
