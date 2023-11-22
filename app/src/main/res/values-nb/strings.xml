@@ -35,4 +35,8 @@
     <string name="ingredients">Ingredienser:</string>
     <string name="instructions">Instruksjoner:</string>
     <string name="clear">Slett</string>
+    <string name="log_out">Logg ut</string>
+    <string name="dark_theme">Dark theme</string>
+    <string name="ChatGPT_error">Feil i genereringen av oppskrift fra chatGPT</string>
+    <string name="sign_in">Logg inn</string>
 </resources>

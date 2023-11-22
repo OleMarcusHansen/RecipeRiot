@@ -38,7 +38,6 @@ fun AuthenticationScreen(
     onSignInClick: (String, String) -> Unit,
     //TODO: Fix notification
     showNotification: (String) -> Unit,
-    //showNotification: (String) -> Unit,
     //TODO: Implement sign up
     //onSignUpClick: () -> Unit
 ) {
@@ -54,8 +53,6 @@ fun AuthenticationScreen(
             value = email,
             onValueChange = { email = it },
             label = { Text("Email") },
-            //text = stringResource(R.string.username),
-            //state = email
         )
         TextField(
             value = password,
@@ -97,29 +94,18 @@ fun AuthenticationScreen(
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             onSignInClick(email, password)
-                            val user = Firebase.auth.currentUser
-
-                            if (user != null) {
-                                Log.d(TAG, "Testicular torsion \n${user.uid}")
-                            }
+                            //val user = Firebase.auth.currentUser
                             showNotification(email)
                             // Sign in successful, navigate to the main app screen.
                         } else {
-                            //onSignInClick(email, password)
                             // Sign in failed, display an error message.
                             Log.e(TAG, "Error Login failed")
                         }
                     }
             }
         }) {
-            Text("Sign In")
+            Text(stringResource(R.string.sign_in))
         }
-        /*
-        TextButton(onClick = onSignUpClick) {
-            Text("Don't have an account? Sign Up")
-        }
-
-         */
     }
 }
 
@@ -135,7 +121,7 @@ fun LoginScreen(login: () -> Unit, modifier : Modifier = Modifier, showNotificat
 
         Button(onClick = {
             login()
-            showNotification(username.value) // Pass a sample user string for now
+            showNotification(username.value)
         }) {
             Text(stringResource(R.string.login))
         }

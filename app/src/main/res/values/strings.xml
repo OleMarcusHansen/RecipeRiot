@@ -34,4 +34,8 @@
     <string name="ingredients">Ingredients:</string>
     <string name="instructions">Instructions:</string>
     <string name="clear">Clear</string>
+    <string name="log_out">Log out</string>
+    <string name="dark_theme">Dark theme</string>
+    <string name="ChatGPT_error">Error generating recipe with ChatGPT</string>
+    <string name="sign_in">Sign In</string>
 </resources>
