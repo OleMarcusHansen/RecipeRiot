@@ -56,6 +56,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import no.hiof.reciperiot.composables.AppBottomBar
+import no.hiof.reciperiot.composables.AppTopBar
 import no.hiof.reciperiot.impl.NotificationService
 import no.hiof.reciperiot.screens.AuthenticationScreen
 import no.hiof.reciperiot.screens.FavouriteMeals
@@ -138,7 +140,7 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
     Scaffold(
         topBar = { AppTopBar(navController, modifier) },
         bottomBar = {
-            BottomNavBar(
+            AppBottomBar(
                 navController = navController,
                 bottomNavigationScreens = bottomNavigationScreens
             )
@@ -186,49 +188,4 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
             }
         }
     }
-}
-
-@Composable
-fun BottomNavBar(navController: NavController, bottomNavigationScreens: List<Screen>)
-{
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination?.route
-
-    BottomAppBar {
-        bottomNavigationScreens.forEach { screen ->
-            NavigationBarItem(selected = currentDestination == screen.route
-                , onClick = {
-                    navController.navigate(screen.route)
-                }, icon = {
-                    Icon(imageVector = screen.icon, contentDescription = "Icon")
-                }, label = {
-                    Text(stringResource(id = screen.title), fontSize = 11.sp, maxLines = 1)
-                }
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AppTopBar(navController: NavController,
-              modifier: Modifier = Modifier) {
-    TopAppBar(
-        modifier = modifier.padding(16.dp),
-        title = { Text(text = "") },
-        navigationIcon = {
-            Column(modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-            Image(
-                painter = painterResource(id = R.drawable.reciperiot),
-                contentDescription = null,
-                modifier = Modifier.clickable {
-                    navController.navigate(Screen.Home.route)
-                }
-            )}
-        }
-    )
 }
