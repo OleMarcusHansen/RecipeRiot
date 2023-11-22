@@ -69,7 +69,6 @@ class HomeViewModel : ViewModel() {
                 val defaultRecipe = Recipe(
                     "iv",
                     "Empty bowl - please try again",
-                    R.drawable.food,
                     "https://cdn.discordapp.com/attachments/1148561836724207708/1174328461351997492/image.png?ex=6567319b&is=6554bc9b&hm=554c6bc1c7793a83a9bc3f1b72b5f26edda4a14f243d6bbc25eb318170b28347&",
                     "0",
                     false,
@@ -112,7 +111,6 @@ class HomeViewModel : ViewModel() {
                 val defaultRecipe = Recipe(
                     "ik",
                     "Burned toast - please try again",
-                    R.drawable.food,
                     "https://cdn.discordapp.com/attachments/1148561836724207708/1172152256683065384/image.png?ex=655f46db&is=654cd1db&hm=2450543bf60afc32ad2c67d54b00328112ba7cd43656abb0d32b34f60d339d98&",
                     "60",
                     false,
@@ -146,7 +144,6 @@ class HomeViewModel : ViewModel() {
                             Recipe(
                                 "yh",
                                 messageJSON.getString("recipe_name"),
-                                R.drawable.food,
                                 imageResponseURL,
                                 messageJSON.getString("recipe_time"),
                                 false,
@@ -163,7 +160,6 @@ class HomeViewModel : ViewModel() {
                         val defaultRecipe = Recipe(
                             "uh",
                             "Failed tomato soup - please try again",
-                            R.drawable.food,
                             "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&",
                             "60",
                             false,
@@ -188,7 +184,6 @@ class HomeViewModel : ViewModel() {
             val defaultRecipe = Recipe(
                 "uh",
                 "Failed tomato soup - please try again",
-                R.drawable.food,
                 "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&",
                 "60",
                 false,
@@ -204,7 +199,6 @@ class HomeViewModel : ViewModel() {
             val defaultRecipe = Recipe(
                 "ih",
                 "Failed tomato soup - please try again",
-                R.drawable.food,
                 "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&",
                 "60",
                 false,

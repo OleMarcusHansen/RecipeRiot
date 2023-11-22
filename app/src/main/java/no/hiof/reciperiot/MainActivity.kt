@@ -6,11 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -20,35 +16,22 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.compose.AppTheme
@@ -56,6 +39,8 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import no.hiof.reciperiot.composables.AppBottomBar
+import no.hiof.reciperiot.composables.AppTopBar
 import no.hiof.reciperiot.impl.NotificationService
 import no.hiof.reciperiot.screens.AuthenticationScreen
 import no.hiof.reciperiot.screens.FavouriteMeals
@@ -138,7 +123,7 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
     Scaffold(
         topBar = { AppTopBar(navController, modifier) },
         bottomBar = {
-            BottomNavBar(
+            AppBottomBar(
                 navController = navController,
                 bottomNavigationScreens = bottomNavigationScreens
             )
@@ -186,50 +171,4 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
             }
         }
     }
-}
-
-@Composable
-fun BottomNavBar(navController: NavController, bottomNavigationScreens: List<Screen>)
-{
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination?.route
-
-    BottomAppBar {
-        bottomNavigationScreens.forEach { screen ->
-            NavigationBarItem(selected = currentDestination == screen.route
-                , onClick = {
-                    navController.navigate(screen.route)
-                }, icon = {
-                    Icon(imageVector = screen.icon, contentDescription = "Icon")
-                }, label = {
-                    Text(stringResource(id = screen.title), fontSize = 11.sp, maxLines = 1)
-                }
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AppTopBar(navController: NavController,
-              modifier: Modifier = Modifier) {
-    TopAppBar(
-        modifier = modifier.padding(16.dp),
-        title = { Text(text = "") },
-        navigationIcon = {
-            Column(modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-            Image(
-                painter = painterResource(id = R.drawable.reciperiot),
-                contentDescription = null,
-                modifier = Modifier.clickable {
-                    navController.navigate(Screen.Home.route)
-                }
-
-            )}
-        }
-    )
 }

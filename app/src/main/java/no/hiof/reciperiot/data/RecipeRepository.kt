@@ -17,7 +17,6 @@ class RecipeRepository {
     private val loadedRecipes: MutableList<Recipe> = mutableListOf()
     val generatedRecipes: MutableList<Recipe> = mutableStateListOf()
 
-
     fun getRecipes(test: Boolean){
         val query = if (test) {
             collectionReference
@@ -28,13 +27,11 @@ class RecipeRepository {
                 .whereEqualTo("userid", user?.uid)
         }
 
-
         query.addSnapshotListener { snapshot, exception ->
             if (exception != null) {
                 Log.e("FirestoreError", "Feil ved henting av data: ${exception.message}")
                 return@addSnapshotListener
             }
-
             loadedRecipes.clear()
                 snapshot?.documents?.forEach { documentSnapshot ->
                     val recipe = documentSnapshot.toObject(Recipe::class.java)
@@ -48,7 +45,6 @@ class RecipeRepository {
             }
     }
 
-
     fun loadFavourites(): List<Recipe> {
         getRecipes(true)
         return loadedRecipes
@@ -61,7 +57,6 @@ class RecipeRepository {
     fun updateRecipeFavouriteStatus(recipe: Recipe, fav: Boolean) {
         val docid = recipe.id
         val updatedRecipe = mapOf("favourite" to fav)
-        val user = com.google.firebase.ktx.Firebase.auth.currentUser
 
         if (user != null) {
             firestore.collection("FavouriteMeals")
@@ -73,12 +68,10 @@ class RecipeRepository {
                 .addOnFailureListener { e ->
                     Log.e(ContentValues.TAG, "Error updating recipe favourite", e)
                 }
-
         }
     }
 
     fun firestoreCleanup(db: FirebaseFirestore) {
-        val user = com.google.firebase.ktx.Firebase.auth.currentUser
         val query = db.collection("FavouriteMeals")
             .whereEqualTo("userid", user?.uid)
             .whereEqualTo("favourite", false)
@@ -92,7 +85,6 @@ class RecipeRepository {
 
                     batch.delete(documentRef)
                 }
-
                 batch.commit()
                     .addOnSuccessListener {
                         Log.d(ContentValues.TAG, "Documents successfully deleted")
@@ -111,7 +103,6 @@ class RecipeRepository {
         val recipeadd = mapOf(
             "id" to "",
             "title" to recipe.title,
-            "imageResourceId" to recipe.imageResourceId,
             "imageURL" to recipe.imageURL,
             "cookingTime" to recipe.cookingTime,
             "favourite" to recipe.favourite,
@@ -135,9 +126,7 @@ class RecipeRepository {
     }
 
     private fun updateRecipeId(recipe: Recipe, documentId: String, db: FirebaseFirestore) {
-
         val updatedRecipe = mapOf("id" to documentId)
-        val user = com.google.firebase.ktx.Firebase.auth.currentUser
 
         if (user != null) {
             db.collection("FavouriteMeals")
@@ -157,7 +146,6 @@ class RecipeRepository {
     }
 
     fun handleFirestoreRemove(recipe: Recipe) {
-        val user = com.google.firebase.ktx.Firebase.auth.currentUser
         Log.d(ContentValues.TAG, "Before get()")
         firestore.collection("FavouriteMeals")
             .whereEqualTo("userid", user?.uid)
