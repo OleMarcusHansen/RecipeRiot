@@ -3,6 +3,7 @@ package no.hiof.reciperiot.composables
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,11 +26,9 @@ fun NumberInput(text : String, state : MutableState<String>){
         Text(text + " ")
         TextField(value = state.value,
             onValueChange = {newText -> state.value = newText},
-            textStyle = TextStyle(fontSize = 16.sp),
             modifier = Modifier
                 .background(Color.White)
-                .border(1.dp, Color.Gray)
-                .width(100.dp),
+                .width(65.dp),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             singleLine = true
         )
