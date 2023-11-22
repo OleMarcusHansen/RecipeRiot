@@ -34,4 +34,5 @@
     <string name="fat">Fett: %1$s</string>
     <string name="ingredients">Ingredienser:</string>
     <string name="instructions">Instruksjoner:</string>
+    <string name="clear">Slett</string>
 </resources>

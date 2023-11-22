@@ -41,7 +41,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -66,9 +68,7 @@ import no.hiof.reciperiot.screens.ShoppingListScreen
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
-
 class MainActivity : ComponentActivity() {
-
     val client = OkHttpClient.Builder()
         .connectTimeout(60, TimeUnit.SECONDS)
         .readTimeout(60, TimeUnit.SECONDS)
@@ -157,15 +157,6 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
                         notificationService.showNotification(user)
                     }
                 )
-                /*
-                LoginScreen(
-                    login = { navController.navigate(Screen.Home.route) },
-                    showNotification = { user ->
-                        notificationService.showNotification(user)
-                    }
-                )
-
-                 */
             }
             composable(Screen.Home.route) {
                 HomeScreen(navController, snackBarHostState, client, modifier,db)
@@ -197,7 +188,6 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
     }
 }
 
-
 @Composable
 fun BottomNavBar(navController: NavController, bottomNavigationScreens: List<Screen>)
 {
@@ -212,7 +202,7 @@ fun BottomNavBar(navController: NavController, bottomNavigationScreens: List<Scr
                 }, icon = {
                     Icon(imageVector = screen.icon, contentDescription = "Icon")
                 }, label = {
-                    Text(stringResource(id = screen.title))
+                    Text(stringResource(id = screen.title), fontSize = 11.sp, maxLines = 1)
                 }
             )
         }
@@ -243,14 +233,3 @@ fun AppTopBar(navController: NavController,
         }
     )
 }
-
-
-
-/*
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    AppTheme {
-        MainApp()
-    }
-}*/
