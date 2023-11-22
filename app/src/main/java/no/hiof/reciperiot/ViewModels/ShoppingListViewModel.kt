@@ -12,10 +12,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 class ShoppingListViewModel : ViewModel() {
     var textState by  mutableStateOf("")
     var prevState by  mutableStateOf("")
+    val user = Firebase.auth.currentUser
 
 
     fun getShoppingList(db: FirebaseFirestore, callback: (shoppingListContent: String) -> Unit) {
-        val user = Firebase.auth.currentUser
         // TODO: Ensure logged in
         val docRef = user?.let { db.collection("shoppinglist").document(it.uid) }
         docRef?.get()?.addOnSuccessListener { document ->
@@ -40,7 +40,6 @@ class ShoppingListViewModel : ViewModel() {
     }
 
     fun saveShoppinglistToDb(db: FirebaseFirestore, shoppingListContent: String) {
-        val user = Firebase.auth.currentUser
         // TODO: Ensure user is logged in
         if (user != null) {
             val docRef = db.collection("shoppinglist").document(user.uid)
@@ -60,4 +59,27 @@ class ShoppingListViewModel : ViewModel() {
             Log.e("ShoppingListScreen", "User is not logged in.")
         }
     }
+    fun clearShoppingList(db: FirebaseFirestore) {
+        if (user != null) {
+            val docRef = db.collection("shoppinglist").document(user.uid)
+            val data = hashMapOf(
+                "shoppingListContent" to ""
+            )
+            docRef.set(data)
+                .addOnSuccessListener {
+                    // Successfully saved the shopping list to the database
+                    Log.d("ShoppingListScreen", "Shopping list saved to the database.")
+                    getShoppingList(db) { shoppingListContent ->
+                        textState = shoppingListContent
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("ShoppingListScreen", "Error saving shopping list to the database: $e")
+                }
+        } else {
+            // Handle the case when the user is not logged in
+            Log.e("ShoppingListScreen", "User is not logged in.")
+        }
+    }
+
 }
