@@ -39,7 +39,6 @@ import org.json.JSONObject
 
 @Composable
 fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFirestore, recipeViewModel: RecipeViewModel = viewModel()) {
-    //val recipeRepository = remember { RecipeRepository() }
     val recipe = recipeViewModel.loadRecipe(recipeId)
 
     LazyColumn {
