@@ -31,7 +31,7 @@ fun NumberInput(text : String, state : MutableState<String>){
                 .border(1.dp, Color.Gray)
                 .width(100.dp),
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-            maxLines = 1
+            singleLine = true
         )
     }
 }

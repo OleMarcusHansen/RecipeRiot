@@ -228,7 +228,6 @@ fun AppTopBar(navController: NavController,
                 modifier = Modifier.clickable {
                     navController.navigate(Screen.Home.route)
                 }
-
             )}
         }
     )
