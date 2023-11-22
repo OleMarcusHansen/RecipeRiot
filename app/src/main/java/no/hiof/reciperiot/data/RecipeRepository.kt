@@ -111,7 +111,6 @@ class RecipeRepository {
         val recipeadd = mapOf(
             "id" to "",
             "title" to recipe.title,
-            "imageResourceId" to recipe.imageResourceId,
             "imageURL" to recipe.imageURL,
             "cookingTime" to recipe.cookingTime,
             "favourite" to recipe.favourite,
