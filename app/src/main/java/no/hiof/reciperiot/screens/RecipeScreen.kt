@@ -34,8 +34,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ViewModels.RecipeViewModel
-import org.json.JSONArray
-import org.json.JSONObject
 
 @Composable
 fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFirestore, recipeViewModel: RecipeViewModel = viewModel()) {
@@ -170,7 +168,7 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
             item {
                 Column {
                     Text(
-                        text = "feil med chatgpt, prøv å generer oppskrift på nytt",
+                        text = stringResource(R.string.ChatGPT_error),
                         color = Color.Black,
                         fontSize = 28.sp,
                         modifier = Modifier

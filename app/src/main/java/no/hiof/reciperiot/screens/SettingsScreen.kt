@@ -56,7 +56,8 @@ fun SettingsScreen(logout: () -> Unit, darkTheme: MutableState<Boolean> = mutabl
         SwitchSetting(bool = darkTheme.value,
             update = { newValue ->
                 darkTheme.value = newValue
-                     }, text = "Dark theme")
+                     }, text = stringResource(R.string.dark_theme)
+        )
         SwitchSetting(bool = otherSetting, update = {newValue -> otherSetting = newValue}, text = "Other setting")
         Row{
             Text(stringResource(id = R.string.language))
@@ -95,17 +96,14 @@ fun SettingsScreen(logout: () -> Unit, darkTheme: MutableState<Boolean> = mutabl
     {
         Row (Modifier.fillMaxWidth(),horizontalArrangement = Arrangement.Center){
             Button(onClick = { logout() }) {
-                Text("Log out")
+                Text(stringResource(R.string.log_out))
             }
         }
 
     }
-
-
 }
 
 fun changeLocales(context: Context, localeString: String) {
-
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
         context.getSystemService(LocaleManager::class.java)
             .applicationLocales = LocaleList.forLanguageTags(localeString)
@@ -113,7 +111,6 @@ fun changeLocales(context: Context, localeString: String) {
     else {
         AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(localeString))
     }
-
 }
 
 @Composable
