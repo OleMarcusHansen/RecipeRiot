@@ -39,4 +39,7 @@
     <string name="dark_theme">Dark theme</string>
     <string name="ChatGPT_error">Feil i genereringen av oppskrift fra chatGPT</string>
     <string name="sign_in">Logg inn</string>
+    <string name="search">Søk</string>
+    <string name="add_an_ingredient">Legg til ingrediens</string>
+    <string name="email">Email</string>
 </resources>

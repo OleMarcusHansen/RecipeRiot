@@ -29,8 +29,6 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import no.hiof.reciperiot.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,12 +50,12 @@ fun AuthenticationScreen(
         TextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") },
+            label = { Text(stringResource(R.string.email)) },
         )
         TextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text(stringResource(R.string.password)) },
             visualTransformation = PasswordVisualTransformation()
         )
         val auth = FirebaseAuth.getInstance()
@@ -66,11 +64,6 @@ fun AuthenticationScreen(
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         onSignInClick("default@mcdefaultson.com", "default")
-                        val user = Firebase.auth.currentUser
-
-                        if (user != null) {
-                            Log.d(TAG, "Testicular torsion \n${user.uid}")
-                        }
                         // Sign in successful, navigate to the main app screen.
                         showNotification("Nils") // Pass a sample user string for now
                     } else {

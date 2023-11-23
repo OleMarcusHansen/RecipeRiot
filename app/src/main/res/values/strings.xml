@@ -38,4 +38,7 @@
     <string name="dark_theme">Dark theme</string>
     <string name="ChatGPT_error">Error generating recipe with ChatGPT</string>
     <string name="sign_in">Sign In</string>
+    <string name="search">Search</string>
+    <string name="add_an_ingredient">Add an ingredient</string>
+    <string name="email">Email</string>
 </resources>

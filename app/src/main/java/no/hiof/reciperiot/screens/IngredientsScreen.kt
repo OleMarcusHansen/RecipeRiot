@@ -182,7 +182,7 @@ fun IngredientsScreen(
                     OutlinedTextField(
                         value = ingredientScreenViewModel.newIngredient,
                         onValueChange = { ingredientScreenViewModel.newIngredient = it },
-                        label = { Text("Add an ingredient") }
+                        label = { Text(stringResource(R.string.add_an_ingredient)) }
                     )
 
                     // Add ingredient button, adds ingredient to list
