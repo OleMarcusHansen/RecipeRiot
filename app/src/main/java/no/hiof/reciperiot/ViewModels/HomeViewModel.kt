@@ -82,7 +82,8 @@ class HomeViewModel : ViewModel() {
 
             //prompt til chatGPT
             //bør bli justert og testet for å få best mulig resultat
-            val prompt = """I have only the ingredients: ${ingredients}. I have ${time} minutes to make food. Generate a recipe for me. Your output should be in JSON format: {recipe_name: String, recipe_time: String, recipe_instructions: String, recipe_nutrition: Object, recipe_ingredients: Array}"""
+            //val prompt = """I have only the ingredients: ${ingredients}. I have ${time} minutes to make food. Generate a recipe for me. Your output should be in JSON format: {recipe_name: String, recipe_time: String, recipe_instructions: String, recipe_nutrition: Object, recipe_ingredients: Array}"""
+            val prompt = """Generate a recipe with the ingredients: ${ingredients} that takes ${time} minutes to make. Output in JSON format: {recipe_name: String, recipe_time: String, recipe_instructions: String, recipe_nutrition: Object, recipe_ingredients: Array}"""
 
             Log.i("RecipeGeneration", "Start generating recipe with prompt: $prompt")
 
@@ -125,7 +126,8 @@ class HomeViewModel : ViewModel() {
             // Handle the response and return the list of recipes
             if (response.isSuccessful) {
                 val responseString = response.body?.string()
-                //println(responseString)
+                println(responseString)
+                Log.e("time", "time: " + (response.receivedResponseAtMillis - response.sentRequestAtMillis))
                 if (responseString != null) {
                     try{
                         val responseJSON = JSONObject(responseString)
