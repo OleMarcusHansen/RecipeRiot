@@ -29,10 +29,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import no.hiof.reciperiot.R
 import no.hiof.reciperiot.ViewModels.RecipeViewModel
 import no.hiof.reciperiot.model.Recipe
 
@@ -75,7 +77,10 @@ fun RecipeCard(
             }
             Column(modifier = Modifier.width(with(LocalDensity.current) { 256.toDp() }),
                 horizontalAlignment = Alignment.End){
-                AsyncImage(model = recipe.imageURL, contentDescription = "Image of the recipe")
+                AsyncImage(
+                    model = recipe.imageURL,
+                    contentDescription = "Image of the recipe",
+                    error = painterResource(id = R.drawable.food))
                 IconToggleButton(
                     checked = favourite,
                     onCheckedChange = {

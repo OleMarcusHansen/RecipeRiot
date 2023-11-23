@@ -24,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -88,7 +89,8 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                     AsyncImage(
                         model = recipe.imageURL,
                         contentDescription = "Image of the recipe",
-                        modifier = Modifier.height(400.dp)
+                        modifier = Modifier.height(400.dp),
+                        error = painterResource(id = R.drawable.food)
                     )
                     Text(
                         text = stringResource(R.string.cooktime, recipe.cookingTime),
