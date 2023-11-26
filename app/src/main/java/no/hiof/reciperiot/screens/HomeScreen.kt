@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
@@ -34,8 +33,8 @@ import no.hiof.reciperiot.data.RecipeRepository
 import okhttp3.OkHttpClient
 
 @Composable
-fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, client: OkHttpClient, modifier: Modifier = Modifier, db: FirebaseFirestore, homeViewModel: HomeViewModel = viewModel()) {
-    homeViewModel.getIngredientsFromFirestore(db)
+fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, client: OkHttpClient, modifier: Modifier = Modifier, homeViewModel: HomeViewModel = viewModel()) {
+    homeViewModel.updateIngredientsList()
 
     // Til snackbar
     val scope = rememberCoroutineScope()

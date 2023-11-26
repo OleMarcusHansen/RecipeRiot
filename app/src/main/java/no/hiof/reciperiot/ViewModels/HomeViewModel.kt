@@ -6,17 +6,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
-import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Secrets
+import no.hiof.reciperiot.data.IngredientsRepository
 import no.hiof.reciperiot.data.RecipeRepository
 import no.hiof.reciperiot.model.Recipe
-import no.hiof.reciperiot.screens.getIngredients
 import okhttp3.Call
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
@@ -35,13 +33,14 @@ class HomeViewModel : ViewModel() {
     var ingredients by mutableStateOf(emptyList<String>())
     val buttonEnabled = mutableStateOf(true)
 
-    private val repository = RecipeRepository()
+    private val recipeRepository = RecipeRepository()
+    private val ingredientRepository = IngredientsRepository()
 
-    // Function to fetch ingredients from Firestore
-    fun getIngredientsFromFirestore(db: FirebaseFirestore) {
-        getIngredients(db) { data ->
+    fun updateIngredientsList() {
+        ingredientRepository.fetchIngredients() { data ->
             if (data != null) {
-                val firestoreIngredients = data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
+                val firestoreIngredients =
+                    data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
                 ingredients = firestoreIngredients
                     .filter {it.second.value}
                     .map {it.first}
@@ -53,10 +52,10 @@ class HomeViewModel : ViewModel() {
 
     // Liste med recipes. For å kanskje generere flere samtidig
     //val recipes = mutableStateOf(repository.loadGeneratedRecipe())
-    val recipes = repository.generatedRecipes
+    val recipes = recipeRepository.generatedRecipes
 
     fun addToDatabase(recipe: Recipe){
-        repository.handleFirestoreAdd(recipe)
+        recipeRepository.handleFirestoreAdd(recipe)
         //recipes.value = repository.loadGeneratedRecipe()
     }
 

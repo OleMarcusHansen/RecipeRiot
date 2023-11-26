@@ -1,7 +1,5 @@
 package no.hiof.reciperiot.screens
 
-import android.content.ContentValues.TAG
-import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -41,40 +39,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.HapticFeedbackConstantsCompat.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ViewModels.IngredientsViewModel
-
-
-
-// Used in HomeViewModel to get ingredients from firestore
-fun getIngredients(db: FirebaseFirestore, callback: (Map<String, Any>?) -> Unit) {
-    val user = Firebase.auth.currentUser
-    // TODO: Ensure logged in
-    val docRef = user?.let { db.collection("ingredients").document(it.uid) }
-    docRef?.get()?.addOnSuccessListener { document ->
-        if (document != null && document.exists()) {
-            callback(document.data)
-        } else {
-            val emptyData = emptyMap<String, Any>()
-            docRef.set(emptyData)
-                ?.addOnSuccessListener {
-                    callback(emptyData)
-                }
-                ?.addOnFailureListener { exception ->
-                    Log.d(TAG, "Error: Could not create doc", exception)
-                    callback(null)
-                }
-        }
-    }?.addOnFailureListener { exception ->
-        Log.d(TAG, "get failed with ", exception)
-        callback(null)
-    }
-}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -84,7 +52,6 @@ fun IngredientRow(
     ingredientViewModel: IngredientsViewModel = viewModel(),
     onCheckedChange: (Boolean) -> Unit)
 {
-
     val haptics = LocalHapticFeedback.current
     var expandedMenu by remember { mutableStateOf(false)}
     var menuRowId by rememberSaveable { mutableStateOf(name) }
@@ -139,11 +106,11 @@ fun IngredientsScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     snackbarHost: SnackbarHostState,
-    ingredientScreenViewModel: IngredientsViewModel = viewModel()
+    ingredientsViewModel: IngredientsViewModel = viewModel()
 ) {
 
     //Fetch data from Firestore
-    ingredientScreenViewModel.updateIngredientsList()
+    ingredientsViewModel.updateIngredientsList()
 
     //Til snackbar
     val scope = rememberCoroutineScope()
@@ -180,24 +147,24 @@ fun IngredientsScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     OutlinedTextField(
-                        value = ingredientScreenViewModel.newIngredient,
-                        onValueChange = { ingredientScreenViewModel.newIngredient = it },
+                        value = ingredientsViewModel.newIngredient,
+                        onValueChange = { ingredientsViewModel.newIngredient = it },
                         label = { Text(stringResource(R.string.add_an_ingredient)) }
                     )
 
                     // Add ingredient button, adds ingredient to list
                     Button(onClick = {
-                        if (ingredientScreenViewModel.newIngredient != "") {
-                            ingredientScreenViewModel.ingredientsList =
-                                ingredientScreenViewModel.ingredientsList + Pair(
-                                    ingredientScreenViewModel.newIngredient,
+                        if (ingredientsViewModel.newIngredient != "") {
+                            ingredientsViewModel.ingredientsList =
+                                ingredientsViewModel.ingredientsList + Pair(
+                                    ingredientsViewModel.newIngredient,
                                     mutableStateOf(true)
                                 )
 
                             // save new ingredient to firestore
-                            ingredientScreenViewModel.saveIngredientsToDb()
+                            ingredientsViewModel.saveIngredientsToDb()
 
-                            ingredientScreenViewModel.newIngredient = ""
+                            ingredientsViewModel.newIngredient = ""
 
                             scope.launch {
                                 snackbarHost.showSnackbar("Ingredient added")
@@ -209,7 +176,7 @@ fun IngredientsScreen(
                 }
 
 
-                ingredientScreenViewModel.ingredientsList.forEach { (name, checkedState) ->
+                ingredientsViewModel.ingredientsList.forEach { (name, checkedState) ->
                     IngredientRow(
 
                         name = name,
@@ -235,7 +202,7 @@ fun IngredientsScreen(
                 horizontalArrangement = Arrangement.Center
             ) {
                 FloatingActionButton(
-                    onClick = { ingredientScreenViewModel.saveIngredientsToDb()
+                    onClick = { ingredientsViewModel.saveIngredientsToDb()
                               reRoutetoHomeScreen()},
                     modifier = modifier
                         .padding(16.dp),
