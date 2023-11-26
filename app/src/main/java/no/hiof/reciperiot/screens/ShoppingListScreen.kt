@@ -28,32 +28,32 @@ import no.hiof.reciperiot.ViewModels.ShoppingListViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ShoppingListScreen(modifier: Modifier = Modifier, db: FirebaseFirestore, ShoppingListViewModel: ShoppingListViewModel = viewModel()) {
+fun ShoppingListScreen(modifier: Modifier = Modifier, db: FirebaseFirestore, shoppingListViewModel: ShoppingListViewModel = viewModel()) {
     //val textState = remember { mutableStateOf("") }
     //val prevState = remember { mutableStateOf("") }
-    ShoppingListViewModel.getShoppingList(db) { data ->
-        if (ShoppingListViewModel.textState.isEmpty()) {
-            ShoppingListViewModel.textState = data.toString()
+    shoppingListViewModel.getShoppingList(db) { data ->
+        if (shoppingListViewModel.textState.isEmpty()) {
+            shoppingListViewModel.textState = data
         }
     }
     Card(modifier = modifier
         .fillMaxSize()
         .padding(10.dp, 0.dp, 10.dp, 95.dp),
         elevation = CardDefaults.cardElevation(8.dp)){
-        TextField(value = ShoppingListViewModel.textState,
+        TextField(value = shoppingListViewModel.textState,
             onValueChange = { newText ->
-                ShoppingListViewModel.textState = newText
+                shoppingListViewModel.textState = newText
             },
             textStyle = TextStyle(fontSize = 16.sp),
             label = {Text("Shopping List")},
             modifier = modifier.fillMaxSize()
         )
     }
-    LaunchedEffect(ShoppingListViewModel.textState) {
+    LaunchedEffect(shoppingListViewModel.textState) {
         //TODO: sjekke om if burde være i viewmodel
-        if (ShoppingListViewModel.prevState != ShoppingListViewModel.textState) {
-            ShoppingListViewModel.saveShoppinglistToDb(db, ShoppingListViewModel.textState)
-            ShoppingListViewModel.prevState = ShoppingListViewModel.textState
+        if (shoppingListViewModel.prevState != shoppingListViewModel.textState) {
+            shoppingListViewModel.saveShoppinglistToDb(db, shoppingListViewModel.textState)
+            shoppingListViewModel.prevState = shoppingListViewModel.textState
         }
     }
     Column(
@@ -66,7 +66,7 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, db: FirebaseFirestore, Sho
             horizontalArrangement = Arrangement.Center
         ) {
             FloatingActionButton(
-                onClick = { ShoppingListViewModel.clearShoppingList(db) },
+                onClick = { shoppingListViewModel.clearShoppingList(db) },
                 modifier = modifier
                     .padding(16.dp),
                 containerColor = MaterialTheme.colorScheme.primaryContainer,

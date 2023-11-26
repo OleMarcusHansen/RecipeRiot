@@ -1,6 +1,5 @@
 package no.hiof.reciperiot.screens
 
-import android.content.res.Resources
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -56,18 +55,30 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
             )
         }
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            val generateString = stringResource(id = R.string.snackbar_generate)
+            val generatedString = stringResource(id = R.string.snackbar_generated)
+            val errorString = stringResource(id = R.string.snackbar_error)
             Button(onClick = {
                 scope.launch {
                     homeViewModel.buttonEnabled.value = false
-                    snackbarHost.showSnackbar("Generate Recipe")
+                    snackbarHost.showSnackbar(generateString)
                 }
                 /*ChatGPT*/
                 scope.launch {
                     val newRecipes = homeViewModel.generateGPT(client, homeViewModel.ingredients, homeViewModel.time.value)
                     //homeViewModel.recipes.value = newRecipes
+                    var gotError = false
+                    if (newRecipes[0].id.contains("error")){
+                        gotError = true
+                    }
                     homeViewModel.addToDatabase(newRecipes[0])
                     homeViewModel.buttonEnabled.value = true
-                    snackbarHost.showSnackbar("Recipe Generated")
+                    if (gotError){
+                        snackbarHost.showSnackbar(errorString)
+                    }
+                    else{
+                        snackbarHost.showSnackbar(generatedString)
+                    }
                 }
             },
                 enabled = homeViewModel.buttonEnabled.value) {

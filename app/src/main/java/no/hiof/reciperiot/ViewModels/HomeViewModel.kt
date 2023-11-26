@@ -66,7 +66,7 @@ class HomeViewModel : ViewModel() {
             if (ingredients.isEmpty() || time == "" || time.toInt() <= 0){
                 Log.w("InvalidInput", "Invalid input for ingredients and/or time")
                 val defaultRecipe = Recipe(
-                    "iv",
+                    "error_iv",
                     "Empty bowl - please try again",
                     "https://cdn.discordapp.com/attachments/1148561836724207708/1174328461351997492/image.png?ex=6567319b&is=6554bc9b&hm=554c6bc1c7793a83a9bc3f1b72b5f26edda4a14f243d6bbc25eb318170b28347&",
                     "0",
@@ -109,7 +109,7 @@ class HomeViewModel : ViewModel() {
                 // Log error and return default timeout recipe
                 Log.e("ChatCompletionError", "Error calling API: ${exception.message}")
                 val defaultRecipe = Recipe(
-                    "ik",
+                    "error_ik",
                     "Burned toast - please try again",
                     "https://cdn.discordapp.com/attachments/1148561836724207708/1172152256683065384/image.png?ex=655f46db&is=654cd1db&hm=2450543bf60afc32ad2c67d54b00328112ba7cd43656abb0d32b34f60d339d98&",
                     "60",
@@ -159,7 +159,7 @@ class HomeViewModel : ViewModel() {
                     catch (exception: JSONException){
                         Log.e("ChatCompletionError", "Error parsing chat completion to JSON: ${exception.message}")
                         val defaultRecipe = Recipe(
-                            "uh",
+                            "error_uh",
                             "Failed tomato soup - please try again",
                             "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&",
                             "60",
@@ -183,7 +183,7 @@ class HomeViewModel : ViewModel() {
             // Log error and return default failed recipe
             Log.e("ChatCompletionError", "Error generating recipe")
             val defaultRecipe = Recipe(
-                "uh",
+                "error_uh",
                 "Failed tomato soup - please try again",
                 "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&",
                 "60",
@@ -198,7 +198,7 @@ class HomeViewModel : ViewModel() {
         catch (exception: Exception){
             Log.e("ParseError", "Error parsing time to int: ${exception.message}")
             val defaultRecipe = Recipe(
-                "ih",
+                "error_ih",
                 "Failed tomato soup - please try again",
                 "https://cdn.discordapp.com/attachments/1148561836724207708/1172151716741906503/image.png?ex=655f465a&is=654cd15a&hm=2ee66b50819a6faa6c8b4e3afa638b5540f1cd59f386703b10b40609ac7645a4&",
                 "60",

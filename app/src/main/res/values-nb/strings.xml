@@ -45,4 +45,5 @@
 
     <string name="snackbar_generate">Genererer Oppskrift</string>
     <string name="snackbar_generated">Oppskrift Generert</string>
+    <string name="snackbar_error">Oppskriftgenerering Feilet</string>
 </resources>

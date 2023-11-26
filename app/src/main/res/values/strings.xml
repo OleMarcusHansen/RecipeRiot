@@ -42,6 +42,7 @@
     <string name="add_an_ingredient">Add an ingredient</string>
     <string name="email">Email</string>
 
-    <string name="snackbar_generate">Generate Recipe</string>
+    <string name="snackbar_generate">Generating Recipe</string>
     <string name="snackbar_generated">Recipe Generated</string>
+    <string name="snackbar_error">Error Generating Recipe</string>
 </resources>
