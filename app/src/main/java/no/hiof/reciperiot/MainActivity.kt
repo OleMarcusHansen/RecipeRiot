@@ -117,7 +117,6 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
         Screen.Favourites,
         Screen.Shopping,
         Screen.Settings
-
     )
 
     val snackBarHostState = remember { SnackbarHostState() }
@@ -154,7 +153,7 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
                 )
             }
             composable(Screen.Home.route) {
-                HomeScreen(navController, snackBarHostState, client, modifier,db)
+                HomeScreen(navController, snackBarHostState, client, modifier)
             }
             composable(Screen.Ingredients.route) {
                 IngredientsScreen(navController, modifier, snackBarHostState)
