@@ -110,8 +110,6 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
     val configuration = LocalConfiguration.current
     var topPadding = 100.dp
 
-    val navEnabled = remember {mutableStateOf(false)}
-
     Scaffold(
         topBar = {
             if (configuration.orientation != ORIENTATION_LANDSCAPE){
@@ -125,8 +123,7 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
         bottomBar = {
             AppBottomBar(
                 navController = navController,
-                bottomNavigationScreens = bottomNavigationScreens,
-                navEnabled = navEnabled.value
+                bottomNavigationScreens = bottomNavigationScreens
             )
         },
         snackbarHost = { SnackbarHost(snackBarHostState)
@@ -136,9 +133,7 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
             composable(Screen.Login.route) {
                 AuthenticationScreen(
                     onSignInClick = { email, password ->
-                        navEnabled.value = true
                         navController.navigate(Screen.Home.route)
-
                     },
                     showNotification = { user ->
                         notificationService.showNotification(user)
