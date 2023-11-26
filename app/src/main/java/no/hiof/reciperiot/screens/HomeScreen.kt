@@ -110,7 +110,6 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                     .padding(16.dp),
                 containerColor = MaterialTheme.colorScheme.primaryContainer
                 ) {
-                //Icon(Icons.Filled.Add, "Floating action button")
                 Text(stringResource(R.string.prev_generate), modifier = Modifier.padding(16.dp))
             }
         }

@@ -20,7 +20,6 @@ class IngredientsViewModel : ViewModel() {
     }
 
     fun saveIngredientsToDb() {
-        //TODO: ensure logged in
         val ingredientsToSave =
             ingredientsList.map { (name, checkedState) ->
                 name to checkedState.value
@@ -39,41 +38,4 @@ class IngredientsViewModel : ViewModel() {
             }
         }
     }
-
-    /*
-    fun getIngredientsToIngredientScreen(callback: (Map<String, Any>?) -> Unit) {
-        // TODO: Ensure logged in
-        val docRef = user?.let { db.collection("ingredients").document(it.uid) }
-        docRef?.get()?.addOnSuccessListener { document ->
-            if (document != null && document.exists()) {
-                callback(document.data)
-            } else {
-                val emptyData = emptyMap<String, Any>()
-                docRef.set(emptyData)
-                    ?.addOnSuccessListener {
-                        callback(emptyData)
-                    }
-                    ?.addOnFailureListener { exception ->
-                        Log.d(ContentValues.TAG, "Error: Could not create doc", exception)
-                        callback(null)
-                    }
-            }
-        }?.addOnFailureListener { exception ->
-            Log.d(ContentValues.TAG, "get failed with ", exception)
-            callback(null)
-        }
-
-    }
-    fun fetchDataFromFireStore() {
-        getIngredientsToIngredientScreen() { data ->
-            if (data != null) {
-                val firestoreIngredients =
-                    data.entries.map { it.key to mutableStateOf(it.value as Boolean) }
-                ingredientsList = firestoreIngredients
-            } else {
-                println("No data or error")
-            }
-        }
-    }
-    */
 }
