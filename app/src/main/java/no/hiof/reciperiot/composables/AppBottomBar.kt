@@ -13,7 +13,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import no.hiof.reciperiot.Screen
 
 @Composable
-fun AppBottomBar(navController: NavController, bottomNavigationScreens: List<Screen>)
+fun AppBottomBar(navController: NavController, bottomNavigationScreens: List<Screen>, navEnabled: Boolean = true)
 {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination?.route
@@ -27,7 +27,8 @@ fun AppBottomBar(navController: NavController, bottomNavigationScreens: List<Scr
                     Icon(imageVector = screen.icon, contentDescription = "Icon")
                 }, label = {
                     Text(stringResource(id = screen.title), fontSize = 11.sp, maxLines = 1)
-                }
+                },
+                enabled = navEnabled
             )
         }
     }
