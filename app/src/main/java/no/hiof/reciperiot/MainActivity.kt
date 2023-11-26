@@ -1,10 +1,8 @@
 package no.hiof.reciperiot
 
 import android.annotation.SuppressLint
-import android.content.ContentValues.TAG
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -86,12 +84,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "Destroy")
-        //RecipeViewModel().firestoreCleanup(db)
-        Firebase.auth.signOut()
     }
 }
 sealed class Screen(val route: String, val title: Int, val icon: ImageVector){
