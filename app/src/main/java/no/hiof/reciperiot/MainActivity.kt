@@ -54,14 +54,14 @@ import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
 class MainActivity : ComponentActivity() {
-    val client = OkHttpClient.Builder()
+    private val client = OkHttpClient.Builder()
         .connectTimeout(60, TimeUnit.SECONDS)
         .readTimeout(60, TimeUnit.SECONDS)
         .writeTimeout(60, TimeUnit.SECONDS)
         .build()
 
     // Firestore connection, maybe change this
-    val db = Firebase.firestore
+    private val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -165,7 +165,7 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
             composable("${Screen.RecipePage.route}/{recipeid}",
                 arguments = listOf(navArgument("recipeid"){ type = NavType.StringType})
             ) { backStackEntry ->
-                RecipePage1(navController, backStackEntry.arguments!!.getString("recipeid", "heipa"), db)
+                RecipePage1(navController, backStackEntry.arguments!!.getString("recipeid", "heipa"))
             }
             composable(Screen.History.route) {
                 HistoryScreen(navController, db)
