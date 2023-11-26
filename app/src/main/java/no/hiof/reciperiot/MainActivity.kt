@@ -60,7 +60,6 @@ class MainActivity : ComponentActivity() {
         .writeTimeout(60, TimeUnit.SECONDS)
         .build()
 
-    // Firestore connection, maybe change this
     private val db = Firebase.firestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,11 +74,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // Call LoginScreen with the showNotification function
-                    /*LoginScreen(login = { /* Handle successful login */ }, showNotification = { user ->
-                        service.showNotification(user)
-                    })*/
-
                     MainApp(service, client, db, darkTheme)
                 }
             }

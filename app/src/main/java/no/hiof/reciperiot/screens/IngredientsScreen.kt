@@ -130,7 +130,6 @@ fun IngredientsScreen(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
 
                     ) {
-                    //Icon(Icons.Filled.Add, "Floating action button")
                     Text(stringResource(R.string.save), modifier = Modifier.padding(16.dp))
                 }
             }

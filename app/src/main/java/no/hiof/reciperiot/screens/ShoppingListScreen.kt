@@ -29,8 +29,6 @@ import no.hiof.reciperiot.ViewModels.ShoppingListViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingListScreen(modifier: Modifier = Modifier, db: FirebaseFirestore, ShoppingListViewModel: ShoppingListViewModel = viewModel()) {
-    //val textState = remember { mutableStateOf("") }
-    //val prevState = remember { mutableStateOf("") }
     ShoppingListViewModel.getShoppingList(db) { data ->
         if (ShoppingListViewModel.textState.isEmpty()) {
             ShoppingListViewModel.textState = data.toString()
@@ -50,7 +48,6 @@ fun ShoppingListScreen(modifier: Modifier = Modifier, db: FirebaseFirestore, Sho
         )
     }
     LaunchedEffect(ShoppingListViewModel.textState) {
-        //TODO: sjekke om if burde være i viewmodel
         if (ShoppingListViewModel.prevState != ShoppingListViewModel.textState) {
             ShoppingListViewModel.saveShoppinglistToDb(db, ShoppingListViewModel.textState)
             ShoppingListViewModel.prevState = ShoppingListViewModel.textState

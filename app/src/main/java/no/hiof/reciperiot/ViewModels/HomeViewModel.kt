@@ -80,7 +80,6 @@ class HomeViewModel : ViewModel() {
             }
 
             //prompt til chatGPT
-            //bør bli justert og testet for å få best mulig resultat
             //val prompt = """I have only the ingredients: ${ingredients}. I have ${time} minutes to make food. Generate a recipe for me. Your output should be in JSON format: {recipe_name: String, recipe_time: String, recipe_instructions: String, recipe_nutrition: Object, recipe_ingredients: Array}"""
             val prompt = """Generate a recipe with the ingredients: ${ingredients} that takes ${time} minutes to make. Output in JSON format: {recipe_name: String, recipe_time: String, recipe_instructions: String, recipe_nutrition: Object, recipe_ingredients: Array}"""
 
@@ -213,8 +212,7 @@ class HomeViewModel : ViewModel() {
     }
 
     suspend fun generateImage(client: OkHttpClient, recipeName: String): String {
-        //prompt
-        //bør bli justert og testet for å få best mulig resultat
+
         val prompt = """Dish called $recipeName"""
 
         Log.i("ImageGeneration", "Start generating image with prompt: $prompt")

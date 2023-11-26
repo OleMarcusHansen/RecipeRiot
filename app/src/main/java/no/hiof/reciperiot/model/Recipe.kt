@@ -1,7 +1,5 @@
 package no.hiof.reciperiot.model
 
-import androidx.annotation.DrawableRes
-
 data class Recipe(
     val id: String = "",
     val title: String = "",

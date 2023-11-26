@@ -72,6 +72,7 @@ class RecipeRepository {
     }
 
     fun firestoreCleanup(db: FirebaseFirestore) {
+        //Ikke brukt
         val query = db.collection("FavouriteMeals")
             .whereEqualTo("userid", user?.uid)
             .whereEqualTo("favourite", false)
@@ -146,6 +147,7 @@ class RecipeRepository {
     }
 
     fun handleFirestoreRemove(recipe: Recipe) {
+        //ikke brukt
         Log.d(ContentValues.TAG, "Before get()")
         firestore.collection("FavouriteMeals")
             .whereEqualTo("userid", user?.uid)

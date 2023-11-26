@@ -42,7 +42,6 @@ import no.hiof.reciperiot.R
 @Composable
 fun SettingsScreen(logout: () -> Unit, darkTheme: MutableState<Boolean> = mutableStateOf(false), modifier : Modifier = Modifier) {
     val context = LocalContext.current
-    //var darkTheme by remember { mutableStateOf(false) }
     var otherSetting by remember { mutableStateOf(false) }
 
     var langExpanded by remember { mutableStateOf(false)}

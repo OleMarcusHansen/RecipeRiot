@@ -63,7 +63,6 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                 /*ChatGPT*/
                 scope.launch {
                     val newRecipes = homeViewModel.generateGPT(client, homeViewModel.ingredients, homeViewModel.time.value)
-                    //homeViewModel.recipes.value = newRecipes
                     homeViewModel.addToDatabase(newRecipes[0])
                     homeViewModel.buttonEnabled.value = true
                     snackbarHost.showSnackbar("Oppskrift generert")
@@ -98,7 +97,6 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                     .padding(16.dp),
                 containerColor = MaterialTheme.colorScheme.primaryContainer
                 ) {
-                //Icon(Icons.Filled.Add, "Floating action button")
                 Text(stringResource(R.string.prev_generate), modifier = Modifier.padding(16.dp))
             }
         }
