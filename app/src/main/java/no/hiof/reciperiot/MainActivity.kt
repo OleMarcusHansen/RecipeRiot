@@ -2,6 +2,7 @@ package no.hiof.reciperiot
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
+import android.content.res.Configuration.ORIENTATION_LANDSCAPE
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -28,6 +29,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -120,8 +122,16 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
 
     val snackBarHostState = remember { SnackbarHostState() }
 
+    val configuration = LocalConfiguration.current
+    var topPadding = 0.dp
+
     Scaffold(
-        topBar = { AppTopBar(navController, modifier) },
+        topBar = {
+            if (configuration.orientation != ORIENTATION_LANDSCAPE){
+                AppTopBar(navController, modifier)
+                topPadding = 100.dp
+            }
+         },
         bottomBar = {
             AppBottomBar(
                 navController = navController,
@@ -131,7 +141,7 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
         snackbarHost = { SnackbarHost(snackBarHostState)
         }
     ) { innerPadding ->
-        NavHost(navController = navController, startDestination = Screen.Login.route, modifier = Modifier.padding(top = 100.dp).padding(bottom = 80.dp)) {
+        NavHost(navController = navController, startDestination = Screen.Login.route, modifier = Modifier.padding(top = topPadding).padding(bottom = 80.dp)) {
             composable(Screen.Login.route) {
                 AuthenticationScreen(
                     onSignInClick = { email, password ->
