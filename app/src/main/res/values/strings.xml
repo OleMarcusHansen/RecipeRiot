@@ -41,4 +41,7 @@
     <string name="search">Search</string>
     <string name="add_an_ingredient">Add an ingredient</string>
     <string name="email">Email</string>
+
+    <string name="snackbar_generate">Generate Recipe</string>
+    <string name="snackbar_generated">Recipe Generated</string>
 </resources>

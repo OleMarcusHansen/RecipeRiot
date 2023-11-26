@@ -114,13 +114,16 @@ fun MainApp(notificationService: NotificationService, client: OkHttpClient,db: F
     val snackBarHostState = remember { SnackbarHostState() }
 
     val configuration = LocalConfiguration.current
-    var topPadding = 0.dp
+    var topPadding = 100.dp
 
     Scaffold(
         topBar = {
             if (configuration.orientation != ORIENTATION_LANDSCAPE){
                 AppTopBar(navController, modifier)
                 topPadding = 100.dp
+            }
+            else{
+                topPadding = 0.dp
             }
          },
         bottomBar = {

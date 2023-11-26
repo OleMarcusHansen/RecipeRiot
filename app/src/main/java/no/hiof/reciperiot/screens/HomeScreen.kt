@@ -1,5 +1,6 @@
 package no.hiof.reciperiot.screens
 
+import android.content.res.Resources
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -58,7 +59,7 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
             Button(onClick = {
                 scope.launch {
                     homeViewModel.buttonEnabled.value = false
-                    snackbarHost.showSnackbar("Genererer oppskrift")
+                    snackbarHost.showSnackbar("Generate Recipe")
                 }
                 /*ChatGPT*/
                 scope.launch {
@@ -66,7 +67,7 @@ fun HomeScreen(navController: NavController, snackbarHost : SnackbarHostState, c
                     //homeViewModel.recipes.value = newRecipes
                     homeViewModel.addToDatabase(newRecipes[0])
                     homeViewModel.buttonEnabled.value = true
-                    snackbarHost.showSnackbar("Oppskrift generert")
+                    snackbarHost.showSnackbar("Recipe Generated")
                 }
             },
                 enabled = homeViewModel.buttonEnabled.value) {
