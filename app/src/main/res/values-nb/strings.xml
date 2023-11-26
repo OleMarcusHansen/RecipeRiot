@@ -42,4 +42,7 @@
     <string name="search">Søk</string>
     <string name="add_an_ingredient">Legg til ingrediens</string>
     <string name="email">Email</string>
+
+    <string name="snackbar_generate">Genererer Oppskrift</string>
+    <string name="snackbar_generated">Oppskrift Generert</string>
 </resources>
