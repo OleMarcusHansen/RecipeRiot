@@ -31,13 +31,12 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.google.firebase.firestore.FirebaseFirestore
 import no.hiof.reciperiot.R
 import no.hiof.reciperiot.Screen
 import no.hiof.reciperiot.ViewModels.RecipeViewModel
 
 @Composable
-fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFirestore, recipeViewModel: RecipeViewModel = viewModel()) {
+fun RecipePage1(navController: NavController, recipeId: String, recipeViewModel: RecipeViewModel = viewModel()) {
     val recipe = recipeViewModel.loadRecipe(recipeId)
 
     LazyColumn {
@@ -90,7 +89,7 @@ fun RecipePage1(navController: NavController, recipeId: String, db: FirebaseFire
                         model = recipe.imageURL,
                         contentDescription = "Image of the recipe",
                         modifier = Modifier.height(400.dp),
-                        error = painterResource(id = R.drawable.food)
+                        error = painterResource(id = R.drawable.standardfood)
                     )
                     Text(
                         text = stringResource(R.string.cooktime, recipe.cookingTime),

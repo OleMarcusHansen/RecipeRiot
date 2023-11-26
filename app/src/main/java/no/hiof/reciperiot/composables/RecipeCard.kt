@@ -44,8 +44,8 @@ fun RecipeCard(
     onRecipeClick: (String) -> Unit,
     onFavouriteToggle: (Recipe) -> Unit,
     updateRecipeFavouriteStatus: (Recipe, Boolean) -> Unit,
-    recipeViewModel: RecipeViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    recipeViewModel: RecipeViewModel = viewModel()
 ) {
     var favourite by rememberSaveable { mutableStateOf(recipe.favourite) }
     recipeViewModel.getNutrition(recipe = recipe)
@@ -80,7 +80,7 @@ fun RecipeCard(
                 AsyncImage(
                     model = recipe.imageURL,
                     contentDescription = "Image of the recipe",
-                    error = painterResource(id = R.drawable.food))
+                    error = painterResource(id = R.drawable.standardfood))
                 IconToggleButton(
                     checked = favourite,
                     onCheckedChange = {
